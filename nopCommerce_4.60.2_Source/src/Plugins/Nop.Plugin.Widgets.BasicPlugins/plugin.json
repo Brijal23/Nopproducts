@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Basic Plugins",
+  "SystemName": "Widgets.BasicPlugins",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.BasicPlugins.dll",
+  "Description": "This plugin is basic widgets plugin"
+}

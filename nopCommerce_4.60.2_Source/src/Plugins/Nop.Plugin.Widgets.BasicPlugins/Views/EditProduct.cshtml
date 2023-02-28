@@ -1,0 +1,768 @@
+﻿@model Nop.Plugin.Widgets.BasicPlugins.Models.Product
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Product</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css" />
+    @*<link href="~/Plugins/Widgets.BasicPlugins/Content/bootstrap.min.css" rel="stylesheet" />*@
+    @*  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css" rel="stylesheet">*@
+    @*    <link href="~/Plugins/Widgets.BasicPlugins/Content/rte_theme_default.css" rel="stylesheet" />
+    *@
+    <style>
+        /* Styling for the accordion */
+        .accordion {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .accordion-header {
+            background-color: #f1f1f1;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+            .accordion-header:hover {
+                background-color: #ddd;
+            }
+
+            .accordion-header.active {
+                background-color: #ccc;
+            }
+
+        .accordion-content {
+            padding: 10px;
+            /* display: none;*/
+        }
+
+            .accordion-content.show {
+                display: block;
+            }
+
+        .form-group {
+            /* display: block !important;*/
+            width: 100%;
+        }
+
+        .visuallyhidden {
+            border: 0;
+            clip: rect(0 0 0 0);
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px;
+        }
+
+        .tox-statusbar__branding {
+            display: none;
+        }
+
+        .required:after {
+            content: " *";
+            color: red;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container" style="padding: 10px; max-width:1600px;">
+
+        @using (Html.BeginForm("EditProduct", "DemoProduct", FormMethod.Post, new { }))
+        {
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h2>Edit Product - @Model.ProductName</h2>
+                </div>
+                <div class="col-md-5">
+                </div>
+                <div class="col-md-4">
+                    <a href='@Url.Action("ProductList", "DemoProduct")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Product List</a>
+                    <button type="submit" class="btn btn-primary text-center" style="float:right;">Save</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="text-align:center;">
+                    @if (ViewBag.SuccessMessage != null)
+                    {
+                        <label style="color:red;">@ViewBag.SuccessMessage</label>
+                    }
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(event)">Product</div>
+                <div class="accordion-content">
+                    <div class="container-fluid">
+                    </div>
+                    @Html.HiddenFor(m => m.ProductID, new {})
+                    @Html.HiddenFor(m => m.IsActive, new {})
+                    @Html.HiddenFor(m => m.CreatedDate, new {})
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ProductName, new { @class = "col-md-3 required" })
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.ProductName, new { @id = "ProductName", @class = "form-control" ,@maxlength="30" })
+                                @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ShortDescription, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.TextAreaFor(m => m.ShortDescription, new { @id = "ShortDescription", @class = "form-control",@rows="2" })
+                                @Html.ValidationMessageFor(m => m.ShortDescription, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FullDescription, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.TextAreaFor(m => m.FullDescription, new { @id = "FullDescription", @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.FullDescription, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SKU, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.SKU, new { @id = "SKU", @class = "form-control" ,@maxlength="20"})
+                                @Html.ValidationMessageFor(m => m.SKU, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.CategoryID, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.ListBoxFor(model => model.CategoryID, Model.Categories, new {@class="form-control select2 select2-hidden-accessible" , @style="width: 100%;" })
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.IsPublished)
+                                @Html.LabelFor(m => m.IsPublished)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(event)">Price</div>
+                <div class="accordion-content">
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Price, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.Price, new { @id = "Price", @class = "form-control" ,@type="number",@min="0",@maxlength="10",@onkeydown="javascript: return event.keyCode == 69 ? false : true"})
+                                @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger" })
+                                <small style="color:red;"></small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.IsTextexempt)
+                                @Html.LabelFor(m => m.IsTextexempt)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group" id="drptaxcategoryid">
+                            @Html.LabelFor(m => m.Taxcategory, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.DropDownListFor(m => m.Taxcategory,Model.TaxCategories,new{@class = "form-control"})
+                                @Html.ValidationMessageFor(m => m.Taxcategory, "", new { @class = "text-danger" })
+                                <small style="color:red;"></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(event)">Shipping</div>
+                <div class="accordion-content">
+                    <div class="row">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.IsShippingEnable)
+                                @Html.LabelFor(m => m.IsShippingEnable)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(event)">Inventory</div>
+                <div class="accordion-content">
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.InventoryMethod, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.DropDownListFor(m => m.InventoryMethod,Model.InventoryMethods,new{@class = "form-control",@id="InventoryMethod",@onchange="InventoryChange();"})
+                                @Html.ValidationMessageFor(m => m.InventoryMethod, "", new { @class = "text-danger" })
+                                <small style="color:red;"></small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group" id="stockID" style="display: none;">
+                            @Html.LabelFor(m => m.StockQuantity, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.StockQuantity, new { @id = "StockQuantity", @class = "form-control" ,@type="number",@min="0",@maxlength="10",@onkeypress="return onlyNumberKey(event)"})
+                                @Html.ValidationMessageFor(m => m.StockQuantity, "", new { @class = "text-danger" })
+                                <small style="color:red;"></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(event)">Pictures</div>
+            <div class="accordion-content">
+                <table class="table table-bordered table-hover display" id="Imagegrid">
+                    <thead>
+                        <tr>
+                            <th>Picture</th>
+                            <th>Display order</th>
+                            <th>Alt</th>
+                            <th>Title</th>
+                            @*  <th>Edit</th>
+                            <th>Delete</th>*@
+                        </tr>
+                    </thead>
+                    <tbody id="Imagedata"></tbody>
+                </table>
+                @* <form id="myForm" enctype="multipart/form-data" method="post">*@
+                @*                <form asp-controller="DemoProduct" asp-action="UploadFile" data-ajax="true" data-ajax-method="Post"  data-ajax-update="#ajaxresult" enctype="multipart/form-data" id="myForm">
+                *@                    <div id="ajaxresult">
+                    <div>
+                        <h4>Add a new picture</h4>
+                        <div class="col-md-3">Picture</div>
+                        <div class="col-md-12">
+                            <div id="pictureimage">
+                                <img src="https://cafe.shopfast.net/images/thumbs/default-image_100.png" id="imgsrc">
+                                <input name="uploadimage" type="file" class="btn btn-success" accept="image/*" id="imageInput" onchange="document.getElementById('imgsrc').src = window.URL.createObjectURL(this.files[0])">
+
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">Alt</div>
+                        <div class="col-md-12">
+                            <input type="text" name="altimage" id="altimage" class="form-control" maxlength="20" />
+                        </div>
+                        <br>
+                        <div class="col-md-3">Title</div>
+                        <div class="col-md-12">
+                            <input type="text" name="Title" id="Title" class="form-control" maxlength="20" />
+                        </div>
+                        <br>
+                        <div class="col-md-3">Display Order</div>
+                        <div class="col-md-6">
+                            <input type="number" name="displayorder" id="displayorder" class="form-control" min="0" maxlength="3" onkeypress="return onlyNumberKey(event)" />
+                        </div>
+                        <br>
+
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            <button type="button" id="addProductPicture" class="btn btn-primary" onclick="AjaxFormSubmit()">Add product picture</button>
+                        </div>
+                    </div>
+                    @* @(await Html.PartialAsync("~/Plugins/Widgets.BasicPlugins/Views/_FileUpload.cshtml", Model.UploadFileModel))*@
+                </div>
+                @*</form>*@
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5-stable/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        //  tinymce.init({
+        //      selector: '#FullDescription'
+        //});
+        tinymce.init({
+            selector: '#FullDescription',
+            plugins: [
+                'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview',
+                'anchor', 'pagebreak',
+                'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code',
+                'fullscreen', 'insertdatetime',
+                'media', 'table', 'emoticons', 'template', 'help'
+            ],
+
+            height: 400
+
+        });
+        // JavaScript to toggle the accordion
+        function toggleAccordion(event) {
+            var accordionHeader = event.target;
+            var accordionContent = accordionHeader.nextElementSibling;
+            accordionHeader.classList.toggle("active");
+            if (accordionContent.style.display === "block") {
+                accordionContent.style.display = "none";
+            } else {
+                accordionContent.style.display = "block";
+            }
+        }
+        $('.select2').select2({
+            closeOnSelect: false
+        });
+        $(document).ready(function () {
+            if ($(this).is(":checked")) {
+                $("#drptaxcategoryid").hide();
+            } else {
+                $("#drptaxcategoryid").show();
+            }
+            var InventoryMethod = $('#InventoryMethod').val();
+
+            if (InventoryMethod == 1)
+                $("#stockID").show();
+            else
+                $("#stockID").hide();
+
+            //$('#Imagegrid').DataTable({
+            //    pagingType: 'full_numbers',
+            //    searching: false,
+            //    sorting: false,
+            //});
+        });
+        $(function () {
+            $("#IsTextexempt").click(function () {
+                if ($(this).is(":checked")) {
+                    $("#drptaxcategoryid").hide();
+                } else {
+                    $("#drptaxcategoryid").show();
+                }
+            });
+        });
+        function InventoryChange() {
+            var InventoryMethod = $('#InventoryMethod').val();
+
+            if (InventoryMethod == 1)
+                $("#stockID").show();
+            else
+                $("#stockID").hide();
+        }
+        function onlyNumberKey(evt) {
+
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+        function AjaxFormSubmit() {
+            //var url = $('#myForm').attr('action');
+            var file = $('#imageInput')[0].files[0];
+            var altimage = $("#altimage").val();
+            var title = $("#Title").val();
+            var displayorder = $("#displayorder").val();
+            var productID = $("#ProductID").val();
+
+
+            var formData = new FormData()
+            formData.append("File", $('#imageInput')[0].files[0]);
+            formData.append("AltImage", altimage);
+            formData.append("Title", title);
+            formData.append("Displayorder", displayorder);
+            formData.append("ProductID", productID);
+            if (file.length > 0) {
+                alert("Please upload file.");
+            }
+            else {
+                SubmitForm(formData);
+            }
+        }
+
+        function SubmitForm(FormData) {
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/DemoProduct/UploadImage',
+                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                data: FormData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.status == "success") {
+                       
+                        var tr;
+                        //Append each row to html table
+                        for (var i = 0; i < response.data.length; i++) {
+                            console.log(response.data);
+                            tr = $('<tr/>');
+                            tr.append("<td><img src='"+ response.data[i].sFile +"'/></td>");
+                            tr.append("<td>" + response.data[i].Displayorder + "</td>");
+                            tr.append("<td>" + response.data[i].AltImage + "</td>");
+                            tr.append("<td>" + response.data[i].Title + "</td>");
+                            console.log(tr);
+                            $('#Imagegrid').append(tr);
+                            $("#imgsrc").attr('src', 'https://cafe.shopfast.net/images/thumbs/default-image_100.png');
+                             $('#imageInput').val('');
+                             $("#altimage").val("");
+                            $("#Title").val("");
+                             $("#displayorder").val("");
+                             
+                        }
+
+
+                    }
+                },
+                error: function (err) {
+                    alert("Error occurs" + err.responseText);
+                }
+            });
+        }
+                                                    //$(document).ready(function () {
+                                                    //    $.validator.unobtrusive.parse($("#myForm"));
+                                                    //});
+
+                                                    //document.getElementById("addProductPicture").addEventListener("click", function (event) {
+                                                    //    event.preventDefault();
+                                                    //    sendData();
+                                                    //});
+                                                    //function sendData() {
+                                                    //    var files = $('#file').prop("files");
+                                                    //        if (files.length > 0) {
+                                                    //        var formData = new FormData();
+                                                    //        formData.append('file', files[0]);
+                                                    //        formData.append('altimage', $("#altimage").val());
+                                                    //        formData.append('title', $("#Title").val());
+                                                    //        formData.append('displayorder', $("#displayorder").val());
+                                                    //        formData.append('productID', $("#ProductID").val());
+                                                    //    //var formData = new FormData();
+                                                    //    //formData.append("name", document.getElementsByName("name")[0].value);
+                                                    //    //formData.append("file", document.getElementsByName("file")[0].files[0]);
+
+                                                    //    var client = new HttpClient();
+                                                    //    var response =  client.PostAsync("/Admin/DemoProduct/UploadImage", formData);
+                                                    //    if (response.IsSuccessStatusCode) {
+                                                    //        // Handle successful response
+                                                    //    } else {
+                                                    //        // Handle error response
+                                                    //    }
+                                                    //}
+                                                    //$('#addProductPicture').on('click', function () {
+                                                    //    debugger;
+
+                                                    //    var files = $('#imageInput').prop("files");
+                                                    //    if (files.length > 0) {
+                                                    //        var data = new FormData();
+                                                    //        data.append('file', files[0]);
+                                                    //        data.append('altimage', $("#altimage").val());
+                                                    //        data.append('title', $("#Title").val());
+                                                    //        data.append('displayorder', $("#displayorder").val());
+                                                    //        data.append('productID', $("#ProductID").val());
+                                                    //        console.log(data);
+
+                                                    //        $.ajax({
+                                                    //            cache: false,
+                                                    //            type: 'get',
+                                                    //            url: '/Admin/DemoProduct/UploadImages',
+                                                    //            dataType: 'json',
+                                                    //            data: data,
+                                                    //            contentType: false,
+                                                    //            processData: false,
+                                                    //            //data: data,
+
+                                                    //            success: function (data) {
+                                                    //                alert(data);
+                                                    //            },
+                                                    //            error: function () {
+                                                    //            }
+                                                    //        });
+                                                    //    }
+                                                    //    else {
+                                                    //        alert("Please choose file.");
+                                                    //    }
+                                                    //});
+    </script>
+    <script type="text/javascript">
+        //$(function () {
+        //    $('#uploadForm').submit(function (e) {
+        //        e.preventDefault();
+        //        var formData = new FormData($(this)[0]);
+        //        $.ajax({
+        //            url: '/ControllerName/UploadImage',
+        //            type: 'POST',
+        //            data: formData,
+        //            cache: false,
+        //            contentType: false,
+        //            processData: false,
+        //            success: function (result) {
+        //                alert(result.message);
+        //            },
+        //            error: function () {
+        //                alert('Error occurred while uploading the image');
+        //            }
+        //        });
+        //    });
+        //});
+        //$("#myForm").submit(function (event) {
+        //    event.preventDefault();
+
+        //    // Get the PNG image file from the input element
+        //    var fileInput = document.getElementById('imageInput');
+        //    var file = fileInput.files[0];
+
+        //    // Create a new FormData object and add the PNG image file to it
+        //    var formData = new FormData();
+        //    formData.append("imageFile", file);
+
+        //    // Send the AJAX request to the server
+        //    $.ajax({
+        //        url: "/Admin/DemoProduct/Callurl",
+        //        type: "POST",
+        //        data: formData,
+        //        processData: false,
+        //        contentType: false,
+        //        success: function (result) {
+        //            console.log("Image uploaded successfully.");
+        //        },
+        //        error: function (xhr, status, error) {
+        //            console.error("Error uploading image: " + error);
+        //        }
+        //    });
+        //});
+
+        //var imageInput = document.getElementById("imageInput");
+        //var uploadButton = document.getElementById("addProductPicture");
+
+        //// Attach a click event listener to the button
+        //uploadButton.addEventListener("click", function () {
+        //    // Create a FormData object to store the image file
+        //    var formData = new FormData();
+        //    formData.append("imageFile", imageInput.files[0]);
+
+        //    // Send an AJAX request to the server
+        //    var xhr = new XMLHttpRequest();
+        //    xhr.open("POST", "/Admin/DemoProduct/Callurl", true);
+        //    xhr.onload = function () {
+        //        if (xhr.status === 200) {
+        //            alert("Image uploaded successfully!");
+        //        } else {
+        //            alert("Failed to upload image.");
+        //        }
+        //    };
+        //    xhr.send(formData);
+        //});
+
+        //function AjaxFormSubmit() {
+        //    debugger;
+        //    //var formData = new FormData("#myForm");
+        //    //var formData = $("#myForm").serialize();
+        //    //console.log(formData);
+        //    var frmdta = new FormData();
+        //    frmdta.append('file', $('#imageInput')[0].files[0]);
+        //    frmdta.append('altimage', $("#altimage").val());
+        //    frmdta.append('title', $("#Title").val());
+        //    frmdta.append('displayorder', $("#displayorder").val());
+        //    frmdta.append('productID', $("#ProductID").val());
+        //    console.log(frmdta);
+        //    // Send the AJAX request to the server
+        //    $.ajax({
+        //        type: "post",
+        //        url: "/Admin/DemoProduct/UploadImages",
+        //        contenttype: false,
+        //        processdata: false,
+        //        data: frmdta,
+        //        success: function (message) {
+        //            alert(message);
+        //        },
+        //        error: function () {
+        //            alert("there was error uploading files!");
+        //        }
+
+        //    });
+
+        //}
+                                                                                                    //var formData = new FormData();
+                                                                                                    ////var formData = new FormData();
+                                                                                                    //formData.append('file', files[0]);
+                                                                                                    ////formData.append('altimage', $("#altimage").val());
+                                                                                                    ////formData.append('title', $("#Title").val());
+                                                                                                    ////formData.append('displayorder', $("#displayorder").val());
+                                                                                                    ////formData.append('productID', $("#ProductID").val());
+                                                                                                    //$.ajax({
+                                                                                                    //    url: '/Admin/DemoProduct/Callurl',
+                                                                                                    //    type: 'POST',
+                                                                                                    //    data: formData,
+                                                                                                    //    cache: false,
+                                                                                                    //    contentType: false,
+                                                                                                    //    processData: false,
+                                                                                                    //    success: function (result) {
+                                                                                                    //        alert(result.message);
+                                                                                                    //    },
+                                                                                                    //    error: function () {
+                                                                                                    //        alert('Error occurred while uploading the image');
+                                                                                                    //    }
+                                                                                                    //});
+                                                                                                    //var v = "abc";
+                                                                                                    //var altimage = $("#altimage").val();
+                                                                                                    //var title = $("#Title").val();
+                                                                                                    //var displayorder = $("#displayorder").val();
+                                                                                                    //var productID = $("#ProductID").val();
+                                                                                                    //$.ajax({
+                                                                                                    //    type: 'post',
+                                                                                                    //    url: '/Admin/DemoProduct/Callurl',
+                                                                                                    //    data: { altimage: altimage, title: title, displayorder: displayorder, productID: productID, file: formData },
+                                                                                                    //    cache: false,
+                                                                                                    //    contentType: false,
+                                                                                                    //    processData: false,
+                                                                                                    //    dataType: "json",
+                                                                                                    //    success: function (data) {
+                                                                                                    //        alert(data);
+                                                                                                    //    },
+                                                                                                    //    error: function () {
+                                                                                                    //    }
+                                                                                                    //});
+
+    </script>
+
+    @* <script>
+    tinymce.init({
+    selector: '#FullDescription',
+    plugins: [
+    'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview',
+    'anchor', 'pagebreak',
+    'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code',
+    'fullscreen', 'insertdatetime',
+    'media', 'table', 'emoticons', 'template', 'help'
+    ]
+
+    });
+    // JavaScript to toggle the accordion
+    function toggleAccordion(event) {
+    var accordionHeader = event.target;
+    var accordionContent = accordionHeader.nextElementSibling;
+    accordionHeader.classList.toggle("active");
+    if (accordionContent.style.display === "block") {
+    accordionContent.style.display = "none";
+    } else {
+    accordionContent.style.display = "block";
+    }
+    }
+    $('.select2').select2({
+    closeOnSelect: false
+    });
+
+    $(function () {
+    $("#IsTextexempt").click(function () {
+    if ($(this).is(":checked")) {
+    $("#drptaxcategoryid").hide();
+    } else {
+    $("#drptaxcategoryid").show();
+    }
+    });
+    });
+    function InventoryChange() {
+    var InventoryMethod = $('#InventoryMethod').val();
+    console.log(InventoryMethod);
+    if (InventoryMethod == 1)
+    $("#stockID").show();
+    else
+    $("#stockID").hide();
+    }
+
+    $('#btnupload').on('click', function (e) {
+    e.preventDefault();
+    $('#file').trigger('click');
+    });
+    //$('#file').change(function () {
+    //    var filename = $('#file').val();
+    //    if (filename.substring(3, 11) == 'fakepath') {
+    //        filename = filename.substring(12);
+    //    } // For Remove fakepath
+    //    $("label[for='file_name'] b").html(filename);
+    //    $("label[for='file_default']").text('Selected File: ');
+    //    if (filename == "") {
+    //        $("label[for='file_default']").text('No File Choosen');
+    //    }
+    //});
+    $('#addProductPicture').on('click', function (e) {
+    debugger;
+    var files = e.target.files;
+    if (files.length > 0) {
+    var data = new FormData();
+    data.append("file", files[0]);
+    data.append('altimage', $("#altimage").val());
+    data.append('Title', $("#Title").val());
+    data.append('displayorder', $("#displayorder").val());
+    data.append('ProductID', $("#ProductID").val());
+    $.ajax({
+    type: "POST",
+    url: '@Url.Action("Addproductpicture","DemoProduct")',
+    contentType: false,
+    processData: false,
+    data: data,
+    success: function (data) {
+    alert(data);
+    },
+    error: function () {
+
+    }
+
+    });
+    }
+    else {
+    alert("Please choose file.");
+    }
+    });
+    //$("#addProductPicture").click(function () {
+    //    debugger;
+    //    var fileUpload = $("#file").get(0).files;
+
+    //    // Create  a FormData object
+    //    var fileData = new FormData();
+    //    fileData.append("ImageFile", fileUpload[0]);
+    //    fileData.append('altimage', $("#altimage").val());
+    //    fileData.append('Title', $("#Title").val());
+    //    fileData.append('displayorder', $("#displayorder").val());
+    //    fileData.append('ProductID', $("#ProductID").val());
+
+    //    if (files[0] == null) { $("#addProductPictureAlert").click(); return }
+    //    $("#addProductPicture").attr("disabled", !0);
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/DemoProduct/Addproductpicture",
+    //        data: fileData,
+    //        contentType: false,
+    //        processData: false,
+    //        success: function (n) {
+    //            n.Result && updateTable("#productpictures-grid")
+    //        },
+    //        error: function () {
+    //            $("#productPictureAddAlert").click()
+    //        },
+    //        complete: function () { $("#addProductPicture").attr("disabled", !1) }
+    //    })
+    //})
+    //  $(document).ready(function () { $("#addProductPictureAlert").attr("data-toggle", "modal").attr("data-target", "#addProductPictureAlert-action-alert") })
+    </script>*@
+</body>
+</html>

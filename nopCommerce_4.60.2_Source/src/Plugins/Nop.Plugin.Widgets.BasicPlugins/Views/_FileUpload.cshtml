@@ -1,0 +1,41 @@
+﻿@*<form id="myForm" enctype="multipart/form-data" method="post">*@
+@*@using (Ajax.BeginForm("UploadFile", "DemoProduct", null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "result" }, new { enctype = "multipart/form-data" }))
+{*@
+@model Nop.Plugin.Widgets.BasicPlugins.Models.UploadFileModel
+
+
+<div>
+    <h4>Add a new picture</h4>
+    <div class="col-md-3">Picture</div>
+    <div class="col-md-12">
+        <div id="pictureimage">
+            <img src="https://cafe.shopfast.net/images/thumbs/default-image_100.png" id="imgsrc">
+            <input name="uploadimage" type="file" class="btn btn-success" accept="image/*" asp-for="File" id="imageInput" onchange="document.getElementById('imgsrc').src = window.URL.createObjectURL(this.files[0])">
+
+        </div>
+
+    </div>
+    <div class="col-md-3">Alt</div>
+    <div class="col-md-12">
+        <input type="text" name="altimage" id="altimage" class="form-control" asp-for="AltImage" maxlength="20" />
+    </div>
+    <br>
+    <div class="col-md-3">Title</div>
+    <div class="col-md-12">
+        <input type="text" name="Title" id="Title" class="form-control" asp-for="Title" maxlength="20" />
+    </div>
+    <br>
+    <div class="col-md-3">Display Order</div>
+    <div class="col-md-6">
+        <input type="number" name="displayorder" id="displayorder" asp-for="Displayorder" class="form-control" min="0" maxlength="3" onkeypress="return onlyNumberKey(event)" />
+    </div>
+    <br>
+
+    <div class="col-md-3"></div>
+    <div class="col-md-9">
+        <button type="button" id="addProductPicture" class="btn btn-primary" onclick="AjaxFormSubmit()">Add product picture</button>
+    </div>
+</div>
+
+
+@*</form>*@

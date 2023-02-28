@@ -1,0 +1,308 @@
+﻿@model Nop.Plugin.Widgets.BasicPlugins.Models.Product
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Product</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    @*<link href="~/Plugins/Widgets.BasicPlugins/Content/bootstrap.min.css" rel="stylesheet" />*@
+    @*  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css" rel="stylesheet">*@
+    @*    <link href="~/Plugins/Widgets.BasicPlugins/Content/rte_theme_default.css" rel="stylesheet" />
+    *@
+    <style>
+        /* Styling for the accordion */
+        .accordion {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .accordion-header {
+            background-color: #f1f1f1;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+            .accordion-header:hover {
+                background-color: #ddd;
+            }
+
+            .accordion-header.active {
+                background-color: #ccc;
+            }
+
+        .accordion-content {
+            padding: 10px;
+            /* display: none;*/
+        }
+
+            .accordion-content.show {
+                display: block;
+            }
+
+        .form-group {
+            /* display: block !important;*/
+            width: 100%;
+        }
+
+        .tox-statusbar__branding {
+            display: none;
+        }
+
+        .required:after {
+            content: " *";
+            color: red;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container" style="padding: 10px; max-width:1600px;">
+
+        @using (Html.BeginForm("AddProduct", "DemoProduct", FormMethod.Post, new { }))
+        {
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h2>Add Product </h2>
+                </div>
+                <div class="col-md-5">
+                </div>
+                <div class="col-md-4">
+                    <a href='@Url.Action("ProductList", "DemoProduct")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Product List</a>
+                    <button type="submit" class="btn btn-primary text-center" style="float:right;">Save</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="text-align:center;">
+                    @if (ViewBag.SuccessMessage != null)
+                    {
+                        <label style="color:red;">@ViewBag.SuccessMessage</label>
+                    }
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(event)">Product</div>
+                <div class="accordion-content">
+                    <div class="container-fluid">
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ProductName, new { @class = "col-md-3 required" })
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.ProductName, new { @id = "ProductName", @class = "form-control" ,@maxlength="30"})
+                                @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ShortDescription, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.TextAreaFor(m => m.ShortDescription, new { @id = "ShortDescription", @class = "form-control",@row="2" })
+                                @Html.ValidationMessageFor(m => m.ShortDescription, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FullDescription, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.TextAreaFor(m => m.FullDescription, new { @id = "FullDescription", @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.FullDescription, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SKU, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.SKU, new { @id = "SKU", @class = "form-control" ,@maxlength="20"})
+                                @Html.ValidationMessageFor(m => m.SKU, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.CategoryID, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.ListBoxFor(model => model.CategoryID, Model.Categories, new {@class="form-control select2 select2-hidden-accessible" , @style="width: 100%;"})
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.IsPublished)
+                                @Html.LabelFor(m => m.IsPublished)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(event)">Price</div>
+                <div class="accordion-content">
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Price, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.Price, new { @id = "Price", @class = "form-control" ,@type="number",@min="0",@maxlength="10",@onkeydown="javascript: return event.keyCode == 69 ? false : true"})
+                                @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger" })
+                                <small style="color:red;"></small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.IsTextexempt)
+                                @Html.LabelFor(m => m.IsTextexempt)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group" id="drptaxcategoryid">
+                            @Html.LabelFor(m => m.Taxcategory, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.DropDownListFor(m => m.Taxcategory,Model.TaxCategories,new{@class = "form-control"})
+                                @Html.ValidationMessageFor(m => m.Taxcategory, "", new { @class = "text-danger" })
+                                <small style="color:red;"></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(event)">Shipping</div>
+                <div class="accordion-content">
+                    <div class="row">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.IsShippingEnable)
+                                @Html.LabelFor(m => m.IsShippingEnable)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(event)">Inventory</div>
+                <div class="accordion-content">
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.InventoryMethod, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.DropDownListFor(m => m.InventoryMethod,Model.InventoryMethods,new{@class = "form-control",@id="InventoryMethod",@onchange="InventoryChange();"})
+                                @Html.ValidationMessageFor(m => m.InventoryMethod, "", new { @class = "text-danger" })
+                                <small style="color:red;"></small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group" id="stockID" style="display: none;">
+                            @Html.LabelFor(m => m.StockQuantity, new { @class = "col-md-3" })
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.StockQuantity, new { @id = "StockQuantity", @class = "form-control" ,@type="number",@min="0",@maxlength="10",@onkeypress="return onlyNumberKey(event)"})
+                                @Html.ValidationMessageFor(m => m.StockQuantity, "", new { @class = "text-danger" })
+                                <small style="color:red;"></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(event)">Pictures</div>
+                <div class="accordion-content">
+                    <p>You need to save the product before you can upload pictures for this product page.</p>
+                </div>
+            </div>
+           
+
+        }
+
+    </div>
+    @*  <script src="~/Plugins/Widgets.BasicPlugins/Scripts/js/jquery-3.2.1.min.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5-stable/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.js"></script>
+    <script>
+        //  tinymce.init({
+        //      selector: '#FullDescription'
+        //});
+        tinymce.init({
+            selector: '#FullDescription',
+            plugins: [
+                'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview',
+                'anchor', 'pagebreak',
+                'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code',
+                'fullscreen', 'insertdatetime',
+                'media', 'table', 'emoticons', 'template', 'help'
+            ],
+            
+            height: 400
+
+        });
+        // JavaScript to toggle the accordion
+        function toggleAccordion(event) {
+            var accordionHeader = event.target;
+            var accordionContent = accordionHeader.nextElementSibling;
+            accordionHeader.classList.toggle("active");
+            if (accordionContent.style.display === "block") {
+                accordionContent.style.display = "none";
+            } else {
+                accordionContent.style.display = "block";
+            }
+        }
+        $('.select2').select2({
+            closeOnSelect: false
+        });
+        $(document).ready(function () {
+            if ($(this).is(":checked")) {
+                $("#drptaxcategoryid").hide();
+            } else {
+                $("#drptaxcategoryid").show();
+            }
+            var InventoryMethod = $('#InventoryMethod').val();
+
+            if (InventoryMethod == 1)
+                $("#stockID").show();
+            else
+                $("#stockID").hide();
+        });
+        $(function () {
+            $("#IsTextexempt").click(function () {
+                if ($(this).is(":checked")) {
+                    $("#drptaxcategoryid").hide();
+                } else {
+                    $("#drptaxcategoryid").show();
+                }
+            });
+        });
+        function InventoryChange() {
+            var InventoryMethod = $('#InventoryMethod').val();
+
+            if (InventoryMethod == 1)
+                $("#stockID").show();
+            else
+                $("#stockID").hide();
+        }
+         function onlyNumberKey(evt) {
+              
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+    </script>
+</body>
+</html>

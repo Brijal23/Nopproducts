@@ -249,7 +249,20 @@
                             <th>Delete</th>*@
                         </tr>
                     </thead>
-                    <tbody id="Imagedata"></tbody>
+                    <tbody id="Imagedata">
+                        @if (Model.UploadFileModel != null)
+                        {
+                            @foreach (var item in Model.UploadFileModel)
+                            {
+                                <tr>
+                                    <td><img src="@item.sFile" /></td>
+                                    <td>@item.Displayorder</td>
+                                    <td>@item.AltImage</td>
+                                    <td>@item.Title</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
                 </table>
                 @* <form id="myForm" enctype="multipart/form-data" method="post">*@
                 @*                <form asp-controller="DemoProduct" asp-action="UploadFile" data-ajax="true" data-ajax-method="Post"  data-ajax-update="#ajaxresult" enctype="multipart/form-data" id="myForm">
@@ -346,11 +359,11 @@
             else
                 $("#stockID").hide();
 
-            //$('#Imagegrid').DataTable({
-            //    pagingType: 'full_numbers',
-            //    searching: false,
-            //    sorting: false,
-            //});
+            $('#Imagegrid').DataTable({
+                pagingType: 'full_numbers',
+                searching: false,
+                sorting: false,
+            });
         });
         $(function () {
             $("#IsTextexempt").click(function () {
@@ -410,26 +423,33 @@
                 contentType: false,
                 success: function (response) {
                     if (response.status == "success") {
-                       
+                        var table = $('#Imagegrid').DataTable();
+                        table.clear().draw();
+                        //table.fnClearTable();
                         var tr;
                         //Append each row to html table
                         for (var i = 0; i < response.data.length; i++) {
                             console.log(response.data);
                             tr = $('<tr/>');
-                            tr.append("<td><img src='"+ response.data[i].sFile +"'/></td>");
+                            tr.append("<td><img src=" + response.data[i].sFile + "></img></td>");
                             tr.append("<td>" + response.data[i].Displayorder + "</td>");
                             tr.append("<td>" + response.data[i].AltImage + "</td>");
                             tr.append("<td>" + response.data[i].Title + "</td>");
-                            console.log(tr);
+
                             $('#Imagegrid').append(tr);
-                            $("#imgsrc").attr('src', 'https://cafe.shopfast.net/images/thumbs/default-image_100.png');
-                             $('#imageInput').val('');
-                             $("#altimage").val("");
-                            $("#Title").val("");
-                             $("#displayorder").val("");
-                             
+
                         }
 
+                        $("#imgsrc").attr('src', 'https://cafe.shopfast.net/images/thumbs/default-image_100.png');
+                        $('#imageInput').val('');
+                        $("#altimage").val("");
+                        $("#Title").val("");
+                        $("#displayorder").val("");
+                        //$('#Imagegrid').DataTable({
+                        //    pagingType: 'full_numbers',
+                        //    searching: false,
+                        //    sorting: false,
+                        //});
 
                     }
                 },
@@ -438,69 +458,69 @@
                 }
             });
         }
-                                                    //$(document).ready(function () {
-                                                    //    $.validator.unobtrusive.parse($("#myForm"));
-                                                    //});
+                                                                                            //$(document).ready(function () {
+                                                                                            //    $.validator.unobtrusive.parse($("#myForm"));
+                                                                                            //});
 
-                                                    //document.getElementById("addProductPicture").addEventListener("click", function (event) {
-                                                    //    event.preventDefault();
-                                                    //    sendData();
-                                                    //});
-                                                    //function sendData() {
-                                                    //    var files = $('#file').prop("files");
-                                                    //        if (files.length > 0) {
-                                                    //        var formData = new FormData();
-                                                    //        formData.append('file', files[0]);
-                                                    //        formData.append('altimage', $("#altimage").val());
-                                                    //        formData.append('title', $("#Title").val());
-                                                    //        formData.append('displayorder', $("#displayorder").val());
-                                                    //        formData.append('productID', $("#ProductID").val());
-                                                    //    //var formData = new FormData();
-                                                    //    //formData.append("name", document.getElementsByName("name")[0].value);
-                                                    //    //formData.append("file", document.getElementsByName("file")[0].files[0]);
+                                                                                            //document.getElementById("addProductPicture").addEventListener("click", function (event) {
+                                                                                            //    event.preventDefault();
+                                                                                            //    sendData();
+                                                                                            //});
+                                                                                            //function sendData() {
+                                                                                            //    var files = $('#file').prop("files");
+                                                                                            //        if (files.length > 0) {
+                                                                                            //        var formData = new FormData();
+                                                                                            //        formData.append('file', files[0]);
+                                                                                            //        formData.append('altimage', $("#altimage").val());
+                                                                                            //        formData.append('title', $("#Title").val());
+                                                                                            //        formData.append('displayorder', $("#displayorder").val());
+                                                                                            //        formData.append('productID', $("#ProductID").val());
+                                                                                            //    //var formData = new FormData();
+                                                                                            //    //formData.append("name", document.getElementsByName("name")[0].value);
+                                                                                            //    //formData.append("file", document.getElementsByName("file")[0].files[0]);
 
-                                                    //    var client = new HttpClient();
-                                                    //    var response =  client.PostAsync("/Admin/DemoProduct/UploadImage", formData);
-                                                    //    if (response.IsSuccessStatusCode) {
-                                                    //        // Handle successful response
-                                                    //    } else {
-                                                    //        // Handle error response
-                                                    //    }
-                                                    //}
-                                                    //$('#addProductPicture').on('click', function () {
-                                                    //    debugger;
+                                                                                            //    var client = new HttpClient();
+                                                                                            //    var response =  client.PostAsync("/Admin/DemoProduct/UploadImage", formData);
+                                                                                            //    if (response.IsSuccessStatusCode) {
+                                                                                            //        // Handle successful response
+                                                                                            //    } else {
+                                                                                            //        // Handle error response
+                                                                                            //    }
+                                                                                            //}
+                                                                                            //$('#addProductPicture').on('click', function () {
+                                                                                            //    debugger;
 
-                                                    //    var files = $('#imageInput').prop("files");
-                                                    //    if (files.length > 0) {
-                                                    //        var data = new FormData();
-                                                    //        data.append('file', files[0]);
-                                                    //        data.append('altimage', $("#altimage").val());
-                                                    //        data.append('title', $("#Title").val());
-                                                    //        data.append('displayorder', $("#displayorder").val());
-                                                    //        data.append('productID', $("#ProductID").val());
-                                                    //        console.log(data);
+                                                                                            //    var files = $('#imageInput').prop("files");
+                                                                                            //    if (files.length > 0) {
+                                                                                            //        var data = new FormData();
+                                                                                            //        data.append('file', files[0]);
+                                                                                            //        data.append('altimage', $("#altimage").val());
+                                                                                            //        data.append('title', $("#Title").val());
+                                                                                            //        data.append('displayorder', $("#displayorder").val());
+                                                                                            //        data.append('productID', $("#ProductID").val());
+                                                                                            //        console.log(data);
 
-                                                    //        $.ajax({
-                                                    //            cache: false,
-                                                    //            type: 'get',
-                                                    //            url: '/Admin/DemoProduct/UploadImages',
-                                                    //            dataType: 'json',
-                                                    //            data: data,
-                                                    //            contentType: false,
-                                                    //            processData: false,
-                                                    //            //data: data,
+                                                                                            //        $.ajax({
+                                                                                            //            cache: false,
+                                                                                            //            type: 'get',
+                                                                                            //            url: '/Admin/DemoProduct/UploadImages',
+                                                                                            //            dataType: 'json',
+                                                                                            //            data: data,
+                                                                                            //            contentType: false,
+                                                                                            //            processData: false,
+                                                                                            //            //data: data,
 
-                                                    //            success: function (data) {
-                                                    //                alert(data);
-                                                    //            },
-                                                    //            error: function () {
-                                                    //            }
-                                                    //        });
-                                                    //    }
-                                                    //    else {
-                                                    //        alert("Please choose file.");
-                                                    //    }
-                                                    //});
+                                                                                            //            success: function (data) {
+                                                                                            //                alert(data);
+                                                                                            //            },
+                                                                                            //            error: function () {
+                                                                                            //            }
+                                                                                            //        });
+                                                                                            //    }
+                                                                                            //    else {
+                                                                                            //        alert("Please choose file.");
+                                                                                            //    }
+                                                                                            //});
     </script>
     <script type="text/javascript">
         //$(function () {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Formats.Tar;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -321,6 +322,35 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                 }
                             }
                             connection.Close();
+                            string Iquery = "select * from [dbo].[ImageDetail] where ProductID='" + id + "'";
+                            using (SqlCommand commands = new SqlCommand(Iquery, connection))
+                            {
+                                connection.Open();
+                                using (SqlDataReader readers = commands.ExecuteReader())
+                                {
+                                    while (readers.Read())
+                                    {
+                                        //var AltImage = readers["Alt"].ToString();
+                                        //var ProductID = readers["ProductID"].ToString();
+                                        //var Title = readers["Title"].ToString();
+                                        //var Displayorder = readers["DisplayOrder"].ToString();
+                                        //var sFile = RetrieveImage((byte[])readers["ImageData"]);
+                                        List<UploadFileModel> UploadFiles = new List<UploadFileModel>();
+                                        UploadFiles.Add(new UploadFileModel()
+                                        {
+                                            AltImage = readers["Alt"].ToString(),
+                                            ProductID = readers["ProductID"].ToString(),
+                                            Title = readers["Title"].ToString(),
+                                            Displayorder = readers["DisplayOrder"].ToString(),
+                                            sFile = RetrieveImage((byte[])readers["ImageData"])
+
+                                        });
+                                        product.UploadFileModel = UploadFiles;
+                                    }
+                                }
+
+                            }
+                            connection.Close();
                         }
                     }
                 }
@@ -431,6 +461,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                     }
                                 }
 
+
                             }
                         }
                         else
@@ -497,7 +528,12 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     var ImageData = ms.ToArray();
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
-
+                        if (model.AltImage == null)
+                            model.AltImage = "";
+                        if (model.Title == null)
+                            model.Title = "";
+                        if (model.Displayorder == null)
+                            model.Displayorder = "";
                         //string query = "INSERT INTO [dbo].[ImageDetail] (ProductID, ImageData, Alt,Title,DisplayOrder) VALUES  ('" + model.ProductID + "','" + ImageData + "','" + model.AltImage + "','" + model.Title + "','" + model.Displayorder + "')";
                         string query = "INSERT INTO [dbo].[ImageDetail] (ProductID, ImageData, Alt,Title,DisplayOrder) VALUES  (@ProductID,@ImageData,@Alt,@Title,@DisplayOrder)";
                         connection.Open();

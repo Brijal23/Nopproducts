@@ -122,6 +122,7 @@
                 <table class="table table-bordered table-hover display" id="example">
                     <thead>
                         <tr>
+                            <th hidden></th>
                             <th>
                                 @Html.DisplayNameFor(model => model.ProductName)
                             </th>
@@ -147,6 +148,7 @@
                         @foreach (var item in Model)
                         {
                             <tr>
+                                <td hidden>@item.CreatedDate</td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.ProductName)
                                 </td>
@@ -154,7 +156,7 @@
                                     @Html.DisplayFor(modelItem => item.SKU)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Price)
+                                    @Html.DisplayFor(modelItem => item.SPrice)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.StockQuantity)
@@ -207,7 +209,6 @@
 
         $(document).ready(function () {
             var v = $("#hiddencategory").val();
-            console.log(v);
             $('select[name^="category"] option[value="'+ v +'"]').attr("selected", "selected");
             var s = $("#hiddenpublished").val();
             $('select[name^="published"] option[value="' + s +'"]').attr("selected", "selected");

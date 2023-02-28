@@ -57,7 +57,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Models
         public bool IsActive { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-        public UploadFileModel? UploadFileModel { get; set; }
+        public List<UploadFileModel>? UploadFileModel { get; set; }
     }
     public class UploadFileModel
     {

@@ -15,10 +15,10 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Models
     public class Product
     {
         public int ProductID { get; set; }
-        [DisplayName("Product name")]
-        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Please enter valid product name")]
+        [DisplayName("Name")]
+        [RegularExpression(@"^[a-zA-Z0-9\s]*$", ErrorMessage = "Please enter valid name")]
         //[Required(AllowEmptyStrings = false)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Enter product name.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Enter name.")]
         public string ProductName { get; set; }
         [DisplayName("Short description")]
         // [StringLength(288, ErrorMessage = "Maximum 288 characters allowed")]
@@ -31,15 +31,19 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Models
         public string? FullDescription { get; set; }
 
         [RegularExpression(@"^[a-zA-Z0-9]*$", ErrorMessage = "Enter valid SKU.")]
-
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Enter SKU.")]
         public string? SKU { get; set; }
         [DisplayName("Published")]
         public bool IsPublished { get; set; }
         [DisplayName("Categories")]
-        public int[]? CategoryID { get; set; }
+        [Required(ErrorMessage = "Please select category.")]
+        public int[] CategoryID { get; set; }
         public IEnumerable<SelectListItem>? Categories { get; set; }
         //[Column(TypeName = "decimal(7,2)")]
         [RegularExpression(@"^(0|\d{0,8}(\.\d{0,2})?)$", ErrorMessage = "Enter valid price.")]
+        [Range(0, 99999999.99)]
+        [Required(ErrorMessage = "Enter price.")]
+        //[MaxLength(11, ErrorMessage = "Enter valid price.")]
         public decimal Price { get; set; }
         public string? SPrice { get; set; }
         [DisplayName("Text exempt")]
@@ -53,6 +57,8 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Models
         public string? InventoryMethod { get; set; }
         public IEnumerable<SelectListItem>? InventoryMethods { get; set; }
         [DisplayName("Stock quantity")]
+        [Range(0, 99999999)]
+        //[MaxLength(8, ErrorMessage = "Stock quantity can't be more than 8 digits.")]
         public int StockQuantity { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -61,6 +67,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Models
     }
     public class UploadFileModel
     {
+        public int? ImageID { get; set; }
         public string? AltImage { get; set; }
         public IFormFile? File { get; set; }
         public string? sFile { get; set; }

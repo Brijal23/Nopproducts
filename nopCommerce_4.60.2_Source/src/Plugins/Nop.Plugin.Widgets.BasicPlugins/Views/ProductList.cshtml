@@ -39,7 +39,6 @@
                 display: block;
             }
 
-        
     </style>
 
 </head>
@@ -58,14 +57,14 @@
             <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-search">&nbsp;&nbsp;&nbsp;</i>Search</div>
             <div class="accordion-content">
 
-                @using (Html.BeginForm("ProductList", "DemoProduct", FormMethod.Get, new { }))
+                @using (Html.BeginForm("ProductList", "DemoProduct", FormMethod.Get, new { @onsubmit = "return checkvalidation()" }))
                 {
                     <div>
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="col-md-4">Product name</div>
                                 <div class="col-md-8">
-                                    <input type="text" name="productName" id="productName" class="form-control" maxlength="20" value="@ViewBag.productnamesearch" />
+                                    <input type="text" name="productName" id="productName" class="form-control"  value="@ViewBag.productnamesearch" />
                                 </div>
 
                             </div>
@@ -124,7 +123,7 @@
                         <tr>
                             <th hidden></th>
                             <th>
-                                @Html.DisplayNameFor(model => model.ProductName)
+                                Product name
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.SKU)
@@ -176,7 +175,7 @@
 
                                 <td>
                                     @Html.ActionLink("Edit", "EditProduct", new { id=item.ProductID}) ||
-                                    @Html.ActionLink("Delete", "DeleteProduct", new { id=item.ProductID})
+                                    @Html.ActionLink("Delete", "DeleteProduct", new { id=item.ProductID},new{@Onclick="return ConfirmDelete();"})
 
                                 </td>
                             </tr>
@@ -193,7 +192,14 @@
         $(document).ready(function () {
             $('#example').DataTable({
                 pagingType: 'full_numbers',
-                searching: false
+                searching: false,
+                sorting: [[0, 'desc']],
+                aoColumnDefs: [
+                    {
+                        bSortable: false,
+                        aTargets: [-1]
+                    }
+                ]
             });
         });
         function toggleAccordion(event) {
@@ -209,10 +215,23 @@
 
         $(document).ready(function () {
             var v = $("#hiddencategory").val();
-            $('select[name^="category"] option[value="'+ v +'"]').attr("selected", "selected");
+            $('select[name^="category"] option[value="' + v + '"]').attr("selected", "selected");
             var s = $("#hiddenpublished").val();
-            $('select[name^="published"] option[value="' + s +'"]').attr("selected", "selected");
+            $('select[name^="published"] option[value="' + s + '"]').attr("selected", "selected");
         });
+
+        function checkvalidation() {
+            debugger;
+            var productName = $("#productName").val();
+            console.log(productName);
+            if (productName.trim().length == 0) {
+                productName = productName.replace(" ", "");
+                $("#productName").val(productName);
+            }
+        }
+        function ConfirmDelete() {
+            return confirm("Are you sure you want to delete this product?");
+        }
     </script>
 </body>
 </html>

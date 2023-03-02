@@ -6,7 +6,7 @@
 <html>
 <head>
     <title>Create Product</title>
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css" />
@@ -70,6 +70,10 @@
             content: " *";
             color: red;
         }
+
+        .resetbtns {
+            display: none;
+        }
     </style>
 
 </head>
@@ -80,11 +84,10 @@
         {
 
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-8">
                     <h2>Edit Product - @Model.ProductName</h2>
                 </div>
-                <div class="col-md-5">
-                </div>
+
                 <div class="col-md-4">
                     <a href='@Url.Action("ProductList", "DemoProduct")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Product List</a>
                     <button type="submit" class="btn btn-primary text-center" style="float:right;">Save</button>
@@ -110,7 +113,7 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.ProductName, new { @class = "col-md-3 required" })
                             <div class="col-md-12">
-                                @Html.TextBoxFor(m => m.ProductName, new { @id = "ProductName", @class = "form-control" ,@maxlength="30" })
+                                @Html.TextBoxFor(m => m.ProductName, new { @id = "ProductName", @class = "form-control" })
                                 @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "text-danger" })
 
                             </div>
@@ -149,7 +152,7 @@
                             @Html.LabelFor(m => m.CategoryID, new { @class = "col-md-3" })
                             <div class="col-md-12">
                                 @Html.ListBoxFor(model => model.CategoryID, Model.Categories, new {@class="form-control select2 select2-hidden-accessible" , @style="width: 100%;" })
-
+                                @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -170,7 +173,7 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.Price, new { @class = "col-md-3" })
                             <div class="col-md-12">
-                                @Html.TextBoxFor(m => m.Price, new { @id = "Price", @class = "form-control" ,@type="number",@min="0",@maxlength="10",@onkeydown="javascript: return event.keyCode == 69 ? false : true"})
+                                @Html.TextBoxFor(m => m.Price, new { @id = "Price", @class = "form-control" ,@type="number",@min="0",@onkeydown="javascript: return event.keyCode == 69 ? false : true"})
                                 @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger" })
                                 <small style="color:red;"></small>
                             </div>
@@ -226,7 +229,7 @@
                         <div class="form-group" id="stockID" style="display: none;">
                             @Html.LabelFor(m => m.StockQuantity, new { @class = "col-md-3" })
                             <div class="col-md-12">
-                                @Html.TextBoxFor(m => m.StockQuantity, new { @id = "StockQuantity", @class = "form-control" ,@type="number",@min="0",@maxlength="10",@onkeypress="return onlyNumberKey(event)"})
+                                @Html.TextBoxFor(m => m.StockQuantity, new { @id = "StockQuantity", @class = "form-control" ,@type="number",@min="0",@onkeypress="return onlyNumberKey(event)"})
                                 @Html.ValidationMessageFor(m => m.StockQuantity, "", new { @class = "text-danger" })
                                 <small style="color:red;"></small>
                             </div>
@@ -238,15 +241,16 @@
         <div class="accordion">
             <div class="accordion-header" onclick="toggleAccordion(event)">Pictures</div>
             <div class="accordion-content">
-                <table class="table table-bordered table-hover display" id="Imagegrid">
+                <table class="table table-bordered table-hover display text-center" id="Imagegrid">
                     <thead>
                         <tr>
-                            <th>Picture</th>
-                            <th>Display order</th>
-                            <th>Alt</th>
-                            <th>Title</th>
-                            @*  <th>Edit</th>
-                            <th>Delete</th>*@
+
+                            <th style="text-align:center;">Picture</th>
+                            <th style="text-align:center;">Display order</th>
+                            <th style="text-align:center;">Alt</th>
+                            <th style="text-align:center;">Title</th>
+                            <th style="text-align:center;">Delete</th>
+
                         </tr>
                     </thead>
                     <tbody id="Imagedata">
@@ -255,25 +259,24 @@
                             @foreach (var item in Model.UploadFileModel)
                             {
                                 <tr>
-                                    <td><img src="@item.sFile" /></td>
+                                    <td><img src="@item.sFile" style="height: 100px; width: 150px;" /></td>
                                     <td>@item.Displayorder</td>
                                     <td>@item.AltImage</td>
                                     <td>@item.Title</td>
+                                    <td><button type="button" class="btn" onclick="DeleteImage(@item.ImageID);">Delete</button></td>
                                 </tr>
                             }
                         }
                     </tbody>
                 </table>
-                @* <form id="myForm" enctype="multipart/form-data" method="post">*@
-                @*                <form asp-controller="DemoProduct" asp-action="UploadFile" data-ajax="true" data-ajax-method="Post"  data-ajax-update="#ajaxresult" enctype="multipart/form-data" id="myForm">
-                *@                    <div id="ajaxresult">
+                <div id="ajaxresult">
                     <div>
                         <h4>Add a new picture</h4>
                         <div class="col-md-3">Picture</div>
                         <div class="col-md-12">
                             <div id="pictureimage">
-                                <img src="https://cafe.shopfast.net/images/thumbs/default-image_100.png" id="imgsrc">
-                                <input name="uploadimage" type="file" class="btn btn-success" accept="image/*" id="imageInput" onchange="document.getElementById('imgsrc').src = window.URL.createObjectURL(this.files[0])">
+                                <img src="https://cafe.shopfast.net/images/thumbs/default-image_100.png" id="imgsrc" style="height: 100px; width: 150px;">
+                                <input name="uploadimage" type="file" class="btn btn-success" accept="image/*" id="imageInput" @* onchange="document.getElementById('imgsrc').src = window.URL.createObjectURL(this.files[0])"*@>
 
                             </div>
 
@@ -299,9 +302,9 @@
                             <button type="button" id="addProductPicture" class="btn btn-primary" onclick="AjaxFormSubmit()">Add product picture</button>
                         </div>
                     </div>
-                    @* @(await Html.PartialAsync("~/Plugins/Widgets.BasicPlugins/Views/_FileUpload.cshtml", Model.UploadFileModel))*@
+
                 </div>
-                @*</form>*@
+
             </div>
         </div>
     </div>
@@ -316,9 +319,39 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
 
     <script>
-        //  tinymce.init({
-        //      selector: '#FullDescription'
+        function readURL() {
+            var $input = $(this);
+            var $newinput = $(this).parent().parent().parent().find('#imgsrc');
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    reset($newinput.next('.delbtn'), true);
+                    $newinput.attr('src', e.target.result).show();
+                    $newinput.after('<button type="button" class="delbtn removebtn" onclick="reset()"><i class="icon-remove"></i></button>');
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        }
+        $("#imageInput").change(readURL);
+        //$(".delbtn").on('click', function (e) {
+        //    alert(1);
+        //    reset($(this));
         //});
+
+        function reset() {
+            var elm = $("#imageInput").val();
+            if (elm && elm.length > 0) {
+                var $input = elm;
+                $('#imgsrc').attr('src', 'https://cafe.shopfast.net/images/thumbs/default-image_100.png');
+
+                $($input).parent().parent().parent().find('input#imageInput ').val("");
+               // $(".removebtn").addClass("resetbtns");
+                //input.fileUpload and input#uploadre both need to empty values for particular div
+
+
+            }
+        }
+
         tinymce.init({
             selector: '#FullDescription',
             plugins: [
@@ -363,6 +396,10 @@
                 pagingType: 'full_numbers',
                 searching: false,
                 sorting: false,
+                columnDefs: [{
+                    targets: [0, 4], // column index (start from 0)
+                    orderable: false, // set orderable false for selected columns
+                }]
             });
         });
         $(function () {
@@ -383,33 +420,32 @@
                 $("#stockID").hide();
         }
         function onlyNumberKey(evt) {
-
-            // Only ASCII character in that range allowed
             var ASCIICode = (evt.which) ? evt.which : evt.keyCode
             if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
                 return false;
             return true;
         }
         function AjaxFormSubmit() {
-            //var url = $('#myForm').attr('action');
+
             var file = $('#imageInput')[0].files[0];
             var altimage = $("#altimage").val();
             var title = $("#Title").val();
             var displayorder = $("#displayorder").val();
             var productID = $("#ProductID").val();
 
-
+            var files = $('#imageInput').val();
+            console.log(files);
             var formData = new FormData()
             formData.append("File", $('#imageInput')[0].files[0]);
             formData.append("AltImage", altimage);
             formData.append("Title", title);
             formData.append("Displayorder", displayorder);
             formData.append("ProductID", productID);
-            if (file.length > 0) {
-                alert("Please upload file.");
+            if (files != "") {
+                SubmitForm(formData);
             }
             else {
-                SubmitForm(formData);
+                alert("Please upload file.");
             }
         }
 
@@ -423,33 +459,41 @@
                 contentType: false,
                 success: function (response) {
                     if (response.status == "success") {
-                        var table = $('#Imagegrid').DataTable();
-                        table.clear().draw();
+                        //var table = $('#Imagegrid').DataTable();
+                        //table.clear().draw();
+                        if ($.fn.DataTable.isDataTable('#Imagegrid')) {
+                            $('#Imagegrid').DataTable().destroy();
+                        }
+
+                        $('#Imagegrid tbody').empty();
+
                         //table.fnClearTable();
                         var tr;
                         //Append each row to html table
                         for (var i = 0; i < response.data.length; i++) {
                             console.log(response.data);
                             tr = $('<tr/>');
-                            tr.append("<td><img src=" + response.data[i].sFile + "></img></td>");
+                            tr.append("<td><img src='" + response.data[i].sFile + "' style='height: 100px; width: 150px;'></img></td>");
                             tr.append("<td>" + response.data[i].Displayorder + "</td>");
                             tr.append("<td>" + response.data[i].AltImage + "</td>");
                             tr.append("<td>" + response.data[i].Title + "</td>");
-
+                            tr.append("<td><button type='button' class='btn' onclick='DeleteImage(" + response.data[i].ImageID + ");'>Delete</button></td>");
                             $('#Imagegrid').append(tr);
 
                         }
-
                         $("#imgsrc").attr('src', 'https://cafe.shopfast.net/images/thumbs/default-image_100.png');
                         $('#imageInput').val('');
                         $("#altimage").val("");
                         $("#Title").val("");
                         $("#displayorder").val("");
-                        //$('#Imagegrid').DataTable({
-                        //    pagingType: 'full_numbers',
-                        //    searching: false,
-                        //    sorting: false,
-                        //});
+                        $('#Imagegrid').DataTable({
+                            pagingType: 'full_numbers',
+                            searching: false,
+                            sorting: false, columnDefs: [{
+                                targets: [0, 4], // column index (start from 0)
+                                orderable: false, // set orderable false for selected columns
+                            }]
+                        });
 
                     }
                 },
@@ -458,331 +502,60 @@
                 }
             });
         }
-                                                                                            //$(document).ready(function () {
-                                                                                            //    $.validator.unobtrusive.parse($("#myForm"));
-                                                                                            //});
+        function DeleteImage(id) {
+            console.log(id);
+            var productID = $("#ProductID").val();
+            $.ajax({
+                type: 'Get',
+                url: "/Admin/DemoProduct/DeleteImage?id=" + id + "&ProductID=" + productID + "",
+                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status == "success") {
+                        //var table = $('#Imagegrid').DataTable();
+                        //table.clear().draw();
+                        if ($.fn.DataTable.isDataTable('#Imagegrid')) {
+                            $('#Imagegrid').DataTable().destroy();
+                        }
 
-                                                                                            //document.getElementById("addProductPicture").addEventListener("click", function (event) {
-                                                                                            //    event.preventDefault();
-                                                                                            //    sendData();
-                                                                                            //});
-                                                                                            //function sendData() {
-                                                                                            //    var files = $('#file').prop("files");
-                                                                                            //        if (files.length > 0) {
-                                                                                            //        var formData = new FormData();
-                                                                                            //        formData.append('file', files[0]);
-                                                                                            //        formData.append('altimage', $("#altimage").val());
-                                                                                            //        formData.append('title', $("#Title").val());
-                                                                                            //        formData.append('displayorder', $("#displayorder").val());
-                                                                                            //        formData.append('productID', $("#ProductID").val());
-                                                                                            //    //var formData = new FormData();
-                                                                                            //    //formData.append("name", document.getElementsByName("name")[0].value);
-                                                                                            //    //formData.append("file", document.getElementsByName("file")[0].files[0]);
+                        $('#Imagegrid tbody').empty();
 
-                                                                                            //    var client = new HttpClient();
-                                                                                            //    var response =  client.PostAsync("/Admin/DemoProduct/UploadImage", formData);
-                                                                                            //    if (response.IsSuccessStatusCode) {
-                                                                                            //        // Handle successful response
-                                                                                            //    } else {
-                                                                                            //        // Handle error response
-                                                                                            //    }
-                                                                                            //}
-                                                                                            //$('#addProductPicture').on('click', function () {
-                                                                                            //    debugger;
+                        //table.fnClearTable();
+                        var tr;
+                        //Append each row to html table
+                        for (var i = 0; i < response.data.length; i++) {
+                            console.log(response.data);
+                            tr = $('<tr/>');
+                            tr.append("<td><img src='" + response.data[i].sFile + "' style='height: 100px; width: 150px;'></img></td>");
+                            tr.append("<td>" + response.data[i].Displayorder + "</td>");
+                            tr.append("<td>" + response.data[i].AltImage + "</td>");
+                            tr.append("<td>" + response.data[i].Title + "</td>");
+                            tr.append("<td><button type='button' class='btn' onclick='DeleteImage(" + response.data[i].ImageID + ");'>Delete</button></td>");
 
-                                                                                            //    var files = $('#imageInput').prop("files");
-                                                                                            //    if (files.length > 0) {
-                                                                                            //        var data = new FormData();
-                                                                                            //        data.append('file', files[0]);
-                                                                                            //        data.append('altimage', $("#altimage").val());
-                                                                                            //        data.append('title', $("#Title").val());
-                                                                                            //        data.append('displayorder', $("#displayorder").val());
-                                                                                            //        data.append('productID', $("#ProductID").val());
-                                                                                            //        console.log(data);
+                            $('#Imagegrid').append(tr);
 
-                                                                                            //        $.ajax({
-                                                                                            //            cache: false,
-                                                                                            //            type: 'get',
-                                                                                            //            url: '/Admin/DemoProduct/UploadImages',
-                                                                                            //            dataType: 'json',
-                                                                                            //            data: data,
-                                                                                            //            contentType: false,
-                                                                                            //            processData: false,
-                                                                                            //            //data: data,
+                        }
+                        $("#imgsrc").attr('src', 'https://cafe.shopfast.net/images/thumbs/default-image_100.png');
+                        $('#imageInput').val('');
+                        $("#altimage").val("");
+                        $("#Title").val("");
+                        $("#displayorder").val("");
+                        $('#Imagegrid').DataTable({
+                            pagingType: 'full_numbers',
+                            searching: false,
+                            sorting: false, columnDefs: [{
+                                targets: [0, 4], // column index (start from 0)
+                                orderable: false, // set orderable false for selected columns
+                            }]
+                        });
 
-                                                                                            //            success: function (data) {
-                                                                                            //                alert(data);
-                                                                                            //            },
-                                                                                            //            error: function () {
-                                                                                            //            }
-                                                                                            //        });
-                                                                                            //    }
-                                                                                            //    else {
-                                                                                            //        alert("Please choose file.");
-                                                                                            //    }
-                                                                                            //});
+                    }
+                },
+                error: function (err) {
+                    alert("Error occurs" + err.responseText);
+                }
+            });
+        }
     </script>
-    <script type="text/javascript">
-        //$(function () {
-        //    $('#uploadForm').submit(function (e) {
-        //        e.preventDefault();
-        //        var formData = new FormData($(this)[0]);
-        //        $.ajax({
-        //            url: '/ControllerName/UploadImage',
-        //            type: 'POST',
-        //            data: formData,
-        //            cache: false,
-        //            contentType: false,
-        //            processData: false,
-        //            success: function (result) {
-        //                alert(result.message);
-        //            },
-        //            error: function () {
-        //                alert('Error occurred while uploading the image');
-        //            }
-        //        });
-        //    });
-        //});
-        //$("#myForm").submit(function (event) {
-        //    event.preventDefault();
-
-        //    // Get the PNG image file from the input element
-        //    var fileInput = document.getElementById('imageInput');
-        //    var file = fileInput.files[0];
-
-        //    // Create a new FormData object and add the PNG image file to it
-        //    var formData = new FormData();
-        //    formData.append("imageFile", file);
-
-        //    // Send the AJAX request to the server
-        //    $.ajax({
-        //        url: "/Admin/DemoProduct/Callurl",
-        //        type: "POST",
-        //        data: formData,
-        //        processData: false,
-        //        contentType: false,
-        //        success: function (result) {
-        //            console.log("Image uploaded successfully.");
-        //        },
-        //        error: function (xhr, status, error) {
-        //            console.error("Error uploading image: " + error);
-        //        }
-        //    });
-        //});
-
-        //var imageInput = document.getElementById("imageInput");
-        //var uploadButton = document.getElementById("addProductPicture");
-
-        //// Attach a click event listener to the button
-        //uploadButton.addEventListener("click", function () {
-        //    // Create a FormData object to store the image file
-        //    var formData = new FormData();
-        //    formData.append("imageFile", imageInput.files[0]);
-
-        //    // Send an AJAX request to the server
-        //    var xhr = new XMLHttpRequest();
-        //    xhr.open("POST", "/Admin/DemoProduct/Callurl", true);
-        //    xhr.onload = function () {
-        //        if (xhr.status === 200) {
-        //            alert("Image uploaded successfully!");
-        //        } else {
-        //            alert("Failed to upload image.");
-        //        }
-        //    };
-        //    xhr.send(formData);
-        //});
-
-        //function AjaxFormSubmit() {
-        //    debugger;
-        //    //var formData = new FormData("#myForm");
-        //    //var formData = $("#myForm").serialize();
-        //    //console.log(formData);
-        //    var frmdta = new FormData();
-        //    frmdta.append('file', $('#imageInput')[0].files[0]);
-        //    frmdta.append('altimage', $("#altimage").val());
-        //    frmdta.append('title', $("#Title").val());
-        //    frmdta.append('displayorder', $("#displayorder").val());
-        //    frmdta.append('productID', $("#ProductID").val());
-        //    console.log(frmdta);
-        //    // Send the AJAX request to the server
-        //    $.ajax({
-        //        type: "post",
-        //        url: "/Admin/DemoProduct/UploadImages",
-        //        contenttype: false,
-        //        processdata: false,
-        //        data: frmdta,
-        //        success: function (message) {
-        //            alert(message);
-        //        },
-        //        error: function () {
-        //            alert("there was error uploading files!");
-        //        }
-
-        //    });
-
-        //}
-                                                                                                    //var formData = new FormData();
-                                                                                                    ////var formData = new FormData();
-                                                                                                    //formData.append('file', files[0]);
-                                                                                                    ////formData.append('altimage', $("#altimage").val());
-                                                                                                    ////formData.append('title', $("#Title").val());
-                                                                                                    ////formData.append('displayorder', $("#displayorder").val());
-                                                                                                    ////formData.append('productID', $("#ProductID").val());
-                                                                                                    //$.ajax({
-                                                                                                    //    url: '/Admin/DemoProduct/Callurl',
-                                                                                                    //    type: 'POST',
-                                                                                                    //    data: formData,
-                                                                                                    //    cache: false,
-                                                                                                    //    contentType: false,
-                                                                                                    //    processData: false,
-                                                                                                    //    success: function (result) {
-                                                                                                    //        alert(result.message);
-                                                                                                    //    },
-                                                                                                    //    error: function () {
-                                                                                                    //        alert('Error occurred while uploading the image');
-                                                                                                    //    }
-                                                                                                    //});
-                                                                                                    //var v = "abc";
-                                                                                                    //var altimage = $("#altimage").val();
-                                                                                                    //var title = $("#Title").val();
-                                                                                                    //var displayorder = $("#displayorder").val();
-                                                                                                    //var productID = $("#ProductID").val();
-                                                                                                    //$.ajax({
-                                                                                                    //    type: 'post',
-                                                                                                    //    url: '/Admin/DemoProduct/Callurl',
-                                                                                                    //    data: { altimage: altimage, title: title, displayorder: displayorder, productID: productID, file: formData },
-                                                                                                    //    cache: false,
-                                                                                                    //    contentType: false,
-                                                                                                    //    processData: false,
-                                                                                                    //    dataType: "json",
-                                                                                                    //    success: function (data) {
-                                                                                                    //        alert(data);
-                                                                                                    //    },
-                                                                                                    //    error: function () {
-                                                                                                    //    }
-                                                                                                    //});
-
-    </script>
-
-    @* <script>
-    tinymce.init({
-    selector: '#FullDescription',
-    plugins: [
-    'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview',
-    'anchor', 'pagebreak',
-    'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code',
-    'fullscreen', 'insertdatetime',
-    'media', 'table', 'emoticons', 'template', 'help'
-    ]
-
-    });
-    // JavaScript to toggle the accordion
-    function toggleAccordion(event) {
-    var accordionHeader = event.target;
-    var accordionContent = accordionHeader.nextElementSibling;
-    accordionHeader.classList.toggle("active");
-    if (accordionContent.style.display === "block") {
-    accordionContent.style.display = "none";
-    } else {
-    accordionContent.style.display = "block";
-    }
-    }
-    $('.select2').select2({
-    closeOnSelect: false
-    });
-
-    $(function () {
-    $("#IsTextexempt").click(function () {
-    if ($(this).is(":checked")) {
-    $("#drptaxcategoryid").hide();
-    } else {
-    $("#drptaxcategoryid").show();
-    }
-    });
-    });
-    function InventoryChange() {
-    var InventoryMethod = $('#InventoryMethod').val();
-    console.log(InventoryMethod);
-    if (InventoryMethod == 1)
-    $("#stockID").show();
-    else
-    $("#stockID").hide();
-    }
-
-    $('#btnupload').on('click', function (e) {
-    e.preventDefault();
-    $('#file').trigger('click');
-    });
-    //$('#file').change(function () {
-    //    var filename = $('#file').val();
-    //    if (filename.substring(3, 11) == 'fakepath') {
-    //        filename = filename.substring(12);
-    //    } // For Remove fakepath
-    //    $("label[for='file_name'] b").html(filename);
-    //    $("label[for='file_default']").text('Selected File: ');
-    //    if (filename == "") {
-    //        $("label[for='file_default']").text('No File Choosen');
-    //    }
-    //});
-    $('#addProductPicture').on('click', function (e) {
-    debugger;
-    var files = e.target.files;
-    if (files.length > 0) {
-    var data = new FormData();
-    data.append("file", files[0]);
-    data.append('altimage', $("#altimage").val());
-    data.append('Title', $("#Title").val());
-    data.append('displayorder', $("#displayorder").val());
-    data.append('ProductID', $("#ProductID").val());
-    $.ajax({
-    type: "POST",
-    url: '@Url.Action("Addproductpicture","DemoProduct")',
-    contentType: false,
-    processData: false,
-    data: data,
-    success: function (data) {
-    alert(data);
-    },
-    error: function () {
-
-    }
-
-    });
-    }
-    else {
-    alert("Please choose file.");
-    }
-    });
-    //$("#addProductPicture").click(function () {
-    //    debugger;
-    //    var fileUpload = $("#file").get(0).files;
-
-    //    // Create  a FormData object
-    //    var fileData = new FormData();
-    //    fileData.append("ImageFile", fileUpload[0]);
-    //    fileData.append('altimage', $("#altimage").val());
-    //    fileData.append('Title', $("#Title").val());
-    //    fileData.append('displayorder', $("#displayorder").val());
-    //    fileData.append('ProductID', $("#ProductID").val());
-
-    //    if (files[0] == null) { $("#addProductPictureAlert").click(); return }
-    //    $("#addProductPicture").attr("disabled", !0);
-    //    $.ajax({
-    //        type: "POST",
-    //        url: "/DemoProduct/Addproductpicture",
-    //        data: fileData,
-    //        contentType: false,
-    //        processData: false,
-    //        success: function (n) {
-    //            n.Result && updateTable("#productpictures-grid")
-    //        },
-    //        error: function () {
-    //            $("#productPictureAddAlert").click()
-    //        },
-    //        complete: function () { $("#addProductPicture").attr("disabled", !1) }
-    //    })
-    //})
-    //  $(document).ready(function () { $("#addProductPictureAlert").attr("data-toggle", "modal").attr("data-target", "#addProductPictureAlert-action-alert") })
-    </script>*@
 </body>
 </html>

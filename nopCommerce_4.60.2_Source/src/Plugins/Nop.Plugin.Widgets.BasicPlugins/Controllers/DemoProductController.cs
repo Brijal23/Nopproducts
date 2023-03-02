@@ -32,6 +32,8 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
         [HttpGet]
         public ActionResult ProductList(string productName = "", string published = "All", string category = "0")
         {
+            if (string.IsNullOrWhiteSpace(productName))
+                productName = null;
             List<Product> Products = new();
             try
             {
@@ -61,7 +63,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         int Ipublished = Convert.ToInt32(published);
                         Query += " AND P.IsPublished =" + Ipublished + "";
                     }
-                    Query += " ORDER BY CreatedDate DESC";
+                    // Query += " ORDER BY CreatedDate DESC";
                     using (SqlCommand command = new SqlCommand(Query, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -73,7 +75,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                     ProductName = reader["ProductName"].ToString(),
                                     ProductID = Convert.ToInt32(reader["ProductID"].ToString()),
                                     SKU = reader["SKU"].ToString(),
-                                    SPrice = reader["Price"].ToString().Replace(".00", ""),
+                                    SPrice = "$ " + reader["Price"].ToString().Replace(".00", ""),
                                     IsPublished = Convert.ToBoolean(reader["IsPublished"].ToString()) == true ? true : false,
                                     StockQuantity = Convert.ToInt32(reader["StockQuantity"].ToString()),
                                     CreatedDate = Convert.ToDateTime(reader["CreatedDate"].ToString())
@@ -304,7 +306,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             }
                             connection.Close();
 
-                            string query1 = "select STUFF((SELECT  ', ' + CAST(t1.CategoryID AS varchar) from CategoryDetail t1 where t.ProductID = t1.ProductID FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)') ,1,2,'') as CategoryID from Products t where t.ProductID=" + id + "";
+                            string query1 = "select STUFF((SELECT  ', ' + CAST(t1.CategoryID AS varchar) from CategoryDetail t1 where t.ProductID = t1.ProductID FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)') ,1,2,'') as CategoryID from Product t where t.ProductID=" + id + "";
                             connection.Open();
                             using (SqlCommand command1 = new SqlCommand(query1, connection))
                             {
@@ -326,6 +328,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             using (SqlCommand commands = new SqlCommand(Iquery, connection))
                             {
                                 connection.Open();
+                                List<UploadFileModel> UploadFiles = new List<UploadFileModel>();
                                 using (SqlDataReader readers = commands.ExecuteReader())
                                 {
                                     while (readers.Read())
@@ -335,18 +338,20 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                         //var Title = readers["Title"].ToString();
                                         //var Displayorder = readers["DisplayOrder"].ToString();
                                         //var sFile = RetrieveImage((byte[])readers["ImageData"]);
-                                        List<UploadFileModel> UploadFiles = new List<UploadFileModel>();
+
                                         UploadFiles.Add(new UploadFileModel()
                                         {
+                                            ImageID = Convert.ToInt32(readers["ImageID"].ToString()),
                                             AltImage = readers["Alt"].ToString(),
                                             ProductID = readers["ProductID"].ToString(),
                                             Title = readers["Title"].ToString(),
                                             Displayorder = readers["DisplayOrder"].ToString(),
                                             sFile = RetrieveImage((byte[])readers["ImageData"])
-
-                                        });
-                                        product.UploadFileModel = UploadFiles;
+                                            
+                                        }); ;
+                                        
                                     }
+                                    product.UploadFileModel = UploadFiles;
                                 }
 
                             }
@@ -436,20 +441,19 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                             connection.Open();
                                             if (ProductID > 0)
                                             {
-                                                if (product.CategoryID != null)
+
+                                                string query4 = "Delete from CategoryDetail where ProductID='" + ProductID + "'";
+                                                SqlCommand command4 = new SqlCommand(query4, connection);
+                                                command4.ExecuteNonQuery();
+                                                connection.Close();
+                                                connection.Open();
+                                                foreach (int CategoryID in product.CategoryID)
                                                 {
-                                                    string query4 = "Delete from CategoryDetail where ProductID='" + ProductID + "'";
-                                                    SqlCommand command4 = new SqlCommand(query4, connection);
-                                                    command4.ExecuteNonQuery();
-                                                    connection.Close();
-                                                    connection.Open();
-                                                    foreach (int CategoryID in product.CategoryID)
-                                                    {
-                                                        string query3 = "INSERT INTO [dbo].[CategoryDetail](ProductID, CategoryID)VALUES(" + ProductID + "," + CategoryID + ")";
-                                                        SqlCommand command1 = new SqlCommand(query3, connection);
-                                                        command1.ExecuteNonQuery();
-                                                    }
+                                                    string query3 = "INSERT INTO [dbo].[CategoryDetail](ProductID, CategoryID)VALUES(" + ProductID + "," + CategoryID + ")";
+                                                    SqlCommand command1 = new SqlCommand(query3, connection);
+                                                    command1.ExecuteNonQuery();
                                                 }
+
                                                 connection.Close();
 
                                                 ViewBag.SuccessMessage = "Added Product Successful";
@@ -507,12 +511,49 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
 
             return RedirectToAction("ProductList", "DemoProduct");
         }
-        //[HttpPost]
-        //public IActionResult UploadImage(IFormFile file, string name)
-        //{
-        //    // Handle the form data
-        //    return Ok();
-        //}
+        [HttpGet]
+        public ActionResult DeleteImage(int id,int ProductID)
+        {
+            List<UploadFileModel> imageList = new();
+            using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
+            {
+                
+                string query = "DELETE FROM [dbo].[ImageDetail] WHERE ImageID='" + id + "'";
+                connection.Open();
+                SqlCommand cmd = new SqlCommand(query, connection);
+                if (cmd.ExecuteNonQuery() == 1)
+                {
+                    connection.Close();
+                    string Iquery = "select * from [dbo].[ImageDetail] where ProductID='" + ProductID + "'";
+                    using (SqlCommand command = new SqlCommand(Iquery, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                imageList.Add(new UploadFileModel()
+                                {
+                                    ImageID = Convert.ToInt32(reader["ImageID"].ToString()),
+                                    AltImage = reader["Alt"].ToString(),
+                                    ProductID = reader["ProductID"].ToString(),
+                                    Title = reader["Title"].ToString(),
+                                    Displayorder = reader["DisplayOrder"].ToString(),
+                                    sFile = RetrieveImage((byte[])reader["ImageData"]),
+
+                                });
+                                
+
+                            }
+                        }
+                        connection.Close();
+                    }
+                    return Json(new { data = imageList, status = "success" });
+
+                }
+            }
+            return Json(new { data = imageList, status = "error" });
+        }
 
         [HttpPost]
         public ActionResult UploadImage(UploadFileModel model)
@@ -556,6 +597,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                     {
                                         imageList.Add(new UploadFileModel()
                                         {
+                                            ImageID = Convert.ToInt32(reader["ImageID"].ToString()),
                                             AltImage = reader["Alt"].ToString(),
                                             ProductID = reader["ProductID"].ToString(),
                                             Title = reader["Title"].ToString(),

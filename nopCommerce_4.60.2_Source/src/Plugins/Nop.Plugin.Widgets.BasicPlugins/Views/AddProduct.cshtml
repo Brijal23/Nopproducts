@@ -91,7 +91,7 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.ProductName, new { @class = "col-md-3 required" })
                             <div class="col-md-12">
-                                @Html.TextBoxFor(m => m.ProductName, new { @id = "ProductName", @class = "form-control" ,@maxlength="30"})
+                                @Html.TextBoxFor(m => m.ProductName, new { @id = "ProductName", @class = "form-control"})
                                 @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "text-danger" })
 
                             </div>
@@ -130,6 +130,7 @@
                             @Html.LabelFor(m => m.CategoryID, new { @class = "col-md-3" })
                             <div class="col-md-12">
                                 @Html.ListBoxFor(model => model.CategoryID, Model.Categories, new {@class="form-control select2 select2-hidden-accessible" , @style="width: 100%;"})
+                                @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -150,7 +151,7 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.Price, new { @class = "col-md-3" })
                             <div class="col-md-12">
-                                @Html.TextBoxFor(m => m.Price, new { @id = "Price", @class = "form-control" ,@type="number",@min="0",@maxlength="10",@onkeydown="javascript: return event.keyCode == 69 ? false : true"})
+                                @Html.TextBoxFor(m => m.Price, new { @id = "Price", @class = "form-control" ,@type="number",@onkeydown="javascript: return event.keyCode == 69 ? false : true"})
                                 @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger" })
                                 <small style="color:red;"></small>
                             </div>
@@ -206,7 +207,7 @@
                         <div class="form-group" id="stockID" style="display: none;">
                             @Html.LabelFor(m => m.StockQuantity, new { @class = "col-md-3" })
                             <div class="col-md-12">
-                                @Html.TextBoxFor(m => m.StockQuantity, new { @id = "StockQuantity", @class = "form-control" ,@type="number",@min="0",@maxlength="10",@onkeypress="return onlyNumberKey(event)"})
+                                @Html.TextBoxFor(m => m.StockQuantity, new { @id = "StockQuantity", @class = "form-control" ,@type="number",@min="0",@onkeypress="return onlyNumberKey(event)"})
                                 @Html.ValidationMessageFor(m => m.StockQuantity, "", new { @class = "text-danger" })
                                 <small style="color:red;"></small>
                             </div>

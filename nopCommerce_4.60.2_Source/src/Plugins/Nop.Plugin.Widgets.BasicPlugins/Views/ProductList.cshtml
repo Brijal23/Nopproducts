@@ -123,6 +123,9 @@
                         <tr>
                             <th hidden></th>
                             <th>
+                                Picture
+                            </th>
+                            <th>
                                 Product name
                             </th>
                             <th>
@@ -148,6 +151,17 @@
                         {
                             <tr>
                                 <td hidden>@item.CreatedDate</td>
+                                <td>
+                                    @if (item.SFile == null)
+                                    {
+                                        <img src="https://cafe.shopfast.net/images/thumbs/default-image_100.png" style="height: 100px; width: 150px;">
+                                    }
+                                    else
+                                    {
+                                        <img src="@item.SFile" style="height: 100px; width: 150px;" />
+                                    }
+
+                                </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.ProductName)
                                 </td>

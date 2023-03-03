@@ -42,7 +42,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                 using (SqlConnection connection = new SqlConnection(constr))
                 {
                     connection.Open();
-                    string Query = "SELECT * FROM [dbo].[Product] AS P ";
+                    string Query = "SELECT * FROM [dbo].[Product] AS P LEFT JOIN [dbo].[ImageDetail] as I on I.ProductID = P.ProductID ";
                     if (category != "0")
                     {
 
@@ -54,7 +54,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         int Icategory = Convert.ToInt32(category);
                         Query += " AND C.CategoryID =" + Icategory + "";
                     }
-                    if (productName != "")
+                    if (productName != "" && productName != null)
                     {
                         Query += " AND P.ProductName LIKE '%" + productName + "%'";
                     }
@@ -72,6 +72,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             {
                                 Products.Add(new Product
                                 {
+                                    SFile = reader["ImageData"].ToString() != "" ? RetrieveImage((byte[])reader["ImageData"]) : null,
                                     ProductName = reader["ProductName"].ToString(),
                                     ProductID = Convert.ToInt32(reader["ProductID"].ToString()),
                                     SKU = reader["SKU"].ToString(),
@@ -90,8 +91,6 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             catch (Exception ex)
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
-
-
                 return View("~/Plugins/Widgets.BasicPlugins/Views/ProductList.cshtml", Products);
 
             }
@@ -154,7 +153,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     new SelectListItem { Value = "1", Text = "Track inventory" },
                     new SelectListItem { Value = "2", Text = "Track inventory by product attributes" },
 
-                         };
+            };
             try
             {
                 if (!ModelState.IsValid)
@@ -171,7 +170,6 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     {
                         connection.Open();
                         string q = "select Count(*) as Count from [dbo].[Product] where ProductName='" + model.ProductName + "'";
-
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
                             using (SqlDataReader r = command.ExecuteReader())
@@ -276,19 +274,16 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     connection.Open();
 
                     string query = "select * from [dbo].[Product] where IsActive=1 and ProductID='" + id + "'";
-
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-
                                 product.ProductName = reader["ProductName"].ToString();
                                 product.ProductID = Convert.ToInt32(reader["ProductID"].ToString());
                                 product.SKU = reader["SKU"].ToString();
                                 product.Price = reader["Price"].ToString() == "" ? 0 : Convert.ToDecimal(reader["Price"].ToString());
-
                                 product.IsPublished = Convert.ToBoolean(reader["IsPublished"].ToString()) == true ? true : false;
                                 product.IsTextexempt = Convert.ToBoolean(reader["IsTextexempt"].ToString()) == true ? true : false;
                                 product.Taxcategory = reader["Taxcategory"].ToString();
@@ -333,12 +328,6 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                 {
                                     while (readers.Read())
                                     {
-                                        //var AltImage = readers["Alt"].ToString();
-                                        //var ProductID = readers["ProductID"].ToString();
-                                        //var Title = readers["Title"].ToString();
-                                        //var Displayorder = readers["DisplayOrder"].ToString();
-                                        //var sFile = RetrieveImage((byte[])readers["ImageData"]);
-
                                         UploadFiles.Add(new UploadFileModel()
                                         {
                                             ImageID = Convert.ToInt32(readers["ImageID"].ToString()),
@@ -347,13 +336,13 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                             Title = readers["Title"].ToString(),
                                             Displayorder = readers["DisplayOrder"].ToString(),
                                             sFile = RetrieveImage((byte[])readers["ImageData"])
-                                            
-                                        }); ;
+
+                                        });
                                         
+
                                     }
                                     product.UploadFileModel = UploadFiles;
                                 }
-
                             }
                             connection.Close();
                         }
@@ -512,12 +501,12 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             return RedirectToAction("ProductList", "DemoProduct");
         }
         [HttpGet]
-        public ActionResult DeleteImage(int id,int ProductID)
+        public ActionResult DeleteImage(int id, int ProductID)
         {
             List<UploadFileModel> imageList = new();
             using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
             {
-                
+
                 string query = "DELETE FROM [dbo].[ImageDetail] WHERE ImageID='" + id + "'";
                 connection.Open();
                 SqlCommand cmd = new SqlCommand(query, connection);
@@ -542,7 +531,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                     sFile = RetrieveImage((byte[])reader["ImageData"]),
 
                                 });
-                                
+
 
                             }
                         }
@@ -628,7 +617,6 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
         }
         public string RetrieveImage(byte[] ImageData)
         {
-
             string imageBase64Data =
         Convert.ToBase64String(ImageData);
             string imageDataURL =

@@ -1,7 +1,26 @@
 ﻿@model Nop.Plugin.Widgets.BasicPlugins.Models.Product
+@inject MediaSettings mediaSettings
+@using Nop.Core.Domain.Media
+@using Nop.Services.Media
+@inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
 @{
     Layout = null;
 }
+
+@{
+    //other variables
+    var random = Nop.Core.CommonHelper.GenerateRandomInteger();
+    var clientId = "picture" + random;
+    //var picture = await pictureService.GetPictureByIdAsync(Model);
+
+    const int pictureSize = 100;
+}
+
+@* register CSS and JS *@
+@*<link rel="stylesheet" href="~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css" />
+*@
+@*<script asp-exclude-from-bundle="true" src="~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js" asp-location="Footer"></script>
+*@
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,11 +29,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css" />
-    @*<link href="~/Plugins/Widgets.BasicPlugins/Content/bootstrap.min.css" rel="stylesheet" />*@
-    @*  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css" rel="stylesheet">*@
-    @*    <link href="~/Plugins/Widgets.BasicPlugins/Content/rte_theme_default.css" rel="stylesheet" />
-    *@
+   
+    <link href="~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css" rel="stylesheet" />
+
     <style>
         /* Styling for the accordion */
         .accordion {
@@ -274,12 +291,36 @@
                         <h4>Add a new picture</h4>
                         <div class="col-md-3">Picture</div>
                         <div class="col-md-12">
-                            <div id="pictureimage">
-                                <img src="https://cafe.shopfast.net/images/thumbs/default-image_100.png" id="imgsrc" style="height: 100px; width: 150px;">
-                                <input name="uploadimage" type="file" class="btn btn-success" accept="image/*" id="imageInput" @* onchange="document.getElementById('imgsrc').src = window.URL.createObjectURL(this.files[0])"*@>
+                            @* <div id="pictureimage">
+                            <img src="https://cafe.shopfast.net/images/thumbs/default-image_100.png" id="imgsrc" style="height: 100px; width: 150px;">
+                            <input name="uploadimage" type="file" class="btn btn-success" accept="image/*" id="imageInput"  onchange="document.getElementById('imgsrc').src = window.URL.createObjectURL(this.files[0])">
 
+                            </div>*@
+                            <div class="upload-picture-block">
+                                <div class="picture-container">
+                                    <div id="@(clientId + "image")" class="uploaded-image">
+@*                                        <img src="@(await pictureService.GetPictureUrlAsync(Model, pictureSize, true))" width="@(pictureSize)" />
+*@                                    </div>
+                                </div>
+                                <div class="upload-button-container">
+                                    @*fine uploader container*@
+                                    <div id="@clientId" class="upload-image-button float-left px-md-1">
+                                        <noscript>
+                                            <p>Please enable JavaScript to use file uploader.</p>
+                                        </noscript>
+                                    </div>
+                                    <div class="remove-image-button float-left px-md-1">
+                                        @*@if (picture != null)
+                                        {*@
+                                            <span id="@(clientId + "remove")" class="btn btn-danger">@T("Admin.Picture.RemovePicture")</span>
+                                       @* }
+                                        else
+                                        {
+                                            <span id="@(clientId + "remove")" class="btn btn-danger" style="display: none;">@T("Admin.Picture.RemovePicture")</span>
+                                        }*@
+                                    </div>
+                                </div>
                             </div>
-
                         </div>
                         <div class="col-md-3">Alt</div>
                         <div class="col-md-12">
@@ -310,47 +351,114 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
+    <script src="~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5-stable/tinymce.min.js" referrerpolicy="origin"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
-
+    <script type="text/template" id="@(clientId)-qq-template">
+        <div class="qq-uploader-selector qq-uploader">
+            <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                <span>@T("Common.FileUploader.DropFiles")</span>
+            </div>
+            <div class="qq-upload-button-selector btn bg-gradient-green">
+                <div>@T("Common.FileUploader.Upload")</div>
+            </div>
+            <span class="qq-drop-processing-selector qq-drop-processing">
+                <span>@T("Common.FileUploader.Processing")</span>
+                <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+            </span>
+            <ul class="qq-upload-list-selector qq-upload-list">
+                <li>
+                    <div class="qq-progress-bar-container-selector">
+                        <div class="qq-progress-bar-selector qq-progress-bar"></div>
+                    </div>
+                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                    <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
+                    <span class="qq-upload-file-selector qq-upload-file"></span>
+                    <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                    <span class="qq-upload-size-selector qq-upload-size"></span>
+                    <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
+                    <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
+                    <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
+                    <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                </li>
+            </ul>
+        </div>
+    </script>
     <script>
-        function readURL() {
-            var $input = $(this);
-            var $newinput = $(this).parent().parent().parent().find('#imgsrc');
-            if (this.files && this.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    reset($newinput.next('.delbtn'), true);
-                    $newinput.attr('src', e.target.result).show();
-                    $newinput.after('<button type="button" class="delbtn removebtn" onclick="reset()"><i class="icon-remove"></i></button>');
-                }
-                reader.readAsDataURL(this.files[0]);
+        $(document).ready(function () {
+
+            var allowedExtensions = ["bmp", "gif", "jpeg", "jpg", "jpe", "jfif", "pjpeg", "pjp", "png", "tiff", "tif", "webp"];
+
+        @{
+            if (mediaSettings.AllowSVGUploads)
+            {
+                <text>
+                        allowedExtensions.push("svg");
+                </text>
             }
         }
-        $("#imageInput").change(readURL);
-        //$(".delbtn").on('click', function (e) {
-        //    alert(1);
-        //    reset($(this));
-        //});
 
-        function reset() {
-            var elm = $("#imageInput").val();
-            if (elm && elm.length > 0) {
-                var $input = elm;
-                $('#imgsrc').attr('src', 'https://cafe.shopfast.net/images/thumbs/default-image_100.png');
+                $("#@(clientId)").fineUploader({
+                    request: {
+                        endpoint: '@(Url.Content("~/Admin/Picture/AsyncUpload"))'
+                    },
+                    template: "@(clientId)-qq-template",
+                    multiple: false,
+                    validation: {
+                        allowedExtensions: allowedExtensions
+                    }
+                }).on("complete", function (event, id, name, responseJSON, xhr) {
+                    if (responseJSON.success) {
+                        $("#@(clientId + "image")").html("<img src='" + responseJSON.imageUrl + "' width='@(pictureSize)'/> ");
+                        $("#@(clientId + "value") input").val(responseJSON.pictureId);
+                        $("#@(clientId + "remove")").show();
+                    }
+                });
+            $("#@(clientId + "remove")").click(function (e) {
+                $("#@(clientId + "image")").html("<img src='' />");
+                $("#@(clientId + "value") input").val(0);
+                $("#@(clientId) .qq-upload-list-selector").empty();
+                $(this).hide();
+            });
+        });
+    </script>
+    <script>
+        //function readURL() {
+        //    var $input = $(this);
+        //    var $newinput = $(this).parent().parent().parent().find('#imgsrc');
+        //    if (this.files && this.files[0]) {
+        //        var reader = new FileReader();
+        //        reader.onload = function (e) {
+        //            reset($newinput.next('.delbtn'), true);
+        //            $newinput.attr('src', e.target.result).show();
+        //            $newinput.after('<button type="button" class="delbtn removebtn" onclick="reset()"><i class="icon-remove"></i></button>');
+        //        }
+        //        reader.readAsDataURL(this.files[0]);
+        //    }
+        //}
+        //$("#imageInput").change(readURL);
+        ////$(".delbtn").on('click', function (e) {
+        ////    alert(1);
+        ////    reset($(this));
+        ////});
 
-                $($input).parent().parent().parent().find('input#imageInput ').val("");
-               // $(".removebtn").addClass("resetbtns");
-                //input.fileUpload and input#uploadre both need to empty values for particular div
+        //function reset() {
+        //    var elm = $("#imageInput").val();
+        //    if (elm && elm.length > 0) {
+        //        var $input = elm;
+        //        $('#imgsrc').attr('src', 'https://cafe.shopfast.net/images/thumbs/default-image_100.png');
+
+        //        $($input).parent().parent().parent().find('input#imageInput ').val("");
+        //       // $(".removebtn").addClass("resetbtns");
+        //        //input.fileUpload and input#uploadre both need to empty values for particular div
 
 
-            }
-        }
+        //    }
+        //}
 
         tinymce.init({
             selector: '#FullDescription',
@@ -395,7 +503,7 @@
             $('#Imagegrid').DataTable({
                 pagingType: 'full_numbers',
                 searching: false,
-                sorting: false,
+                sorting: true,
                 columnDefs: [{
                     targets: [0, 4], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
@@ -448,7 +556,6 @@
                 alert("Please upload file.");
             }
         }
-
         function SubmitForm(FormData) {
             $.ajax({
                 type: 'POST',
@@ -464,7 +571,6 @@
                         if ($.fn.DataTable.isDataTable('#Imagegrid')) {
                             $('#Imagegrid').DataTable().destroy();
                         }
-
                         $('#Imagegrid tbody').empty();
 
                         //table.fnClearTable();
@@ -489,12 +595,11 @@
                         $('#Imagegrid').DataTable({
                             pagingType: 'full_numbers',
                             searching: false,
-                            sorting: false, columnDefs: [{
+                            sorting: true, columnDefs: [{
                                 targets: [0, 4], // column index (start from 0)
                                 orderable: false, // set orderable false for selected columns
                             }]
                         });
-
                     }
                 },
                 error: function (err) {
@@ -517,7 +622,6 @@
                         if ($.fn.DataTable.isDataTable('#Imagegrid')) {
                             $('#Imagegrid').DataTable().destroy();
                         }
-
                         $('#Imagegrid tbody').empty();
 
                         //table.fnClearTable();
@@ -543,7 +647,7 @@
                         $('#Imagegrid').DataTable({
                             pagingType: 'full_numbers',
                             searching: false,
-                            sorting: false, columnDefs: [{
+                            sorting: true, columnDefs: [{
                                 targets: [0, 4], // column index (start from 0)
                                 orderable: false, // set orderable false for selected columns
                             }]

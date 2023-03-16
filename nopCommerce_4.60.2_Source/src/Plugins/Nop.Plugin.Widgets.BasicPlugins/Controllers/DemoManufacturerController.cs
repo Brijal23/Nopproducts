@@ -17,14 +17,14 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
     [AutoValidateAntiforgeryToken]
-    public class DemoCategoryController : BasePluginController
+    public class DemoManufacturerController : BasePluginController
     {
 
         [HttpGet]
-        public ActionResult CategoryList(string CategoryName = "", string published = "All")
+        public ActionResult ManufacturerList(string ManufacturerName = "", string published = "All")
         {
 
-            List<Category> categories = new();
+            List<Manufacturer> Manufacturers = new();
             try
             {
                 string constr = @"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True";
@@ -33,10 +33,10 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                 {
                     connection.Open();
                     string Query = "";
-                    Query = "SELECT * FROM Categories AS C WHERE IsActive=1";
-                    if (CategoryName != "" && CategoryName != null)
+                    Query = "SELECT * FROM Manufacturers AS C WHERE IsActive=1";
+                    if (ManufacturerName != "" && ManufacturerName != null)
                     {
-                        Query += " AND C.CategoryName LIKE '%" + CategoryName + "%'";
+                        Query += " AND C.ManufacturerName LIKE '%" + ManufacturerName + "%'";
                     }
                     if (published != "All")
                     {
@@ -49,10 +49,10 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         {
                             while (reader.Read())
                             {
-                                categories.Add(new Category
+                                Manufacturers.Add(new Manufacturer
                                 {
-                                    CategoryName = reader["CategoryName"].ToString(),
-                                    CategoryID = Convert.ToInt32(reader["CategoryID"].ToString()),
+                                    ManufacturerName = reader["ManufacturerName"].ToString(),
+                                    ManufacturerID = Convert.ToInt32(reader["ManufacturerID"].ToString()),
                                     Displayorder = Convert.ToInt32(reader["Displayorder"].ToString()),
                                     IsPublished = Convert.ToBoolean(reader["IsPublished"].ToString()) == true ? true : false,
                                 });
@@ -65,53 +65,41 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             catch (Exception ex)
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
-                return View("~/Plugins/Widgets.BasicPlugins/Views/Category/CategoryList.cshtml", categories);
+                return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/ManufacturerList.cshtml", Manufacturers);
             }
-            ViewBag.Categorynamesearch = CategoryName;
+            ViewBag.Manufacturernamesearch = ManufacturerName;
             ViewBag.publishedsearch = published;
-            return View("~/Plugins/Widgets.BasicPlugins/Views/Category/CategoryList.cshtml", categories);
+            return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/ManufacturerList.cshtml", Manufacturers);
         }
         [HttpGet]
-        public ActionResult AddCategory(int id = 0)
+        public ActionResult AddManufacturer(int id = 0)
         {
-            Category category = new();
-            GetAllMethods(category);
-            return View("~/Plugins/Widgets.BasicPlugins/Views/Category/AddCategory.cshtml", category);
+            Manufacturer Manufacturer = new();
+            return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/AddManufacturer.cshtml", Manufacturer);
         }
 
-        private void GetAllMethods(Category category)
-        {
-            category.ParentCategories = new[]
-        {new SelectListItem { Value = "0", Text = "[None]" },
-        new SelectListItem { Value = "1", Text = "Lunch & Dinner" },
-        new SelectListItem { Value = "2", Text = "Breakfast & Brunch" },
-        new SelectListItem { Value = "3", Text = "Baked Goods & Desserts" },
-        new SelectListItem { Value = "4", Text = "Drinks" },
-             };
-        }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult AddCategory(Category model, string Command)
+        public ActionResult AddManufacturer(Manufacturer model, string Command)
         {
-            Category category = new();
-            GetAllMethods(category);
+            Manufacturer Manufacturer = new();
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return View("~/Plugins/Widgets.BasicPlugins/Views/Category/AddCategory.cshtml", category);
+                    return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/AddManufacturer.cshtml", Manufacturer);
                 }
                 else
                 {
                     ViewBag.SuccessMessage = "";
-                    int CategoryID = 0;
+                    int ManufacturerID = 0;
                     int Count = 0;
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[Categories] where CategoryName='" + model.CategoryName + "'";
+                        string q = "select Count(*) as Count from [dbo].[Manufacturers] where ManufacturerName='" + model.ManufacturerName + "'";
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
                             using (SqlDataReader r = command.ExecuteReader())
@@ -128,13 +116,13 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             if (model.Description != null)
                                 model.Description = HttpUtility.UrlEncode(model.Description);
 
-                            string query = "INSERT INTO [Categories] (CategoryName, Description, IsPublished,ParentcategoryId,Displayorder,IsActive,CreatedDate,UpdatedDate) VALUES  ('" + model.CategoryName.Trim() + "','" + model.Description + "','" + model.IsPublished + "','" + model.ParentcategoryId + "','" + model.Displayorder + "','" + 1 + "','" + DateTime.Now + "','" + DateTime.Now + "')";
+                            string query = "INSERT INTO [Manufacturers] (ManufacturerName, Description, IsPublished,Displayorder,IsActive,CreatedDate,UpdatedDate) VALUES  ('" + model.ManufacturerName.Trim() + "','" + model.Description + "','" + model.IsPublished + "','" + model.Displayorder + "','" + 1 + "','" + DateTime.Now + "','" + DateTime.Now + "')";
                             connection.Open();
                             SqlCommand cmd = new SqlCommand(query, connection);
                             if (cmd.ExecuteNonQuery() == 1)
                             {
                                 connection.Close();
-                                string query1 = "select CategoryID from [dbo].[Categories] where CategoryName='" + model.CategoryName + "'";
+                                string query1 = "select ManufacturerID from [dbo].[Manufacturers] where ManufacturerName='" + model.ManufacturerName + "'";
                                 connection.Open();
                                 using (SqlCommand command = new SqlCommand(query1, connection))
                                 {
@@ -142,25 +130,25 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                     {
                                         while (reader.Read())
                                         {
-                                            CategoryID = Convert.ToInt32(reader["CategoryID"].ToString());
+                                            ManufacturerID = Convert.ToInt32(reader["ManufacturerID"].ToString());
                                         }
                                     }
                                 }
                                 connection.Close();
-                                ViewBag.SuccessMessage = "Category Add Successfully";
+                                ViewBag.SuccessMessage = "Manufacturer Add Successfully";
                                 if (Command == "save")
-                                    return RedirectToAction("CategoryList", "DemoCategory");
+                                    return RedirectToAction("ManufacturerList", "DemoManufacturer");
                                 else
                                 {
-                                    return RedirectToAction("EditCategory", new { id = CategoryID });
+                                    return RedirectToAction("EditManufacturer", new { id = ManufacturerID });
                                 }
 
                             }
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "Category Name Alredy Exist.";
-                            return View("~/Plugins/Widgets.BasicPlugins/Views/Category/AddCategory.cshtml", category);
+                            ViewBag.SuccessMessage = "Manufacturer Name Alredy Exist.";
+                            return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/AddManufacturer.cshtml", Manufacturer);
                         }
                     }
                 }
@@ -168,15 +156,14 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             catch (Exception ex)
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
-                return View("~/Plugins/Widgets.BasicPlugins/Views/Category/AddCategory.cshtml", category);
+                return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/AddManufacturer.cshtml", Manufacturer);
             }
-            return View("~/Plugins/Widgets.BasicPlugins/Views/Category/AddCategory.cshtml", category);
+            return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/AddManufacturer.cshtml", Manufacturer);
         }
         [HttpGet]
-        public ActionResult EditCategory(int id)
+        public ActionResult EditManufacturer(int id)
         {
-            Category category = new();
-            GetAllMethods(category);
+            Manufacturer Manufacturer = new();
             try
             {
                 string constr = @"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True";
@@ -184,22 +171,21 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                 {
                     connection.Open();
 
-                    string query = "select * from [dbo].[Categories] where IsActive=1 and CategoryID='" + id + "'";
+                    string query = "select * from [dbo].[Manufacturers] where IsActive=1 and ManufacturerID='" + id + "'";
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                category.CategoryName = reader["CategoryName"].ToString();
-                                category.CategoryID = Convert.ToInt32(reader["CategoryID"].ToString());
-                                category.ParentcategoryId = reader["ParentcategoryId"].ToString();
-                                category.IsPublished = Convert.ToBoolean(reader["IsPublished"].ToString()) == true ? true : false;
-                                category.Displayorder = Convert.ToInt32(reader["Displayorder"].ToString());
+                                Manufacturer.ManufacturerName = reader["ManufacturerName"].ToString();
+                                Manufacturer.ManufacturerID = Convert.ToInt32(reader["ManufacturerID"].ToString());
+                                Manufacturer.IsPublished = Convert.ToBoolean(reader["IsPublished"].ToString()) == true ? true : false;
+                                Manufacturer.Displayorder = Convert.ToInt32(reader["Displayorder"].ToString());
                                 if (reader["Description"].ToString() != "")
-                                    category.Description = HttpUtility.UrlDecode(reader["Description"].ToString());
+                                    Manufacturer.Description = HttpUtility.UrlDecode(reader["Description"].ToString());
                                 else
-                                    category.Description = "";
+                                    Manufacturer.Description = "";
 
                             }
                             connection.Close();
@@ -210,12 +196,12 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             catch (Exception ex)
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
-                return View("~/Plugins/Widgets.BasicPlugins/Views/Category/EditCategory.cshtml", category);
+                return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/EditManufacturer.cshtml", Manufacturer);
             }
-            return View("~/Plugins/Widgets.BasicPlugins/Views/Category/EditCategory.cshtml", category);
+            return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/EditManufacturer.cshtml", Manufacturer);
         }
         [HttpPost]
-        public ActionResult EditCategory(Category category,string Command)
+        public ActionResult EditManufacturer(Manufacturer Manufacturer,string Command)
         {
             // GetAllMethods(product);
             try
@@ -223,16 +209,16 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                 if (!ModelState.IsValid)
                 {
                     ViewBag.SuccessMessage = "Enter required fields.";
-                    return View("~/Plugins/Widgets.BasicPlugins/Views/Category/EditCategory.cshtml", category);
+                    return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/EditManufacturer.cshtml", Manufacturer);
                 }
                 else
                 {
-                    int CategoryID = 0;
+                    int ManufacturerID = 0;
                     int Count = 0;
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[Categories] where CategoryName='" + category.CategoryName + "'and CategoryID!='" + category.CategoryID + "'";
+                        string q = "select Count(*) as Count from [dbo].[Manufacturers] where ManufacturerName='" + Manufacturer.ManufacturerName + "'and ManufacturerID!='" + Manufacturer.ManufacturerID + "'";
 
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
@@ -246,26 +232,26 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         if (Count == 0)
                         {
-                            if (category.Description != null)
-                                category.Description = HttpUtility.UrlEncode(category.Description);
+                            if (Manufacturer.Description != null)
+                                Manufacturer.Description = HttpUtility.UrlEncode(Manufacturer.Description);
 
-                            string query = "Update Categories set CategoryName='" + category.CategoryName + "',Description='" + category.Description + "',IsPublished='" + category.IsPublished + "',ParentcategoryId='" + category.ParentcategoryId + "',Displayorder='" + category.Displayorder + "',IsActive=1,UpdatedDate=GETDATE() where CategoryID='" + category.CategoryID + "'";
+                            string query = "Update Manufacturers set ManufacturerName='" + Manufacturer.ManufacturerName + "',Description='" + Manufacturer.Description + "',IsPublished='" + Manufacturer.IsPublished + "',Displayorder='" + Manufacturer.Displayorder + "',IsActive=1,UpdatedDate=GETDATE() where ManufacturerID='" + Manufacturer.ManufacturerID + "'";
                             SqlCommand cmd = new SqlCommand(query, connection);
                             if (cmd.ExecuteNonQuery() == 1)
                             {
-                                ViewBag.SuccessMessage = "Updated Category Successful";
+                                ViewBag.SuccessMessage = "Updated Manufacturer Successful";
                                 if (Command == "save")
-                                    return RedirectToAction("CategoryList", "DemoCategory");
+                                    return RedirectToAction("ManufacturerList", "DemoManufacturer");
                                 else
                                 {
-                                    return RedirectToAction("EditCategory", new { id = category.CategoryID });
+                                    return RedirectToAction("EditManufacturer", new { id = Manufacturer.ManufacturerID });
                                 }
                             }
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "Category Name Alredy Exist.";
-                            return View("~/Plugins/Widgets.BasicPlugins/Views/Category/EditCategory.cshtml", category);
+                            ViewBag.SuccessMessage = "Manufacturer Name Alredy Exist.";
+                            return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/EditManufacturer.cshtml", Manufacturer);
                         }
                     }
                 }
@@ -273,12 +259,12 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             catch (Exception ex)
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
-                return View("~/Plugins/Widgets.BasicPlugins/Views/Category/EditCategory.cshtml", category);
+                return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/EditManufacturer.cshtml", Manufacturer);
             }
-            return View("~/Plugins/Widgets.BasicPlugins/Views/Category/EditCategory.cshtml", category);
+            return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/EditManufacturer.cshtml", Manufacturer);
         }
         [HttpGet]
-        public ActionResult DeleteCategory(string data)
+        public ActionResult DeleteManufacturer(string data)
         {
             try
             {
@@ -287,7 +273,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     connection.Open();
                     foreach (var id in data.Split(","))
                     {
-                        string query = "Update Categories set IsActive=0 where CategoryID='" + id + "'";
+                        string query = "Update Manufacturers set IsActive=0 where ManufacturerID='" + id + "'";
                         SqlCommand cmd = new SqlCommand(query, connection);
                         cmd.ExecuteNonQuery();
                     }
@@ -308,12 +294,12 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                 using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                 {
                     connection.Open();
-                    string query = "Update Categories set IsActive=0 where CategoryID='" + id + "'";
+                    string query = "Update Manufacturers set IsActive=0 where ManufacturerID='" + id + "'";
                     SqlCommand cmd = new SqlCommand(query, connection);
                     if (cmd.ExecuteNonQuery() == 1)
                     {
-                        ViewBag.SuccessMessage = "Category Deleted Successfully.";
-                        return RedirectToAction("CategoryList", "DemoCategory");
+                        ViewBag.SuccessMessage = "Manufacturer Deleted Successfully.";
+                        return RedirectToAction("ManufacturerList", "DemoManufacturer");
                     }
                     connection.Close();
                 }
@@ -321,10 +307,10 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             catch (Exception ex)
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
-                return RedirectToAction("CategoryList", "DemoCategory");
+                return RedirectToAction("ManufacturerList", "DemoManufacturer");
             }
 
-            return RedirectToAction("CategoryList", "DemoCategory");
+            return RedirectToAction("ManufacturerList", "DemoManufacturer");
         }
     }
 }

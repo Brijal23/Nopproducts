@@ -1,8 +1,8 @@
-﻿@model Nop.Plugin.Widgets.BasicPlugins.Models.Category
+﻿@model Nop.Plugin.Widgets.BasicPlugins.Models.Manufacturer
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit Category</title>
+    <title>Create Manufacturer</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
@@ -73,19 +73,17 @@
 <body>
     <div class="container" style="padding: 10px; max-width:1600px;">
 
-        @using (Html.BeginForm("EditCategory", "DemoCategory", FormMethod.Post, new { @class = "form-horizontal" }))
+        @using (Html.BeginForm("AddManufacturer", "DemoManufacturer", FormMethod.Post, new { @class = "form-horizontal" }))
         {
 
             <div class="row">
                 <div class="col-md-6">
-                    <h2>Edit Category - @Model.CategoryName </h2>
+                    <h2>Add Manufacturer </h2>
                 </div>
                 @* <div class="col-md-5">
             </div>*@
                 <div class="col-md-6">
-                    <a href='@Url.Action("CategoryList", "DemoCategory")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Category List</a>
-                    @Html.ActionLink("Delete", "Delete", new { id=Model.CategoryID},new{@Onclick="return ConfirmDelete();",@class="btn btn-primary text-center",style="float:right; margin-left: 15px;"})
-
+                    <a href='@Url.Action("ManufacturerList", "DemoManufacturer")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Manufacturer List</a>
                     <button type="submit" class="btn btn-primary text-center" style="float:right; margin-left: 15px;" value="saveedit" name="Command">Save and Continue Edit</button>
                     <button type="submit" class="btn btn-primary text-center" style="float:right;" value="save" name="Command">Save</button>
                 </div>
@@ -105,18 +103,16 @@
                 </div>
             </div>
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Category Info</div>
+                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Manufacturer Info</div>
                 <div class="accordion-content">
-                    @Html.HiddenFor(m => m.CategoryID, new {})
-                    @Html.HiddenFor(m => m.IsActive, new {})
-                    @Html.HiddenFor(m => m.CreatedDate, new {})
+
                     <div class="row mb-2">
                         <div class="col-md-2">
-                            @Html.LabelFor(m => m.CategoryName, new { @class = "required" })
+                            @Html.LabelFor(m => m.ManufacturerName, new { @class = "required" })
                         </div>
                         <div class="col-md-10">
-                            @Html.TextBoxFor(m => m.CategoryName, new { @id = "CategoryName", @class = "form-control",@autocomplete="off",@onkeydown="return Checkvalidate();"})
-                            @Html.ValidationMessageFor(m => m.CategoryName, "", new { @class = "text-danger pnameerror" })
+                            @Html.TextBoxFor(m => m.ManufacturerName, new { @id = "ManufacturerName", @class = "form-control",@autocomplete="off",@onkeydown="return Checkvalidate();"})
+                            @Html.ValidationMessageFor(m => m.ManufacturerName, "", new { @class = "text-danger pnameerror" })
                         </div>
                     </div>
 
@@ -127,14 +123,7 @@
                             @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
                         </div>
                     </div>
-
-                    <div class="row mb-2">
-                        @Html.LabelFor(m => m.ParentcategoryId, new { @class = "col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownListFor(model => model.ParentcategoryId, Model.ParentCategories, new {@class="form-control" ,@style="width: 100%;"})
-                            @Html.ValidationMessageFor(m => m.ParentcategoryId, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
+                   
                     <div class="row mb-2">
                         <div class="col-md-2">
                             @Html.LabelFor(m => m.IsPublished)
@@ -147,7 +136,7 @@
                     </div>
                 </div>
             </div>
-            <div class="accordion">
+             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Display</div>
                 <div class="accordion-content">
                     <div class="row mb-2">
@@ -165,7 +154,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5-stable/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
@@ -180,16 +169,13 @@
 
         function Checkvalidate() {
             var flag = true;
-            var pname = $("#CategoryName").val();
+            var pname = $("#ManufacturerName").val();
             if (pname.trim().length == 0) {
                 $(".pnameerror").text("Only white space not allowed.");
-                $("#CategoryName").val("");
+                $("#ManufacturerName").val("");
                 flag = true;
             }
             return flag;
-        }
-        function ConfirmDelete() {
-            return confirm("Are you sure you want to delete this Category?");
         }
         tinymce.init({
             selector: '#Description',
@@ -203,7 +189,10 @@
             height: 400
         });
 
-        $(document).ready(function () { $("#Displayorder").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+        $(document).ready(function () { $("#Displayorder").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# ", validationMessage: "Please enter value less than 99999999." }) });
+        //var numericBox = $("#Displayorder").data("kendoNumericTextBox");
+        //numericBox.max(99999999);
+        //numericBox.validationMessage = "Please enter value less than 99999999.";
         // JavaScript to toggle the accordion
         function toggleAccordion(event) {
             var accordionHeader = event.target;

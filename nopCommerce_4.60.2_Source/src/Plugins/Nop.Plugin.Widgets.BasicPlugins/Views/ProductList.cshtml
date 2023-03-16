@@ -53,9 +53,8 @@
                 <h2>Products</h2>
             </div>
             <div class="col-md-6">
-                <a href='@Url.Action("AddProduct", "DemoProduct")' class="btn btn-primary" style="float: right; margin-left: 15px;">Add Product</a>
-                <button type="button" class="btn btn-danger" style="float:right;" id="btnDelete">Delete(selected)</button>
-
+                <button type="button" class="btn btn-danger" style="float:right;margin-left: 15px;" id="btnDelete">Delete(selected)</button>
+                <a href='@Url.Action("AddProduct", "DemoProduct")' class="btn btn-primary" style="float: right;">Add Product</a>
             </div>
         </div>
 
@@ -285,22 +284,11 @@
                             //});
                         }
                     });
-                    //var options = {};
-                    //options.url = '/Admin/DemoProduct/DeleteProduct';
-                    //options.type = "POST";
-                    //options.data = JSON.stringify(customerIds);
-                    //options.headers = "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val();
-                    //options.contentType = "application/json";
-                    //options.dataType = "json";
-                    //options.success = function (msg) {
-                    //    alert(msg);
-                    //};
-                    //options.error = function () {
-                    //    alert("Error while deleting the records!");
-                    //};
-                    //console.log(options.data);
-                    //$.ajax(options);
+                    
                 }
+            }
+            else {
+                alert("Please select row.");
             }
         });
         function toggleAccordion(event) {

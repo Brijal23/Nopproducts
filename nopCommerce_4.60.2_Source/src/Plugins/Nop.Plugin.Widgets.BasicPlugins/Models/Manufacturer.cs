@@ -10,18 +10,16 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace Nop.Plugin.Widgets.BasicPlugins.Models
 {
-    public class Category
+    public class Manufacturer
     {
-        public int CategoryID { get; set; }
+        public int ManufacturerID { get; set; }
         [DisplayName("Name")]
         [RegularExpression(@"^[a-zA-Z0-9\s]*$", ErrorMessage = "Please enter valid name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Enter name.")]
-        public string CategoryName { get; set; }
+        public string ManufacturerName { get; set; }
         [DisplayName("Description")]
         public string? Description { get; set; }
-        [DisplayName("Parent Category")]
-        public string? ParentcategoryId { get; set; }
-        public IEnumerable<SelectListItem>? ParentCategories { get; set; }
+      
         [DisplayName("Published")]
         public bool IsPublished { get; set; }
         [DisplayName("Display order")]

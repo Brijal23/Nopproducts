@@ -77,12 +77,12 @@
         {
 
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <h2>Add Category </h2>
                 </div>
                 @* <div class="col-md-5">
             </div>*@
-                <div class="col-md-9">
+                <div class="col-md-6">
                     <a href='@Url.Action("CategoryList", "DemoCategory")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Category List</a>
                     <button type="submit" class="btn btn-primary text-center" style="float:right; margin-left: 15px;" value="saveedit" name="Command">Save and Continue Edit</button>
                     <button type="submit" class="btn btn-primary text-center" style="float:right;" value="save" name="Command">Save</button>
@@ -174,16 +174,16 @@
 
     <script>
 
-        //function Checkvalidate() {
-        //    var flag = true;
-        //    var pname = $("#CategoryName").val();
-        //    if (pname.trim().length == 0) {
-        //        $(".pnameerror").text("Only white space not allowed.");
-        //        $("#CategoryName").val("");
-        //        flag = true;
-        //    }
-        //    return flag;
-        //}
+        function Checkvalidate() {
+            var flag = true;
+            var pname = $("#CategoryName").val();
+            if (pname.trim().length == 0) {
+                $(".pnameerror").text("Only white space not allowed.");
+                $("#CategoryName").val("");
+                flag = true;
+            }
+            return flag;
+        }
         tinymce.init({
             selector: '#Description',
             plugins: [
@@ -196,7 +196,10 @@
             height: 400
         });
 
-        $(document).ready(function () { $("#Displayorder").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+        $(document).ready(function () { $("#Displayorder").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# ", validationMessage: "Please enter value less than 99999999." }) });
+        //var numericBox = $("#Displayorder").data("kendoNumericTextBox");
+        //numericBox.max(99999999);
+        //numericBox.validationMessage = "Please enter value less than 99999999.";
         // JavaScript to toggle the accordion
         function toggleAccordion(event) {
             var accordionHeader = event.target;

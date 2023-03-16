@@ -1263,10 +1263,18 @@
     <None Remove="plugin.json" />
     <None Remove="Views\AddProduct - Copy.cshtml" />
     <None Remove="Views\AddProduct.cshtml" />
+    <None Remove="Views\ProductAttribute\AddProductAttribute.cshtml" />
+    <None Remove="Views\ProductAttribute\EditProductAttribute.cshtml" />
+    <None Remove="Views\ProductAttribute\ProductAttributeList.cshtml" />
+    <None Remove="Views\ProductTag\AddProductTag.cshtml" />
+    <None Remove="Views\ProductTag\EditProductTag.cshtml" />
+    <None Remove="Views\Manufacturer\AddManufacturer.cshtml" />
     <None Remove="Views\Category\AddCategory.cshtml" />
     <None Remove="Views\Category\CategoryList.cshtml" />
     <None Remove="Views\Category\EditCategory.cshtml" />
     <None Remove="Views\EditProduct.cshtml" />
+    <None Remove="Views\Manufacturer\EditManufacturer.cshtml" />
+    <None Remove="Views\Manufacturer\ManufacturerList.cshtml" />
     <None Remove="Views\ProductList.cshtml" />
     <None Remove="Content\bootstrap.min.css" />
     <!--<None Remove="Content\richtexteditor_content.css" />
@@ -1274,6 +1282,7 @@
     <None Remove="Content\rte_theme_default.css" />
     <None Remove="Content\rte.js" />
     <None Remove="Content\all_plugins.js" />
+    <None Remove="Views\ProductTag\ProductTagList.cshtml" />
     <None Remove="Views\_FileUpload.cshtml" />
   </ItemGroup>
 
@@ -6312,6 +6321,33 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\AddProduct - Copy.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\ProductAttribute\AddProductAttribute.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\ProductAttribute\EditProductAttribute.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\ProductAttribute\ProductAttributeList.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\ProductTag\AddProductTag.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\ProductTag\EditProductTag.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\ProductTag\ProductTagList.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Manufacturer\AddManufacturer.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Manufacturer\ManufacturerList.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Manufacturer\EditManufacturer.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Category\AddCategory.cshtml">

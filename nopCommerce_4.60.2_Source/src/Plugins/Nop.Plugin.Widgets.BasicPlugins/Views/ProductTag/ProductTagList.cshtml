@@ -1,9 +1,9 @@
-﻿@model IEnumerable<Nop.Plugin.Widgets.BasicPlugins.Models.Category>
+﻿@model IEnumerable<Nop.Plugin.Widgets.BasicPlugins.Models.ProductTag>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title> Categories</title>
+    <title> ProductTags</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -49,11 +49,11 @@
     <div class="container" style="padding: 10px; max-width:1600px;">
         <div class="row">
             <div class="col-md-6">
-                <h2>Categories</h2>
+                <h2>Product tags</h2>
             </div>
             <div class="col-md-6">
                 <button type="button" class="btn btn-danger" style="float:right; margin-left: 15px;" id="btnDelete">Delete(selected)</button>
-                <a href='@Url.Action("AddCategory", "DemoCategory")' class="btn btn-primary" style="float: right;">Add Category</a>
+                <a href='@Url.Action("AddProductTag", "DemoProductTag")' class="btn btn-primary" style="float: right;">Add Tag</a>
             </div>
         </div>
 
@@ -61,23 +61,15 @@
             <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-search">&nbsp;&nbsp;&nbsp;</i>Search</div>
             <div class="accordion-content">
 
-                @using (Html.BeginForm("CategoryList", "DemoCategory", FormMethod.Get, new { @onsubmit = "return checkvalidation()" }))
+                @using (Html.BeginForm("ProductTagList", "DemoProductTag", FormMethod.Get, new { @onsubmit = "return checkvalidation()" }))
                 {
                     <div>
                         <div class="row">
-                            <div class="col-sm-3" style="margin-left: 93px"><label>Category name</label></div>
+                            <div class="col-sm-3" style="margin-left: 93px"><label>Tag name</label></div>
                             <div class="col-sm-3" style="margin-left: -160px;margin-right: 150px;">
-                                <input type="text" name="CategoryName" id="CategoryName" class="form-control" value="@ViewBag.Categorynamesearch" />
+                                <input type="text" name="ProductTagName" id="ProductTagName" class="form-control" value="@ViewBag.ProductTagnamesearch" />
                             </div>
-                            <div class="col-sm-3"><label>Published</label></div>
-                            <div class="col-sm-3" style="margin-left: -160px;">
-                                <input type="hidden" id="hiddenpublished" value="@ViewBag.publishedsearch" />
-                                <select class="form-control" id="SearchPublishedId" name="published">
-                                    <option value="All">All</option>
-                                    <option value="1">Published only</option>
-                                    <option value="0">Unpublished only</option>
-                                </select>
-                            </div>
+                            
                         </div>
                         <br><br>
                         <div style="text-align:center;">
@@ -85,11 +77,8 @@
                         </div>
                     </div>
                 }
-
-
             </div>
         </div>
-
         <div class="form-group">
             <div style="text-align:center;">
                 @if (ViewBag.SuccessMessage != null)
@@ -106,15 +95,11 @@
                         <tr>
                             <th hidden></th>
                             <th><input type="checkbox" id="chkAll" /></th>
-
                             <th>
-                                @Html.DisplayNameFor(model => model.CategoryName)
+                                @Html.DisplayNameFor(model => model.ProductTagName)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.IsPublished)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Displayorder)
+                                Tagged products
                             </th>
                             <th>
                                 Edit
@@ -126,29 +111,16 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td hidden>@item.CategoryID</td>
-                                <td><input type="checkbox" name="itemIds" class="checkboxGroups" value="@item.CategoryID" /></td>
+                                <td hidden>@item.ProductTagID</td>
+                                <td><input type="checkbox" name="itemIds" class="checkboxGroups" value="@item.ProductTagID" /></td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.CategoryName)
+                                    @Html.DisplayFor(modelItem => item.ProductTagName)
                                 </td>
                                 <td>
-                                    @if (item.IsPublished == true)
-                                    {
-                                        <p>Yes</p>
-                                        @*<i class="fa fa-check true-icon"></i>*@
-                                    }
-                                    else
-                                    {
-                                        <p>No</p>
-                                    }
-
+                                    0
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Displayorder)
-                                </td>
-
-                                <td>
-                                    @Html.ActionLink("Edit", "EditCategory", new { id=item.CategoryID},new{/*@class="btn btn-Se"*/})
+                                    @Html.ActionLink("Edit", "EditProductTag", new { id=item.ProductTagID},new{/*@class="btn btn-Se"*/})
                                 </td>
                             </tr>
                         }
@@ -169,22 +141,12 @@
                 aoColumnDefs: [
                     {
                         bSortable: false,
-                        aTargets: [1,5]
+                        aTargets: [1,4]
                     }
                 ]
             });
         });
-        //$(document).ready(function () {
-        //    $("#example input[id='chkAll']:checkbox").click(function () {
-        //        if ($(this).is(":checked")) {
-        //            //Check/uncheck all checkboxes in list according to main checkbox
-        //            $("#example input[class='checkboxGroups']:checkbox").attr('checked', true);
-        //        }
-        //        else {
-        //            $("#example input[class='checkboxGroups']:checkbox").attr('checked', false);
-        //        }
-        //    });
-        //});
+        
         $(document).ready(function () {
             $('#chkAll').click(function () {
                 var isChecked = $(this).prop("checked");
@@ -225,12 +187,12 @@
 
                     $.ajax({
                         type: "Get",
-                        url: "/Admin/DemoCategory/DeleteCategory?data=" + customerIds + "",
+                        url: "/Admin/DemoProductTag/DeleteProductTag?data=" + customerIds + "",
                         headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
                         dataType: "json",
                         success: function (response) {
                             if (response.status == "success") {
-                                window.location.href = "/Admin/DemoCategory/CategoryList";
+                                window.location.href = "/Admin/DemoProductTag/ProductTagList";
                             }
                             
                         }
@@ -253,22 +215,16 @@
             }
         }
 
-        $(document).ready(function () {
-
-            var s = $("#hiddenpublished").val();
-            $('select[name^="published"] option[value="' + s + '"]').attr("selected", "selected");
-        });
-
         function checkvalidation() {
-            var CategoryName = $("#CategoryName").val();
-            console.log(CategoryName);
-            if (CategoryName.trim().length == 0) {
-                CategoryName = CategoryName.replace(" ", "");
-                $("#CategoryName").val(CategoryName);
+            var ProductTagName = $("#ProductTagName").val();
+            console.log(ProductTagName);
+            if (ProductTagName.trim().length == 0) {
+                ProductTagName = ProductTagName.replace(" ", "");
+                $("#ProductTagName").val(ProductTagName);
             }
         }
         function ConfirmDelete() {
-            return confirm("Are you sure you want to delete this Category?");
+            return confirm("Are you sure you want to delete this ProductTag?");
         }
     </script>
 </body>

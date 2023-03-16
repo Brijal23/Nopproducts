@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Formats.Tar;
+using System.Globalization;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Vml;
 using MaxMind.GeoIP2.Model;
@@ -19,6 +21,8 @@ using Nop.Plugin.Widgets.BasicPlugins.Models;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
+using static ClosedXML.Excel.XLPredefinedFormat;
+using DateTime = System.DateTime;
 using Path = System.IO.Path;
 
 namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
@@ -42,29 +46,30 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                 using (SqlConnection connection = new SqlConnection(constr))
                 {
                     connection.Open();
-                    string Query = "SELECT * FROM [dbo].[Product] AS P LEFT JOIN [dbo].[ImageDetail] as I on I.ProductID = P.ProductID ";
+                    string Query = "";
+                    string Query1 = "";
+                    string Query2 = "";
+                    string Query3 = "";
                     if (category != "0")
                     {
-
-                        Query += " INNER JOIN [dbo].[CategoryDetail] as C on C.ProductID = P.ProductID";
+                       Query = " INNER JOIN [dbo].[CategoryDetail] as C on C.ProductID = P.ProductID";
                     }
-                    Query += " WHERE P.IsActive = 1";
                     if (category != "0")
                     {
                         int Icategory = Convert.ToInt32(category);
-                        Query += " AND C.CategoryID =" + Icategory + "";
+                        Query1 = " AND C.CategoryID =" + Icategory + "";
                     }
                     if (productName != "" && productName != null)
                     {
-                        Query += " AND P.ProductName LIKE '%" + productName + "%'";
+                        Query2 = " AND P.ProductName LIKE '%" + productName + "%'";
                     }
                     if (published != "All")
                     {
                         int Ipublished = Convert.ToInt32(published);
-                        Query += " AND P.IsPublished =" + Ipublished + "";
+                        Query3 = " AND P.IsPublished =" + Ipublished + "";
                     }
-                    // Query += " ORDER BY CreatedDate DESC";
-                    using (SqlCommand command = new SqlCommand(Query, connection))
+                    string Q = "SELECT P.ProductID,P.ProductName,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID" + Query + " WHERE P.IsActive=1 "+ Query1 + Query2 + Query3 + " and I.ImageID IN (SELECT MAX(ImageID) FROM ImageDetail GROUP BY ProductID) Union SELECT * FROM (SELECT P.ProductID,P.ProductName,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID " + Query + " WHERE P.IsActive=1 "+ Query1 + Query2 + Query3 + ") as X WHERE X.ImageData is null";
+                    using (SqlCommand command = new SqlCommand(Q, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -76,33 +81,37 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                     ProductName = reader["ProductName"].ToString(),
                                     ProductID = Convert.ToInt32(reader["ProductID"].ToString()),
                                     SKU = reader["SKU"].ToString(),
-                                    SPrice = "$ " + reader["Price"].ToString().Replace(".00", ""),
+                                    SPrice = reader["Price"].ToString().Replace(".00", "") + " USD",
                                     IsPublished = Convert.ToBoolean(reader["IsPublished"].ToString()) == true ? true : false,
                                     StockQuantity = Convert.ToInt32(reader["StockQuantity"].ToString()),
-                                    CreatedDate = Convert.ToDateTime(reader["CreatedDate"].ToString())
+                                    CreatedDate = Convert.ToDateTime(reader["CreatedDate"])
                                 });
 
                             }
                         }
                     }
                 }
-
+                ViewBag.productnamesearch = productName;
+                ViewBag.publishedsearch = published;
+                ViewBag.categorysearch = category;
+                return View("~/Plugins/Widgets.BasicPlugins/Views/ProductList.cshtml", Products);
             }
             catch (Exception ex)
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
                 return View("~/Plugins/Widgets.BasicPlugins/Views/ProductList.cshtml", Products);
-
-            }
-            ViewBag.productnamesearch = productName;
-            ViewBag.publishedsearch = published;
-            ViewBag.categorysearch = category;
-            return View("~/Plugins/Widgets.BasicPlugins/Views/ProductList.cshtml", Products);
+            }            
         }
         [HttpGet]
         public ActionResult AddProduct(int id = 0)
         {
             Product product = new();
+            GetAllMethods(product);
+            return View("~/Plugins/Widgets.BasicPlugins/Views/AddProduct.cshtml", product);
+        }
+
+        private void GetAllMethods(Product product)
+        {
             product.Categories = new[]
           {
         new SelectListItem { Value = "1", Text = "Lunch & Dinner" },
@@ -124,41 +133,100 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
         new SelectListItem { Value = "2", Text = "Track inventory by product attributes" },
 
              };
-            return View("~/Plugins/Widgets.BasicPlugins/Views/AddProduct.cshtml", product);
+            product.ProductTypes = new[]
+            {
+        new SelectListItem { Value = "1", Text = "Simple" },
+        new SelectListItem { Value = "2", Text = "Grouped(product with variants)" }
+
+             };
+            product.ProductTemplates = new[]
+           {
+        new SelectListItem { Value = "1", Text = "Simple product" },
+        new SelectListItem { Value = "2", Text = "Product Weight" }
+
+             };
+            product.Unitofproducts = new[]
+           {
+        new SelectListItem { Value = "1", Text = "ounce(s)" },
+        new SelectListItem { Value = "2", Text = "lb(s)" },
+        new SelectListItem { Value = "3", Text = "kg(s)" },
+        new SelectListItem { Value = "4", Text = "gram(s)" }
+
+             };
+            product.Referenceunits = new[]
+           {
+        new SelectListItem { Value = "1", Text = "ounce(s)" },
+        new SelectListItem { Value = "2", Text = "lb(s)" },
+        new SelectListItem { Value = "3", Text = "kg(s)" },
+        new SelectListItem { Value = "4", Text = "gram(s)" }
+
+             };
+            product.Discounts = new[]
+          {
+        new SelectListItem { Value = "1", Text = "Simple" },
+        new SelectListItem { Value = "2", Text = "Sample discount with coupon code" }
+
+             };
+            product.Deliverydates = new[]
+          {
+        new SelectListItem { Value = "0", Text = "None" },
+        new SelectListItem { Value = "1", Text = "1-2 days" },
+        new SelectListItem { Value = "2", Text = "3-5 days" },
+        new SelectListItem { Value = "3", Text = "1 week" }
+
+             };
+            product.Warehouses = new[]
+         {
+        new SelectListItem { Value = "0", Text = "None" }
+
+             };
+            product.Lowstockactivities = new[]
+          {
+        new SelectListItem { Value = "0", Text = "Nothing" },
+        new SelectListItem { Value = "1", Text = "Disable buy button" },
+        new SelectListItem { Value = "2", Text = "Unpublish" }
+
+             };
+            product.BackordersList = new[]
+         {
+        new SelectListItem { Value = "0", Text = "No backorders" },
+        new SelectListItem { Value = "1", Text = "Allow qty below 0" },
+        new SelectListItem { Value = "2", Text = "Allow qty below 0 and notify user" }
+
+             };
+            product.GiftcardtypeList = new[]
+        {
+        new SelectListItem { Value = "1", Text = "Virtual" },
+        new SelectListItem { Value = "2", Text = "Physical" }
+
+             };
+            product.RentalperiodList = new[]
+           {
+                    new SelectListItem { Value = "0", Text = "Days" },
+                    new SelectListItem { Value = "1", Text = "Weeks" },
+                    new SelectListItem { Value = "2", Text = "Months" },
+                    new SelectListItem { Value = "3", Text = "Years" },
+            };
+            product.CycleperiodList = new[]
+          {
+                    new SelectListItem { Value = "0", Text = "Days" },
+                    new SelectListItem { Value = "1", Text = "Weeks" },
+                    new SelectListItem { Value = "2", Text = "Months" },
+                    new SelectListItem { Value = "3", Text = "Years" },
+            };
         }
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult AddProduct(Product model)
+        public ActionResult AddProduct(Product model, string Command)
         {
             Product product = new();
-            product.Categories = new[]
-            {
-                    new SelectListItem { Value = "1", Text = "Lunch & Dinner" },
-                    new SelectListItem { Value = "2", Text = "Breakfast & Brunch" },
-                    new SelectListItem { Value = "3", Text = "Baked Goods & Desserts" },
-                    new SelectListItem { Value = "4", Text = "Drinks" },
-                         };
-            // model.Categories = new MultiSelectList(categories, "Value", "Text");
-            product.TaxCategories = new[]
-            {
-                    new SelectListItem { Value = "0", Text = "[None]" },
-                    new SelectListItem { Value = "1", Text = "Food" },
-                    new SelectListItem { Value = "2", Text = "Bevarage" },
-
-                         };
-            product.InventoryMethods = new[]
-            {
-                    new SelectListItem { Value = "0", Text = "Don't track inventory" },
-                    new SelectListItem { Value = "1", Text = "Track inventory" },
-                    new SelectListItem { Value = "2", Text = "Track inventory by product attributes" },
-
-            };
+            GetAllMethods(product);
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    //ViewBag.SuccessMessage = "Enter required fields.";
                     return View("~/Plugins/Widgets.BasicPlugins/Views/AddProduct.cshtml", product);
                 }
                 else
@@ -187,7 +255,8 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                 model.FullDescription = HttpUtility.UrlEncode(model.FullDescription);
                             if (product.ShortDescription != null)
                                 product.ShortDescription = HttpUtility.UrlEncode(product.ShortDescription);
-                            string query = "INSERT INTO [Product] (ProductName, ShortDescription, FullDescription,SKU,IsPublished,Price,IsTextexempt,Taxcategory,IsShippingEnabled,InventoryMethod,StockQuantity,IsActive,CreatedDate,UpdatedDate) VALUES  ('" + model.ProductName + "','" + model.ShortDescription + "','" + model.FullDescription + "','" + model.SKU + "','" + model.IsPublished + "','" + model.Price + "','" + model.IsTextexempt + "','" + model.Taxcategory + "','" + model.IsShippingEnable + "','" + model.InventoryMethod + "','" + model.StockQuantity + "','" + 1 + "','" + DateTime.Now + "','" + DateTime.Now + "')";
+
+                            string query = "INSERT INTO [Product] (ProductName, ShortDescription, FullDescription,SKU,IsPublished,Price,IsTextexempt,Taxcategory,IsShippingEnabled,InventoryMethod,StockQuantity,IsActive,CreatedDate,UpdatedDate) VALUES  ('" + model.ProductName.Trim() + "','" + model.ShortDescription + "','" + model.FullDescription + "','" + model.SKU + "','" + model.IsPublished + "','" + model.Price + "','" + model.IsTextexempt + "','" + model.Taxcategory + "','" + model.IsShippingEnable + "','" + model.InventoryMethod + "','" + model.StockQuantity + "','" + 1 + "','" + DateTime.Now + "','" + DateTime.Now + "')";
                             connection.Open();
                             SqlCommand cmd = new SqlCommand(query, connection);
                             if (cmd.ExecuteNonQuery() == 1)
@@ -215,11 +284,17 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                                         command1.ExecuteNonQuery();
                                                     }
                                                 }
-                                                connection.Close();
+                                               
 
                                                 ViewBag.SuccessMessage = "Added Product Successful";
+                                                if(Command == "save")
                                                 return RedirectToAction("ProductList", "DemoProduct");
+                                                else
+                                                {
+                                                    return RedirectToAction("EditProduct", new { id = ProductID });
+                                                }
                                             }
+                                            connection.Close();
                                         }
                                     }
                                 }
@@ -244,28 +319,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
         public ActionResult EditProduct(int id)
         {
             Product product = new();
-            product.Categories = new[]
-                   {
-                    new SelectListItem { Value = "1", Text = "Lunch & Dinner" },
-                    new SelectListItem { Value = "2", Text = "Breakfast & Brunch" },
-                    new SelectListItem { Value = "3", Text = "Baked Goods & Desserts" },
-                    new SelectListItem { Value = "4", Text = "Drinks" },
-                };
-
-            product.TaxCategories = new[]
-            {
-        new SelectListItem { Value = "0", Text = "[None]" },
-        new SelectListItem { Value = "1", Text = "Food" },
-        new SelectListItem { Value = "2", Text = "Bevarage" },
-
-             };
-            product.InventoryMethods = new[]
-            {
-        new SelectListItem { Value = "0", Text = "Don't track inventory" },
-        new SelectListItem { Value = "1", Text = "Track inventory" },
-        new SelectListItem { Value = "2", Text = "Track inventory by product attributes" },
-
-             };
+            GetAllMethods(product);
             try
             {
                 string constr = @"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True";
@@ -338,7 +392,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                             sFile = RetrieveImage((byte[])readers["ImageData"])
 
                                         });
-                                        
+
 
                                     }
                                     product.UploadFileModel = UploadFiles;
@@ -357,30 +411,13 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             return View("~/Plugins/Widgets.BasicPlugins/Views/EditProduct.cshtml", product);
         }
         [HttpPost]
-        public ActionResult EditProduct(Product product)
+        public ActionResult EditProduct(Product product, string Command)
         {
-            product.Categories = new[]
-                   {
-                    new SelectListItem { Value = "1", Text = "Lunch & Dinner" },
-                    new SelectListItem { Value = "2", Text = "Breakfast & Brunch" },
-                    new SelectListItem { Value = "3", Text = "Baked Goods & Desserts" },
-                    new SelectListItem { Value = "4", Text = "Drinks" },
-                };
-
-            product.TaxCategories = new[]
-            {
-        new SelectListItem { Value = "0", Text = "[None]" },
-        new SelectListItem { Value = "1", Text = "Food" },
-        new SelectListItem { Value = "2", Text = "Bevarage" },
-
-             };
-            product.InventoryMethods = new[]
-            {
-        new SelectListItem { Value = "0", Text = "Don't track inventory" },
-        new SelectListItem { Value = "1", Text = "Track inventory" },
-        new SelectListItem { Value = "2", Text = "Track inventory by product attributes" },
-
-             };
+            if (Command == "delete")
+            { 
+                return RedirectToAction("Delete", new { id = product.ProductID });
+            }
+            GetAllMethods(product);
             try
             {
                 if (!ModelState.IsValid)
@@ -446,7 +483,12 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                                 connection.Close();
 
                                                 ViewBag.SuccessMessage = "Added Product Successful";
-                                                return RedirectToAction("ProductList", "DemoProduct");
+                                                if (Command == "save")
+                                                    return RedirectToAction("ProductList", "DemoProduct");
+                                                else
+                                                {
+                                                    return RedirectToAction("EditProduct", new { id = ProductID });
+                                                }
 
                                             }
 
@@ -475,7 +517,30 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             return View("~/Plugins/Widgets.BasicPlugins/Views/EditProduct.cshtml", product);
         }
         [HttpGet]
-        public ActionResult DeleteProduct(int id)
+        public ActionResult DeleteProduct(string data)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
+                {
+                    connection.Open();
+                    foreach (var id in data.Split(","))
+                    {
+                        string query = "Update Product set IsActive=0 where ProductID='" + id + "'";
+                        SqlCommand cmd = new SqlCommand(query, connection);
+                        cmd.ExecuteNonQuery();
+                    }
+                    connection.Close();
+                    return Json(new { status = "success" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = "error" });
+            }
+        }
+        [HttpGet]
+        public ActionResult Delete(int id)
         {
             try
             {
@@ -594,7 +659,6 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                             sFile = RetrieveImage((byte[])reader["ImageData"]),
 
                                         });
-                                        ;
 
                                     }
                                 }

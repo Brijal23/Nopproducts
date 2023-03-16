@@ -1,9 +1,9 @@
-﻿@model IEnumerable<Nop.Plugin.Widgets.BasicPlugins.Models.Product>
+﻿@model IEnumerable<Nop.Plugin.Widgets.BasicPlugins.Models.Category>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title> Products</title>
+    <title> Categories</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -40,7 +40,6 @@
             }
 
         .row {
-            /* display: block !important;*/
             width: 100%;
         }
     </style>
@@ -48,12 +47,12 @@
 </head>
 <body>
     <div class="container" style="padding: 10px; max-width:1600px;">
-        <div class="row mb-2">
+        <div class="row">
             <div class="col-md-6">
-                <h2>Products</h2>
+                <h2>Categories</h2>
             </div>
             <div class="col-md-6">
-                <a href='@Url.Action("AddProduct", "DemoProduct")' class="btn btn-primary" style="float: right; margin-left: 15px;">Add Product</a>
+                <a href='@Url.Action("AddCategory", "DemoCategory")' class="btn btn-primary" style="float: right; margin-left: 15px;">Add Category</a>
                 <button type="button" class="btn btn-danger" style="float:right;" id="btnDelete">Delete(selected)</button>
 
             </div>
@@ -63,35 +62,23 @@
             <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-search">&nbsp;&nbsp;&nbsp;</i>Search</div>
             <div class="accordion-content">
 
-                @using (Html.BeginForm("ProductList", "DemoProduct", FormMethod.Get, new { @onsubmit = "return checkvalidation()" }))
+                @using (Html.BeginForm("CategoryList", "DemoCategory", FormMethod.Get, new { @onsubmit = "return checkvalidation()" }))
                 {
                     <div>
-                        <div class="row mb-2">
-                                <div class="col-sm-4"><label>Product name</label>
-                                
-                                    <input type="text" name="productName" id="productName" class="form-control" value="@ViewBag.productnamesearch" autocomplete="off"/>
-                                </div>
-                                <div class="col-sm-4"><label>Category</label>
-                                
-                                    <input type="hidden" id="hiddencategory" value="@ViewBag.categorysearch" />
-                                    <select class="form-control" id="SearchCategoryId" name="category">
-                                        <option value="0">All</option>
-                                        <option value="2">Breakfast &amp; Brunch</option>
-                                        <option value="1">Lunch &amp; Dinner</option>
-                                        <option value="3">Baked Goods &amp; Desserts</option>
-                                        <option value="4">Drinks</option>
-                                    </select>
-                                </div>
-                           
-                                <div class="col-sm-4"><label>Published</label>
-                                    <input type="hidden" id="hiddenpublished" value="@ViewBag.publishedsearch" />
-                                    <select class="form-control" id="SearchPublishedId" name="published">
-                                        <option value="All">All</option>
-                                        <option value="1">Published only</option>
-                                        <option value="0">Unpublished only</option>
-                                    </select>
-                                </div>
-                           
+                        <div class="row">
+                            <div class="col-sm-3"><label>Category name</label></div>
+                            <div class="col-sm-3">
+                                <input type="text" name="CategoryName" id="CategoryName" class="form-control" value="@ViewBag.Categorynamesearch" />
+                            </div>
+                            <div class="col-sm-3"><label>Published</label></div>
+                            <div class="col-sm-3">
+                                <input type="hidden" id="hiddenpublished" value="@ViewBag.publishedsearch" />
+                                <select class="form-control" id="SearchPublishedId" name="published">
+                                    <option value="All">All</option>
+                                    <option value="1">Published only</option>
+                                    <option value="0">Unpublished only</option>
+                                </select>
+                            </div>
                         </div>
                         <br><br>
                         <div style="text-align:center;">
@@ -120,23 +107,15 @@
                         <tr>
                             <th hidden></th>
                             <th><input type="checkbox" id="chkAll" /></th>
+
                             <th>
-                            Picture
-                            </th>
-                            <th>
-                                Product name
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.SKU)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Price)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.StockQuantity)
+                                @Html.DisplayNameFor(model => model.CategoryName)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.IsPublished)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Displayorder)
                             </th>
                             <th>
                                 Edit
@@ -148,30 +127,10 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td hidden>@item.ProductID</td>
-                                <td><input type="checkbox" name="itemIds" class="checkboxGroups" value="@item.ProductID" /></td>
-                                 <td>
-                            @if (item.SFile == null)
-                            {
-                            <img src="https://cafe.shopfast.net/images/thumbs/default-image_100.png" style="height: 100px; width: 150px;">
-                            }
-                            else
-                            {
-                            <img src="@item.SFile" style="height: 100px; width: 150px;" />
-                            }
-
-                            </td>
+                                <td hidden>@item.CategoryID</td>
+                                <td><input type="checkbox" name="itemIds" class="checkboxGroups" value="@item.CategoryID" /></td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.ProductName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.SKU)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.SPrice)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.StockQuantity)
+                                    @Html.DisplayFor(modelItem => item.CategoryName)
                                 </td>
                                 <td>
                                     @if (item.IsPublished == true)
@@ -185,11 +144,12 @@
                                     }
 
                                 </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Displayorder)
+                                </td>
 
                                 <td>
-                                    @Html.ActionLink("Edit", "EditProduct", new { id=item.ProductID},new{/*@class="btn btn-Se"*/})
-                                    @*@Html.ActionLink("Delete", "DeleteProduct", new { id=item.ProductID},new{@Onclick="return ConfirmDelete();"})
-                                *@
+                                    @Html.ActionLink("Edit", "EditCategory", new { id=item.CategoryID},new{/*@class="btn btn-Se"*/})
                                 </td>
                             </tr>
                         }
@@ -210,7 +170,7 @@
                 aoColumnDefs: [
                     {
                         bSortable: false,
-                        aTargets: [1,2,8]
+                        aTargets: [-1]
                     }
                 ]
             });
@@ -267,12 +227,12 @@
 
                     $.ajax({
                         type: "Get",
-                        url: "/Admin/DemoProduct/DeleteProduct?data=" + customerIds + "",
+                        url: "/Admin/DemoCategory/DeleteCategory?data=" + customerIds + "",
                         headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
                         dataType: "json",
                         success: function (response) {
                             if (response.status == "success") {
-                                window.location.href = "/Admin/DemoProduct/ProductList";
+                                window.location.href = "/Admin/DemoCategory/CategoryList";
                             }
                             //checked.each(function () {
                             //    var row = $(this).closest("tr");
@@ -286,7 +246,7 @@
                         }
                     });
                     //var options = {};
-                    //options.url = '/Admin/DemoProduct/DeleteProduct';
+                    //options.url = '/Admin/DemoCategory/DeleteCategory';
                     //options.type = "POST";
                     //options.data = JSON.stringify(customerIds);
                     //options.headers = "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val();
@@ -315,23 +275,22 @@
         }
 
         $(document).ready(function () {
-            var v = $("#hiddencategory").val();
-            $('select[name^="category"] option[value="' + v + '"]').attr("selected", "selected");
+
             var s = $("#hiddenpublished").val();
             $('select[name^="published"] option[value="' + s + '"]').attr("selected", "selected");
         });
 
         function checkvalidation() {
             debugger;
-            var productName = $("#productName").val();
-            console.log(productName);
-            if (productName.trim().length == 0) {
-                productName = productName.replace(" ", "");
-                $("#productName").val(productName);
+            var CategoryName = $("#CategoryName").val();
+            console.log(CategoryName);
+            if (CategoryName.trim().length == 0) {
+                CategoryName = CategoryName.replace(" ", "");
+                $("#CategoryName").val(CategoryName);
             }
         }
         function ConfirmDelete() {
-            return confirm("Are you sure you want to delete this product?");
+            return confirm("Are you sure you want to delete this Category?");
         }
     </script>
 </body>

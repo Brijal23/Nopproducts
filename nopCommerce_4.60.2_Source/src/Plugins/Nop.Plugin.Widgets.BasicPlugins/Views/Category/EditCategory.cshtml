@@ -1,0 +1,224 @@
+﻿@model Nop.Plugin.Widgets.BasicPlugins.Models.Category
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Category</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.2.510/styles/kendo.common.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.2.510/styles/kendo.default.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.2.510/styles/kendo.mobile.all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tag-editor/1.0.20/jquery.tag-editor.css" integrity="sha512-FILySSY3nAOje2KkIZUxajmYnEDpcPsSjvTSBlo9jHsMXbtNongJIh75cRp9jsG5R1GYO8fYRWQ66FLbSZfTGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Styling for the accordion */
+        .accordion {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .accordion-header {
+            background-color: #f1f1f1;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+            .accordion-header:hover {
+                background-color: #ddd;
+            }
+
+            .accordion-header.active {
+                background-color: #ccc;
+            }
+
+        .accordion-content {
+            padding: 10px;
+            /* display: none;*/
+        }
+
+            .accordion-content.show {
+                display: block;
+            }
+
+        .row {
+            /* display: block !important;*/
+            width: 100%;
+        }
+
+        .tox-statusbar__branding {
+            display: none;
+        }
+
+        .required:after {
+            content: " *";
+            color: red;
+        }
+
+
+        .tag-editor {
+            padding: 0.375rem 0.75rem;
+            border: 1px solid #ced4da !important;
+        }
+
+        .testClass input {
+            pointer-events: none;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div class="container" style="padding: 10px; max-width:1600px;">
+
+        @using (Html.BeginForm("AddCategory", "DemoCategory", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h2>Edit Category - @Model.CategoryName </h2>
+                </div>
+                @* <div class="col-md-5">
+            </div>*@
+                <div class="col-md-9">
+                    <a href='@Url.Action("CategoryList", "DemoCategory")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Category List</a>
+                    @Html.ActionLink("Delete", "Delete", new { id=Model.CategoryID},new{@Onclick="return ConfirmDelete();",@class="btn btn-primary text-center",style="float:right; margin-left: 15px;"})
+
+                    <button type="submit" class="btn btn-primary text-center" style="float:right; margin-left: 15px;" value="saveedit" name="Command">Save and Continue Edit</button>
+                    <button type="submit" class="btn btn-primary text-center" style="float:right;" value="save" name="Command">Save</button>
+                </div>
+
+            </div>
+            @*<div class="row">
+        <div class="col-md-3">
+        <input type="checkbox" id="togbutton" checked data-toggle="toggle" data-on="Advanced" data-off="Basic" data-onstyle="primary" data-offstyle="light">
+        </div>
+        </div>*@
+            <div class="form-group">
+                <div style="text-align:center;">
+                    @if (ViewBag.SuccessMessage != null)
+                    {
+                        <label style="color:red;">@ViewBag.SuccessMessage</label>
+                    }
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Category Info</div>
+                <div class="accordion-content">
+                    @Html.HiddenFor(m => m.CategoryID, new {})
+                    @Html.HiddenFor(m => m.IsActive, new {})
+                    @Html.HiddenFor(m => m.CreatedDate, new {})
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.CategoryName, new { @class = "required" })
+                        </div>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.CategoryName, new { @id = "CategoryName", @class = "form-control",@autocomplete="off",@onkeydown="return Checkvalidate();"})
+                            @Html.ValidationMessageFor(m => m.CategoryName, "", new { @class = "text-danger pnameerror" })
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        @Html.LabelFor(m => m.Description, new { @class = "col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(m => m.Description, new { @id = "Description", @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        @Html.LabelFor(m => m.ParentcategoryId, new { @class = "col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.ParentcategoryId, Model.ParentCategories, new {@class="form-control" ,@style="width: 100%;"})
+                            @Html.ValidationMessageFor(m => m.ParentcategoryId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.IsPublished)
+                        </div>
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.IsPublished)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Display</div>
+                <div class="accordion-content">
+                    <div class="row mb-2">
+                        @Html.LabelFor(m => m.Displayorder, new { @class = "col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Displayorder, new { @id = "Displayorder", @class = "form-control" ,@type="number",@min="0",@onkeypress="return onlyNumberKey(event)",@onblur="if(this.value==''){this.value=0;}"})
+                            @Html.ValidationMessageFor(m => m.Displayorder, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+   
+    <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5-stable/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2023.1.117/js/kendo.all.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2023.1.117/js/kendo.aspnetmvc.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/caret/1.3.7/jquery.caret.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tag-editor/1.0.20/jquery.tag-editor.min.js" integrity="sha512-wexRM3SVzXnR9XDRR32JUDTyDZP3XGAsrsbVl+rBMupJsHZqbUCBMxVHDDzCpvKVhJqerRYoInsRA2ySEzpYLg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+
+        //function Checkvalidate() {
+        //    var flag = true;
+        //    var pname = $("#CategoryName").val();
+        //    if (pname.trim().length == 0) {
+        //        $(".pnameerror").text("Only white space not allowed.");
+        //        $("#CategoryName").val("");
+        //        flag = true;
+        //    }
+        //    return flag;
+        //}
+        tinymce.init({
+            selector: '#Description',
+            plugins: [
+                'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview',
+                'anchor', 'pagebreak',
+                'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code',
+                'fullscreen', 'insertdatetime',
+                'media', 'table', 'emoticons', 'template', 'help'
+            ],
+            height: 400
+        });
+
+        $(document).ready(function () { $("#Displayorder").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+        // JavaScript to toggle the accordion
+        function toggleAccordion(event) {
+            var accordionHeader = event.target;
+            var accordionContent = accordionHeader.nextElementSibling;
+            accordionHeader.classList.toggle("active");
+            if (accordionContent.style.display === "block") {
+                accordionContent.style.display = "none";
+            } else {
+                accordionContent.style.display = "block";
+            }
+        }
+
+        function onlyNumberKey(evt) {
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+    </script>
+</body>
+</html>

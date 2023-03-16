@@ -82,20 +82,19 @@
                 <div class="col-md-3">
                     <h2>Add Product </h2>
                 </div>
-               @* <div class="col-md-5">
-                </div>*@
-                <div class="col-md-9">
+                <div class="col-md-5">
+                </div>
+                <div class="col-md-4">
                     <a href='@Url.Action("ProductList", "DemoProduct")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Product List</a>
-                    <button type="submit" class="btn btn-primary text-center" style="float:right; margin-left: 15px;" value="saveedit" name="Command">Save and Continue Edit</button>
-                    <button type="submit" class="btn btn-primary text-center" style="float:right;" value="save" name="Command">Save</button>
+                    <button type="submit" class="btn btn-primary text-center" style="float:right;" id="savebtn">Save</button>
                 </div>
 
             </div>
-            @*<div class="row">
+            <div class="row">
                 <div class="col-md-3">
                     <input type="checkbox" id="togbutton" checked data-toggle="toggle" data-on="Advanced" data-off="Basic" data-onstyle="primary" data-offstyle="light">
                 </div>
-            </div>*@
+            </div>
             <div class="form-group">
                 <div style="text-align:center;">
                     @if (ViewBag.SuccessMessage != null)
@@ -105,9 +104,10 @@
                 </div>
             </div>
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Product Info</div>
+                <div class="accordion-header" onclick="toggleAccordion(event)">Product Info</div>
                 <div class="accordion-content">
-                   
+                    <div class="container-fluid">
+                    </div>
                     <div class="row mb-2">
                         <div class="col-md-2">
                             @Html.LabelFor(m => m.ProductName, new { @class = "required" })
@@ -137,7 +137,7 @@
                     <div class="row mb-2">
                         @Html.LabelFor(m => m.SKU, new { @class = "col-md-2 required" })
                         <div class="col-md-10">
-                            @Html.TextBoxFor(m => m.SKU, new { @id = "SKU", @class = "form-control" ,@autocomplete="off",@maxlength="20"})
+                            @Html.TextBoxFor(m => m.SKU, new { @id = "SKU", @class = "form-control" ,@maxlength="20"})
                             @Html.ValidationMessageFor(m => m.SKU, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -158,7 +158,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="productaccordian" style="display:none;">
+                    <div class="productaccordian">
                         <div class="row mb-2">
                             @Html.LabelFor(m => m.Producttags, new { @class = "col-md-2" })
                             <div class="col-md-10">
@@ -296,7 +296,7 @@
                 </div>
             </div>
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-usd panel-icon"></i>&nbsp; Price</div>
+                <div class="accordion-header" onclick="toggleAccordion(event)">Price</div>
                 <div class="accordion-content">
                     <div class="row mb-2">
                         @Html.LabelFor(m => m.Price, new { @class = "col-md-2 required" })
@@ -305,7 +305,7 @@
                             @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="productaccordian" style="display:none;">
+                    <div class="productaccordian">
                         <div class="row mb-2">
                             @Html.LabelFor(m => m.OldPrice, new { @class = "col-md-2" })
                             <div class="col-md-10">
@@ -458,7 +458,7 @@
                             @Html.ValidationMessageFor(m => m.Taxcategory, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="row mb-2 productaccordian" style="display:none;">
+                    <div class="row mb-2 productaccordian">
                         <div class="col-md-2">
                             @Html.LabelFor(m => m.IsServices)
                         </div>
@@ -472,7 +472,7 @@
                 </div>
             </div>
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-truck panel-icon"></i> &nbsp;Shipping</div>
+                <div class="accordion-header" onclick="toggleAccordion(event)">Shipping</div>
                 <div class="accordion-content">
                     <div class="row mb-2">
                         <div class="col-md-2">
@@ -484,7 +484,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="productaccordian dvshipping" style="display:none;">
+                    <div class="productaccordian dvshipping">
                         <div class="row mb-2">
                             @Html.LabelFor(m => m.Weight, new { @class = "col-md-2" })
                             <div class="col-md-10">
@@ -552,7 +552,7 @@
                 </div>
             </div>
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-sitemap panel-icon"></i> &nbsp; Inventory</div>
+                <div class="accordion-header" onclick="toggleAccordion(event)">Inventory</div>
                 <div class="accordion-content">
                     <div class="row mb-2">
                         @Html.LabelFor(m => m.InventoryMethod, new { @class = "col-md-2" })
@@ -568,7 +568,7 @@
                             @Html.ValidationMessageFor(m => m.StockQuantity, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="productaccordian" style="display:none;">
+                    <div class="productaccordian">
                         <div class="row mb-2 multiplecheck">
                             @Html.LabelFor(m => m.WarehouseID, new { @class = "col-md-2" })
                             <div class="col-md-10">
@@ -684,7 +684,7 @@
                 </div>
             </div>
 *@
-            <div class="accordion productaccordian" style="display:none;">
+            <div class="accordion productaccordian">
                 <div class="accordion-header" onclick="toggleAccordion(event)">Gift card</div>
                 <div class="accordion-content">
                     <div class="row mb-2">
@@ -713,7 +713,7 @@
                     </div>
                 </div>
             </div>
-            <div class="accordion productaccordian" style="display:none;">
+            <div class="accordion productaccordian">
                 <div class="accordion-header" onclick="toggleAccordion(event)">Rental</div>
                 <div class="accordion-content">
                     <div class="row mb-2">
@@ -742,7 +742,7 @@
                     </div>
                 </div>
             </div>
-            <div class="accordion productaccordian" style="display:none;">
+            <div class="accordion productaccordian">
                 <div class="accordion-header" onclick="toggleAccordion(event)">Recurring product</div>
                 <div class="accordion-content">
                     <div class="row mb-2">
@@ -779,7 +779,7 @@
                     </div>
                 </div>
             </div>
-            <div class="accordion productaccordian" style="display:none;">
+            <div class="accordion productaccordian">
                 <div class="accordion-header" onclick="toggleAccordion(event)">SEO</div>
                 <div class="accordion-content">
                     <div class="row mb-2">
@@ -832,43 +832,43 @@
     @*    <script src="https://cdnjs.cloudflare.com/ajax/libs/tag-editor/1.0.20/jquery.tag-editor.js" integrity="sha512-Q97Wbo3X93J1a+cM+MftacnX5zhx2iPbw68tM6HFo44un46h3NojL8aKW+jFTplOu5YhfctmSd6OPBnd0NdC6w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     *@
     <script>
-        //var switchStatus = false;
-        //$("#togbutton").on('change', function () {
-        //    if ($(this).is(':checked')) {
-        //        debugger;
-        //        switchStatus = $(this).is(':checked');
-        //        if (switchStatus == false) {
-        //            $(".productaccordian").hide();
-        //        }
-        //        else {
-        //            $(".productaccordian").show();
-        //        }
-        //    }
-        //    else {
-        //        debugger;
-        //        switchStatus = $(this).is(':checked');
-        //        if (switchStatus == false) {
-        //            $(".productaccordian").hide();
-        //        }
-        //        else {
-        //            $(".productaccordian").show();
-        //        }
-        //        //alert(switchStatus);// To verify
-        //    }
-        //});
-        $(document).ready(function () { $("#Price").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000 USD" }) });
-        //$(document).ready(function () { $("#OldPrice").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000 USD" }) });
-        //$(document).ready(function () { $("#Productcost").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000 USD" }) });
-        //$(document).ready(function () { $("#Minimumamount").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000 USD" }) });
-        //$(document).ready(function () { $("#Maximumamount").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000 USD" }) });
-        //$(document).ready(function () { $("#Amountinproduct").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000" }) });
-        //$(document).ready(function () { $("#Referenceamount").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000" }) });
-        //$(document).ready(function () { $("#Weight").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000 lb(s)" }) });
-        //$(document).ready(function () { $("#Length").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000 inch(es)" }) });
-        //$(document).ready(function () { $("#Width").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000 inch(es)" }) });
-        //$(document).ready(function () { $("#Height").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000 inch(es)" }) });
-        //$(document).ready(function () { $("#Additionalshippingcharge").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000 USD" }) });
-        //$(document).ready(function () { $("#Giftcardamount").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000 " }) });
+        var switchStatus = false;
+        $("#togbutton").on('change', function () {
+            if ($(this).is(':checked')) {
+                debugger;
+                switchStatus = $(this).is(':checked');
+                if (switchStatus == false) {
+                    $(".productaccordian").hide();
+                }
+                else {
+                    $(".productaccordian").show();
+                }
+            }
+            else {
+                debugger;
+                switchStatus = $(this).is(':checked');
+                if (switchStatus == false) {
+                    $(".productaccordian").hide();
+                }
+                else {
+                    $(".productaccordian").show();
+                }
+                //alert(switchStatus);// To verify
+            }
+        });
+        $(document).ready(function () { $("#Price").kendoNumericTextBox({ min: 0, max: 99999999.99, decimals: 2, restrictDecimals: !0, format: "#.00 USD" }) });
+        $(document).ready(function () { $("#OldPrice").kendoNumericTextBox({ min: 0, max: 99999999.99, decimals: 2, restrictDecimals: !0, format: "#.00 USD" }) });
+        $(document).ready(function () { $("#Productcost").kendoNumericTextBox({ min: 0, max: 99999999.99, decimals: 2, restrictDecimals: !0, format: "#.00 USD" }) });
+        $(document).ready(function () { $("#Minimumamount").kendoNumericTextBox({ min: 0, max: 99999999.99, decimals: 2, restrictDecimals: !0, format: "#.00 USD" }) });
+        $(document).ready(function () { $("#Maximumamount").kendoNumericTextBox({ min: 0, max: 99999999.99, decimals: 2, restrictDecimals: !0, format: "#.00 USD" }) });
+        $(document).ready(function () { $("#Amountinproduct").kendoNumericTextBox({ min: 0, max: 99999999.99, decimals: 2, restrictDecimals: !0, format: "#.00" }) });
+        $(document).ready(function () { $("#Referenceamount").kendoNumericTextBox({ min: 0, max: 99999999.99, decimals: 2, restrictDecimals: !0, format: "#.00" }) });
+        $(document).ready(function () { $("#Weight").kendoNumericTextBox({ min: 0, max: 99999999.99, decimals: 2, restrictDecimals: !0, format: "#.00 lb(s)" }) });
+        $(document).ready(function () { $("#Length").kendoNumericTextBox({ min: 0, max: 99999999.99, decimals: 2, restrictDecimals: !0, format: "#.00 inch(es)" }) });
+        $(document).ready(function () { $("#Width").kendoNumericTextBox({ min: 0, max: 99999999.99, decimals: 2, restrictDecimals: !0, format: "#.00 inch(es)" }) });
+        $(document).ready(function () { $("#Height").kendoNumericTextBox({ min: 0, max: 99999999.99, decimals: 2, restrictDecimals: !0, format: "#.00 inch(es)" }) });
+        $(document).ready(function () { $("#Additionalshippingcharge").kendoNumericTextBox({ min: 0, max: 99999999.99, decimals: 2, restrictDecimals: !0, format: "#.00 USD" }) });
+        $(document).ready(function () { $("#Giftcardamount").kendoNumericTextBox({ min: 0, max: 99999999.99, decimals: 2, restrictDecimals: !0, format: "#.00 " }) });
         function Checkvalidate() {
             var flag = true;
             var pname = $("#ProductName").val();
@@ -898,37 +898,38 @@
             },
             placeholder: 'Enter tags ...'
         });
-        //$(document).ready(function () {
-        //    var presentDate = new Date();
-        //    // create DateTimePicker from input HTML element
-        //    $(".datetimepicker").kendoDateTimePicker({
-        //        format:"MM/dd/yyyy hh:mm tt", 
-        //        min: presentDate,
-        //        popup: {
-        //            position: "bottom right", origin: "top right"
-        //        }
-        //    });
-        //    var switchStatus = false;
+        $(document).ready(function () {
+            var presentDate = new Date();
+            // create DateTimePicker from input HTML element
+            $(".datetimepicker").kendoDateTimePicker({
+                format:"MM/dd/yyyy hh:mm tt", 
+                min: presentDate,
+                popup: {
+                    position: "bottom right", origin: "top right"
+                }
+            });
+            var switchStatus = false;
 
-        //    switchStatus = $("#togbutton").is(':checked');
-        //    if (switchStatus == false) {
-        //        $(".productaccordian").hide();
-        //    }
-        //    else {
-        //        $(".productaccordian").show();
-        //    }
+            switchStatus = $("#togbutton").is(':checked');
+            if (switchStatus == false) {
+                $(".productaccordian").hide();
+            }
+            else {
+                $(".productaccordian").show();
+            }
 
-        //});
-        //$(document).ready(function () { $("#Minimumstockqty").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
-        //$(document).ready(function () { $("#Notifyforqtybelow").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
-        //$(document).ready(function () { $("#Minimumcartqty").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
-        //$(document).ready(function () { $("#Maximumcartqty").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
-        //$(document).ready(function () { $("#Rentalperiodlength").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
-        //$(document).ready(function () { $("#Totalcycles").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
-        //$(document).ready(function () { $("#Cyclelength").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
-        //$(document).ready(function () { $("#Displayorder").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
-        //$(document).ready(function () { $("#Allowedquantities").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+        });
+        $(document).ready(function () { $("#Minimumstockqty").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+        $(document).ready(function () { $("#Notifyforqtybelow").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+        $(document).ready(function () { $("#Minimumcartqty").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+        $(document).ready(function () { $("#Maximumcartqty").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+        $(document).ready(function () { $("#Rentalperiodlength").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+        $(document).ready(function () { $("#Totalcycles").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+        $(document).ready(function () { $("#Cyclelength").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+        $(document).ready(function () { $("#Displayorder").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
         $(document).ready(function () { $("#StockQuantity").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+        $(document).ready(function () { $("#Allowedquantities").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+
         // JavaScript to toggle the accordion
         function toggleAccordion(event) {
             var accordionHeader = event.target;
@@ -955,53 +956,53 @@
                 $("#stockID").show();
             else
                 $("#stockID").hide();
-            //if ($("#IsShowOnHomepage").is(":checked")) {
-            //    $("#DisplayorderID").show();
-            //} else {
-            //    $("#DisplayorderID").hide();
-            //}
-            //if ($("#IsMarkasnew").is(":checked")) {
-            //    $(".marknews").show();
-            //} else {
-            //    $(".marknews").hide();
-            //}
-            //if ($("#IsAvailableforpreorder").is(":checked")) {
-            //    $(".availableforpreorder").show();
-            //} else {
-            //    $(".availableforpreorder").hide();
-            //}
-            //if ($("#IsUserentersprice").is(":checked")) {
-            //    $(".entersamount").show();
-            //} else {
-            //    $(".entersamount").hide();
-            //}
-            //if ($("#IsBasepriceenabled").is(":checked")) {
-            //    $(".basepriceamounts").show();
-            //} else {
-            //    $(".basepriceamounts").hide();
-            //}
-            //switchStatus = $("#togbutton").is(':checked');
+            if ($("#IsShowOnHomepage").is(":checked")) {
+                $("#DisplayorderID").show();
+            } else {
+                $("#DisplayorderID").hide();
+            }
+            if ($("#IsMarkasnew").is(":checked")) {
+                $(".marknews").show();
+            } else {
+                $(".marknews").hide();
+            }
+            if ($("#IsAvailableforpreorder").is(":checked")) {
+                $(".availableforpreorder").show();
+            } else {
+                $(".availableforpreorder").hide();
+            }
+            if ($("#IsUserentersprice").is(":checked")) {
+                $(".entersamount").show();
+            } else {
+                $(".entersamount").hide();
+            }
+            if ($("#IsBasepriceenabled").is(":checked")) {
+                $(".basepriceamounts").show();
+            } else {
+                $(".basepriceamounts").hide();
+            }
+            switchStatus = $("#togbutton").is(':checked');
 
-            //if ($("#IsShippingEnable").is(":checked") && switchStatus != false) {
-            //    $(".dvshipping").show();
-            //} else {
-            //    $(".dvshipping").hide();
-            //}
-            //if ($("#Isgiftcard").is(":checked")) {
-            //    $(".giftcheck").show();
-            //} else {
-            //    $(".giftcheck").hide();
-            //}
-            //if ($("#Isrental").is(":checked")) {
-            //    $(".rentalcheck").show();
-            //} else {
-            //    $(".rentalcheck").hide();
-            //}
-            //if ($("#IsRecurringproduct").is(":checked")) {
-            //    $(".recurringcheck").show();
-            //} else {
-            //    $(".recurringcheck").hide();
-            //}
+            if ($("#IsShippingEnable").is(":checked") && switchStatus != false) {
+                $(".dvshipping").show();
+            } else {
+                $(".dvshipping").hide();
+            }
+            if ($("#Isgiftcard").is(":checked")) {
+                $(".giftcheck").show();
+            } else {
+                $(".giftcheck").hide();
+            }
+            if ($("#Isrental").is(":checked")) {
+                $(".rentalcheck").show();
+            } else {
+                $(".rentalcheck").hide();
+            }
+            if ($("#IsRecurringproduct").is(":checked")) {
+                $(".recurringcheck").show();
+            } else {
+                $(".recurringcheck").hide();
+            }
         });
         $(function () {
             $("#IsTextexempt").click(function () {
@@ -1012,114 +1013,114 @@
                 }
             });
         });
-        //$(function () {
-        //    $("#IsShowOnHomepage").click(function () {
-        //        if ($(this).is(":checked")) {
-        //            $("#DisplayorderID").show();
-        //        } else {
-        //            $("#DisplayorderID").hide();
-        //        }
-        //    });
-        //});
-        //$(function () {
-        //    $("#IsMarkasnew").click(function () {
-        //        if ($(this).is(":checked")) {
-        //            $(".marknews").show();
-        //        } else {
-        //            $(".marknews").hide();
-        //        }
-        //    });
-        //});
-        //$(function () {
-        //    $("#IsAvailableforpreorder").click(function () {
-        //        if ($(this).is(":checked")) {
-        //            $(".availableforpreorder").show();
-        //        } else {
-        //            $(".availableforpreorder").hide();
-        //        }
-        //    });
-        //});
-        //$(function () {
-        //    $("#IsUserentersprice").click(function () {
-        //        if ($(this).is(":checked")) {
-        //            $(".entersamount").show();
-        //        } else {
-        //            $(".entersamount").hide();
-        //        }
-        //    });
-        //});
-        //$(function () {
-        //    $("#IsBasepriceenabled").click(function () {
-        //        if ($(this).is(":checked")) {
-        //            $(".basepriceamounts").show();
-        //        } else {
-        //            $(".basepriceamounts").hide();
-        //        }
-        //    });
-        //});
-        //$(function () {
-        //    $("#IsMultiplewarehouses").click(function () {
-        //        if ($(this).is(":checked")) {
-        //            $(".multiplecheck").hide();
-        //        } else {
-        //            $(".multiplecheck").show();
-        //        }
-        //    });
-        //});
-        //$(function () {
-        //    $("#Isgiftcard").click(function () {
-        //        if ($(this).is(":checked")) {
-        //            $(".giftcheck").show();
-        //        } else {
-        //            $(".giftcheck").hide();
-        //        }
-        //    });
-        //});
-        //$(function () {
-        //    $("#Isrental").click(function () {
-        //        if ($(this).is(":checked")) {
-        //            $(".rentalcheck").show();
-        //        } else {
-        //            $(".rentalcheck").hide();
-        //        }
-        //    });
-        //});
-        //$(function () {
-        //    $("#IsRecurringproduct").click(function () {
-        //        if ($(this).is(":checked")) {
-        //            $(".recurringcheck").show();
-        //        } else {
-        //            $(".recurringcheck").hide();
-        //        }
-        //    });
-        //});
-        //$(function () {
-        //    //var switchStatus = false;
+        $(function () {
+            $("#IsShowOnHomepage").click(function () {
+                if ($(this).is(":checked")) {
+                    $("#DisplayorderID").show();
+                } else {
+                    $("#DisplayorderID").hide();
+                }
+            });
+        });
+        $(function () {
+            $("#IsMarkasnew").click(function () {
+                if ($(this).is(":checked")) {
+                    $(".marknews").show();
+                } else {
+                    $(".marknews").hide();
+                }
+            });
+        });
+        $(function () {
+            $("#IsAvailableforpreorder").click(function () {
+                if ($(this).is(":checked")) {
+                    $(".availableforpreorder").show();
+                } else {
+                    $(".availableforpreorder").hide();
+                }
+            });
+        });
+        $(function () {
+            $("#IsUserentersprice").click(function () {
+                if ($(this).is(":checked")) {
+                    $(".entersamount").show();
+                } else {
+                    $(".entersamount").hide();
+                }
+            });
+        });
+        $(function () {
+            $("#IsBasepriceenabled").click(function () {
+                if ($(this).is(":checked")) {
+                    $(".basepriceamounts").show();
+                } else {
+                    $(".basepriceamounts").hide();
+                }
+            });
+        });
+        $(function () {
+            $("#IsMultiplewarehouses").click(function () {
+                if ($(this).is(":checked")) {
+                    $(".multiplecheck").hide();
+                } else {
+                    $(".multiplecheck").show();
+                }
+            });
+        });
+        $(function () {
+            $("#Isgiftcard").click(function () {
+                if ($(this).is(":checked")) {
+                    $(".giftcheck").show();
+                } else {
+                    $(".giftcheck").hide();
+                }
+            });
+        });
+        $(function () {
+            $("#Isrental").click(function () {
+                if ($(this).is(":checked")) {
+                    $(".rentalcheck").show();
+                } else {
+                    $(".rentalcheck").hide();
+                }
+            });
+        });
+        $(function () {
+            $("#IsRecurringproduct").click(function () {
+                if ($(this).is(":checked")) {
+                    $(".recurringcheck").show();
+                } else {
+                    $(".recurringcheck").hide();
+                }
+            });
+        });
+        $(function () {
+            //var switchStatus = false;
 
-        //    switchStatus = $("#togbutton").is(':checked');
-        //    console.log(switchStatus);
-        //    $("#IsShippingEnable").click(function () {
-        //        if ($(this).is(":checked") && switchStatus != false) {
-        //            $(".dvshipping").show();
-        //        } else {
-        //            $(".dvshipping").hide();
-        //        }
-        //    });
-        //});
+            switchStatus = $("#togbutton").is(':checked');
+            console.log(switchStatus);
+            $("#IsShippingEnable").click(function () {
+                if ($(this).is(":checked") && switchStatus != false) {
+                    $(".dvshipping").show();
+                } else {
+                    $(".dvshipping").hide();
+                }
+            });
+        });
         function InventoryChange() {
             var InventoryMethod = $('#InventoryMethod').val();
-           // switchStatus = $("#togbutton").is(':checked');
+            switchStatus = $("#togbutton").is(':checked');
             if (InventoryMethod == 1)
                 $("#stockID").show();
             else if (InventoryMethod != 1 && switchStatus == false)
                 $("#stockID").hide();
 
-            //if (InventoryMethod == 1 && switchStatus != false) {
-            //    $(".trackclass").show();
-            //}
-            //else if (switchStatus != false && InventoryMethod != 1) {
-            //    $(".trackclass").hide();
-            //}
+            if (InventoryMethod == 1 && switchStatus != false) {
+                $(".trackclass").show();
+            }
+            else if (switchStatus != false && InventoryMethod != 1) {
+                $(".trackclass").hide();
+            }
         }
         function onlyNumberKey(evt) {
             var ASCIICode = (evt.which) ? evt.which : evt.keyCode

@@ -1,13 +1,13 @@
 ﻿@model Nop.Plugin.Widgets.BasicPlugins.Models.Product
-@inject MediaSettings mediaSettings
-@using Nop.Core.Domain.Media
+@*@inject MediaSettings mediaSettings
+*@@*@using Nop.Core.Domain.Media
 @using Nop.Services.Media
 @inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
-@{
+*@@{
     Layout = null;
 }
 
-@{
+@*@{
     //other variables
     var random = Nop.Core.CommonHelper.GenerateRandomInteger();
     var clientId = "picture" + random;
@@ -15,7 +15,7 @@
 
     const int pictureSize = 100;
 }
-
+*@
 @* register CSS and JS *@
 @*<link rel="stylesheet" href="~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css" />
 *@
@@ -24,12 +24,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Create Product</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <title>Edit Product</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+            @*<link href="~/Plugins/Widgets.BasicPlugins/Content/bootstrap.min.css" rel="stylesheet" />*@
+            @*  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css" rel="stylesheet">*@
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.2.510/styles/kendo.common.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.2.510/styles/kendo.default.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.2.510/styles/kendo.mobile.all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tag-editor/1.0.20/jquery.tag-editor.css" integrity="sha512-FILySSY3nAOje2KkIZUxajmYnEDpcPsSjvTSBlo9jHsMXbtNongJIh75cRp9jsG5R1GYO8fYRWQ66FLbSZfTGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css" />
-   
+
     <link href="~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css" rel="stylesheet" />
 
     <style>
@@ -45,7 +53,6 @@
             padding: 10px;
             cursor: pointer;
         }
-
             .accordion-header:hover {
                 background-color: #ddd;
             }
@@ -58,16 +65,13 @@
             padding: 10px;
             /* display: none;*/
         }
-
             .accordion-content.show {
                 display: block;
             }
 
-        .form-group {
-            /* display: block !important;*/
+        .row {
             width: 100%;
         }
-
         .visuallyhidden {
             border: 0;
             clip: rect(0 0 0 0);
@@ -78,11 +82,9 @@
             position: absolute;
             width: 1px;
         }
-
         .tox-statusbar__branding {
             display: none;
         }
-
         .required:after {
             content: " *";
             color: red;
@@ -90,6 +92,13 @@
 
         .resetbtns {
             display: none;
+        }
+        .tag-editor {
+            padding: 0.375rem 0.75rem;
+            border: 1px solid #ced4da !important;
+        }
+        .testClass input {
+            pointer-events: none;
         }
     </style>
 
@@ -101,13 +110,16 @@
         {
 
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <h2>Edit Product - @Model.ProductName</h2>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <a href='@Url.Action("ProductList", "DemoProduct")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Product List</a>
-                    <button type="submit" class="btn btn-primary text-center" style="float:right;">Save</button>
+                    @*<button type="submit" class="btn btn-primary text-center" style="float:right; margin-left: 15px;" value="delete" name="Command">Delete</button>*@
+                    @Html.ActionLink("Delete", "Delete", new { id=Model.ProductID},new{@Onclick="return ConfirmDelete();",@class="btn btn-primary text-center",style="float:right; margin-left: 15px;"})
+                    <button type="submit" class="btn btn-primary text-center" style="float:right; margin-left: 15px;" value="saveedit" name="Command">Save and Continue Edit</button>
+                    <button type="submit" class="btn btn-primary text-center" style="float:right;" value="save" name="Command">Save</button>
                 </div>
             </div>
             <div class="form-group">
@@ -119,65 +131,58 @@
                 </div>
             </div>
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(event)">Product</div>
+                <div class="accordion-header" onclick="toggleAccordion(event)">Product Info</div>
                 <div class="accordion-content">
-                    <div class="container-fluid">
-                    </div>
                     @Html.HiddenFor(m => m.ProductID, new {})
                     @Html.HiddenFor(m => m.IsActive, new {})
                     @Html.HiddenFor(m => m.CreatedDate, new {})
-                    <div class="row">
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.ProductName, new { @class = "col-md-3 required" })
-                            <div class="col-md-12">
-                                @Html.TextBoxFor(m => m.ProductName, new { @id = "ProductName", @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "text-danger" })
-
-                            </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.ProductName, new { @class = "required" })
+                        </div>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.ProductName, new { @id = "ProductName", @class = "form-control",@autocomplete="off",@onkeydown="return Checkvalidate();"})
+                            @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "text-danger pnameerror" })
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.ShortDescription, new { @class = "col-md-3" })
-                            <div class="col-md-12">
-                                @Html.TextAreaFor(m => m.ShortDescription, new { @id = "ShortDescription", @class = "form-control",@rows="2" })
-                                @Html.ValidationMessageFor(m => m.ShortDescription, "", new { @class = "text-danger" })
-                            </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.ShortDescription, new {  })
+                        </div>
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(m => m.ShortDescription, new { @id = "ShortDescription", @class = "form-control",@row="2" })
+                            @Html.ValidationMessageFor(m => m.ShortDescription, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.FullDescription, new { @class = "col-md-3" })
-                            <div class="col-md-12">
-                                @Html.TextAreaFor(m => m.FullDescription, new { @id = "FullDescription", @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.FullDescription, "", new { @class = "text-danger" })
-                            </div>
+                    <div class="row mb-2">
+                        @Html.LabelFor(m => m.FullDescription, new { @class = "col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(m => m.FullDescription, new { @id = "FullDescription", @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.FullDescription, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.SKU, new { @class = "col-md-3" })
-                            <div class="col-md-12">
-                                @Html.TextBoxFor(m => m.SKU, new { @id = "SKU", @class = "form-control" ,@maxlength="20"})
-                                @Html.ValidationMessageFor(m => m.SKU, "", new { @class = "text-danger" })
-                            </div>
+                    <div class="row mb-2">
+                        @Html.LabelFor(m => m.SKU, new { @class = "col-md-2 required" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.SKU, new { @id = "SKU", @class = "form-control" ,@autocomplete="off",@maxlength="20"})
+                            @Html.ValidationMessageFor(m => m.SKU, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.CategoryID, new { @class = "col-md-3" })
-                            <div class="col-md-12">
-                                @Html.ListBoxFor(model => model.CategoryID, Model.Categories, new {@class="form-control select2 select2-hidden-accessible" , @style="width: 100%;" })
-                                @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "text-danger" })
-                            </div>
+                    <div class="row mb-2">
+                        @Html.LabelFor(m => m.CategoryID, new { @class = "col-md-2 required" })
+                        <div class="col-md-10">
+                            @Html.ListBoxFor(model => model.CategoryID, Model.Categories, new {@class="form-control select2 select2-hidden-accessible" ,@style="width: 100%;"})
+                            @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-offset-2 col-md-10">
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.IsPublished)
+                        </div>
+                        <div class="col-md-10">
                             <div class="checkbox">
                                 @Html.CheckBoxFor(m => m.IsPublished)
-                                @Html.LabelFor(m => m.IsPublished)
                             </div>
                         </div>
                     </div>
@@ -186,32 +191,28 @@
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion(event)">Price</div>
                 <div class="accordion-content">
-                    <div class="row">
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Price, new { @class = "col-md-3" })
-                            <div class="col-md-12">
-                                @Html.TextBoxFor(m => m.Price, new { @id = "Price", @class = "form-control" ,@type="number",@min="0",@onkeydown="javascript: return event.keyCode == 69 ? false : true"})
-                                @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger" })
-                                <small style="color:red;"></small>
-                            </div>
+                    <div class="row mb-2">
+                        @Html.LabelFor(m => m.Price, new { @class = "col-md-2 required" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Price, new { @id = "Price", @class = "form-control" ,@min="0",@onkeydown="javascript: return event.keyCode == 69 ? false : true",@onblur="if(this.value==''){this.value=0;}"})
+                            @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-offset-2 col-md-10">
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.IsTextexempt)
+                        </div>
+                        <div class="col-md-10">
                             <div class="checkbox">
                                 @Html.CheckBoxFor(m => m.IsTextexempt)
-                                @Html.LabelFor(m => m.IsTextexempt)
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="form-group" id="drptaxcategoryid">
-                            @Html.LabelFor(m => m.Taxcategory, new { @class = "col-md-3" })
-                            <div class="col-md-12">
-                                @Html.DropDownListFor(m => m.Taxcategory,Model.TaxCategories,new{@class = "form-control"})
-                                @Html.ValidationMessageFor(m => m.Taxcategory, "", new { @class = "text-danger" })
-                                <small style="color:red;"></small>
-                            </div>
+                    <div class="row mb-2" id="drptaxcategoryid">
+                        @Html.LabelFor(m => m.Taxcategory, new { @class = "col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(m => m.Taxcategory,Model.TaxCategories,new{@class = "form-control"})
+                            @Html.ValidationMessageFor(m => m.Taxcategory, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 </div>
@@ -219,11 +220,13 @@
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion(event)">Shipping</div>
                 <div class="accordion-content">
-                    <div class="row">
-                        <div class="col-md-offset-2 col-md-10">
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.IsShippingEnable)
+                        </div>
+                        <div class="col-md-10">
                             <div class="checkbox">
                                 @Html.CheckBoxFor(m => m.IsShippingEnable)
-                                @Html.LabelFor(m => m.IsShippingEnable)
                             </div>
                         </div>
                     </div>
@@ -232,24 +235,18 @@
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion(event)">Inventory</div>
                 <div class="accordion-content">
-                    <div class="row">
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.InventoryMethod, new { @class = "col-md-3" })
-                            <div class="col-md-12">
-                                @Html.DropDownListFor(m => m.InventoryMethod,Model.InventoryMethods,new{@class = "form-control",@id="InventoryMethod",@onchange="InventoryChange();"})
-                                @Html.ValidationMessageFor(m => m.InventoryMethod, "", new { @class = "text-danger" })
-                                <small style="color:red;"></small>
-                            </div>
+                    <div class="row mb-2">
+                        @Html.LabelFor(m => m.InventoryMethod, new { @class = "col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(m => m.InventoryMethod,Model.InventoryMethods,new{@class = "form-control",@id="InventoryMethod",@onchange="InventoryChange();"})
+                            @Html.ValidationMessageFor(m => m.InventoryMethod, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="form-group" id="stockID" style="display: none;">
-                            @Html.LabelFor(m => m.StockQuantity, new { @class = "col-md-3" })
-                            <div class="col-md-12">
-                                @Html.TextBoxFor(m => m.StockQuantity, new { @id = "StockQuantity", @class = "form-control" ,@type="number",@min="0",@onkeypress="return onlyNumberKey(event)"})
-                                @Html.ValidationMessageFor(m => m.StockQuantity, "", new { @class = "text-danger" })
-                                <small style="color:red;"></small>
-                            </div>
+                    <div class="row mb-2 multiplecheck" id="stockID" style="display: none;">
+                        @Html.LabelFor(m => m.StockQuantity, new { @class = "col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.StockQuantity, new { @id = "StockQuantity", @class = "form-control" ,@type="number",@min="0",@onkeypress="return onlyNumberKey(event)",@onblur="if(this.value==''){this.value=0;}"})
+                            @Html.ValidationMessageFor(m => m.StockQuantity, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 </div>
@@ -289,40 +286,79 @@
                 <div id="ajaxresult">
                     <div>
                         <h4>Add a new picture</h4>
-                        <div class="col-md-3">Picture</div>
-                        <div class="col-md-12">
-                            @* <div id="pictureimage">
-                            <img src="https://cafe.shopfast.net/images/thumbs/default-image_100.png" id="imgsrc" style="height: 100px; width: 150px;">
-                            <input name="uploadimage" type="file" class="btn btn-success" accept="image/*" id="imageInput"  onchange="document.getElementById('imgsrc').src = window.URL.createObjectURL(this.files[0])">
-
-                            </div>*@
-                            <div class="upload-picture-block">
-                                <div class="picture-container">
-                                    <div id="@(clientId + "image")" class="uploaded-image">
-@*                                        <img src="@(await pictureService.GetPictureUrlAsync(Model, pictureSize, true))" width="@(pictureSize)" />
-*@                                    </div>
+                        <div class="row mb-2">
+                            <div class="col-md-2">
+                                <div>
+                                    <label style="margin-top: 40px;">Picture</label>
                                 </div>
-                                <div class="upload-button-container">
-                                    @*fine uploader container*@
-                                    <div id="@clientId" class="upload-image-button float-left px-md-1">
-                                        <noscript>
-                                            <p>Please enable JavaScript to use file uploader.</p>
-                                        </noscript>
-                                    </div>
-                                    <div class="remove-image-button float-left px-md-1">
-                                        @*@if (picture != null)
-                                        {*@
-                                            <span id="@(clientId + "remove")" class="btn btn-danger">@T("Admin.Picture.RemovePicture")</span>
-                                       @* }
-                                        else
-                                        {
-                                            <span id="@(clientId + "remove")" class="btn btn-danger" style="display: none;">@T("Admin.Picture.RemovePicture")</span>
-                                        }*@
-                                    </div>
+                                
+                            </div>
+                            <div class="col-md-10">
+                                <div id="pictureimage">
+                                    <img src="https://cafe.shopfast.net/images/thumbs/default-image_100.png" id="imgsrc" style="height: 100px; width: 150px;">
+                                    <input name="uploadimage" type="file" class="btn btn-success" accept="image/*" id="imageInput" onchange="document.getElementById('imgsrc').src = window.URL.createObjectURL(this.files[0])">
+
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">Alt</div>
+                        <div class="row mb-2">
+                            <div class="col-md-2">
+                                <label>Alt</label>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="text" name="altimage" id="altimage" class="form-control" maxlength="20" />
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-2">
+                                <label>Title</label>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="text" name="Title" id="Title" class="form-control" maxlength="20" />
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-2">
+                                <label>Display Order</label>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="number" name="displayorder" id="displayorder" class="form-control" min="0" maxlength="3" onkeypress="return onlyNumberKey(event)" />
+                            </div>
+                        </div>
+                       @* <div class="col-md-3">Picture</div>
+                        <div class="col-md-12">
+                            <div id="pictureimage">
+                                <img src="https://cafe.shopfast.net/images/thumbs/default-image_100.png" id="imgsrc" style="height: 100px; width: 150px;">
+                                <input name="uploadimage" type="file" class="btn btn-success" accept="image/*" id="imageInput" onchange="document.getElementById('imgsrc').src = window.URL.createObjectURL(this.files[0])">
+
+                            </div>*@
+                            @* <div class="upload-picture-block">
+                            <div class="picture-container">
+                            <div id="@(clientId + "image")" class="uploaded-image">
+                            @*                                        <img src="@(await pictureService.GetPictureUrlAsync(Model, pictureSize, true))" width="@(pictureSize)" />
+                            </div>
+                            </div>
+                            <div class="upload-button-container">
+                            @*fine uploader container
+                            <div id="@clientId" class="upload-image-button float-left px-md-1">
+                            <noscript>
+                            <p>Please enable JavaScript to use file uploader.</p>
+                            </noscript>
+                            </div>
+                            <div class="remove-image-button float-left px-md-1">
+                            @if (picture != null)
+                            {
+                            <span id="@(clientId + "remove")" class="btn btn-danger">@T("Admin.Picture.RemovePicture")</span>
+                            @* }
+                            else
+                            {
+                            <span id="@(clientId + "remove")" class="btn btn-danger" style="display: none;">@T("Admin.Picture.RemovePicture")</span>
+                            }
+                            </div>
+                            </div>
+                            </div>*@
+                       @* </div>*@
+                       @* <div class="col-md-3">Alt</div>
                         <div class="col-md-12">
                             <input type="text" name="altimage" id="altimage" class="form-control" maxlength="20" />
                         </div>
@@ -335,7 +371,7 @@
                         <div class="col-md-3">Display Order</div>
                         <div class="col-md-6">
                             <input type="number" name="displayorder" id="displayorder" class="form-control" min="0" maxlength="3" onkeypress="return onlyNumberKey(event)" />
-                        </div>
+                        </div>*@
                         <br>
 
                         <div class="col-md-3"></div>
@@ -349,83 +385,90 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5-stable/tinymce.min.js" referrerpolicy="origin"></script>
-
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2023.1.117/js/kendo.all.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2023.1.117/js/kendo.aspnetmvc.min.js"></script>
+    <script src="~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
-    <script type="text/template" id="@(clientId)-qq-template">
-        <div class="qq-uploader-selector qq-uploader">
-            <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
-                <span>@T("Common.FileUploader.DropFiles")</span>
-            </div>
-            <div class="qq-upload-button-selector btn bg-gradient-green">
-                <div>@T("Common.FileUploader.Upload")</div>
-            </div>
-            <span class="qq-drop-processing-selector qq-drop-processing">
-                <span>@T("Common.FileUploader.Processing")</span>
-                <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
-            </span>
-            <ul class="qq-upload-list-selector qq-upload-list">
-                <li>
-                    <div class="qq-progress-bar-container-selector">
-                        <div class="qq-progress-bar-selector qq-progress-bar"></div>
-                    </div>
-                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
-                    <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
-                    <span class="qq-upload-file-selector qq-upload-file"></span>
-                    <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
-                    <span class="qq-upload-size-selector qq-upload-size"></span>
-                    <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
-                    <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
-                    <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
-                    <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
-                </li>
-            </ul>
-        </div>
-    </script>
-    <script>
-        $(document).ready(function () {
 
-            var allowedExtensions = ["bmp", "gif", "jpeg", "jpg", "jpe", "jfif", "pjpeg", "pjp", "png", "tiff", "tif", "webp"];
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/caret/1.3.7/jquery.caret.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tag-editor/1.0.20/jquery.tag-editor.min.js" integrity="sha512-wexRM3SVzXnR9XDRR32JUDTyDZP3XGAsrsbVl+rBMupJsHZqbUCBMxVHDDzCpvKVhJqerRYoInsRA2ySEzpYLg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @*    <script src="https://cdnjs.cloudflare.com/ajax/libs/tag-editor/1.0.20/jquery.tag-editor.js" integrity="sha512-Q97Wbo3X93J1a+cM+MftacnX5zhx2iPbw68tM6HFo44un46h3NojL8aKW+jFTplOu5YhfctmSd6OPBnd0NdC6w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    *@
+    @*<script type="text/template" id="@(clientId)-qq-template">
+    <div class="qq-uploader-selector qq-uploader">
+    <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+    <span>@T("Common.FileUploader.DropFiles")</span>
+    </div>
+    <div class="qq-upload-button-selector btn bg-gradient-green">
+    <div>@T("Common.FileUploader.Upload")</div>
+    </div>
+    <span class="qq-drop-processing-selector qq-drop-processing">
+    <span>@T("Common.FileUploader.Processing")</span>
+    <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+    </span>
+    <ul class="qq-upload-list-selector qq-upload-list">
+    <li>
+    <div class="qq-progress-bar-container-selector">
+    <div class="qq-progress-bar-selector qq-progress-bar"></div>
+    </div>
+    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+    <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
+    <span class="qq-upload-file-selector qq-upload-file"></span>
+    <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+    <span class="qq-upload-size-selector qq-upload-size"></span>
+    <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
+    <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
+    <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
+    <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
+    </li>
+    </ul>
+    </div>
+    </script>*@
+    @*<script>
+    $(document).ready(function () {
+    var allowedExtensions = ["bmp", "gif", "jpeg", "jpg", "jpe", "jfif", "pjpeg", "pjp", "png", "tiff", "tif", "webp"];
+    @{
+    if (mediaSettings.AllowSVGUploads)
+    {
+    <text>
+    allowedExtensions.push("svg");
+    </text>
+    }
+    }
 
-        @{
-            if (mediaSettings.AllowSVGUploads)
-            {
-                <text>
-                        allowedExtensions.push("svg");
-                </text>
-            }
-        }
-
-                $("#@(clientId)").fineUploader({
-                    request: {
-                        endpoint: '@(Url.Content("~/Admin/Picture/AsyncUpload"))'
-                    },
-                    template: "@(clientId)-qq-template",
-                    multiple: false,
-                    validation: {
-                        allowedExtensions: allowedExtensions
-                    }
-                }).on("complete", function (event, id, name, responseJSON, xhr) {
-                    if (responseJSON.success) {
-                        $("#@(clientId + "image")").html("<img src='" + responseJSON.imageUrl + "' width='@(pictureSize)'/> ");
-                        $("#@(clientId + "value") input").val(responseJSON.pictureId);
-                        $("#@(clientId + "remove")").show();
-                    }
-                });
-            $("#@(clientId + "remove")").click(function (e) {
-                $("#@(clientId + "image")").html("<img src='' />");
-                $("#@(clientId + "value") input").val(0);
-                $("#@(clientId) .qq-upload-list-selector").empty();
-                $(this).hide();
-            });
-        });
-    </script>
+    $("#@(clientId)").fineUploader({
+    request: {
+    endpoint: '@(Url.Content("~/Admin/Picture/AsyncUpload"))'
+    },
+    template: "@(clientId)-qq-template",
+    multiple: false,
+    validation: {
+    allowedExtensions: allowedExtensions
+    }
+    }).on("complete", function (event, id, name, responseJSON, xhr) {
+    if (responseJSON.success) {
+    $("#@(clientId + "image")").html("<img src='" + responseJSON.imageUrl + "' width='@(pictureSize)'/> ");
+    $("#@(clientId + "value") input").val(responseJSON.pictureId);
+    $("#@(clientId + "remove")").show();
+    }
+    });
+    $("#@(clientId + "remove")").click(function (e) {
+    $("#@(clientId + "image")").html("<img src='' />");
+    $("#@(clientId + "value") input").val(0);
+    $("#@(clientId) .qq-upload-list-selector").empty();
+    $(this).hide();
+    });
+    });
+    </script>*@
     <script>
         //function readURL() {
         //    var $input = $(this);
@@ -435,31 +478,33 @@
         //        reader.onload = function (e) {
         //            reset($newinput.next('.delbtn'), true);
         //            $newinput.attr('src', e.target.result).show();
-        //            $newinput.after('<button type="button" class="delbtn removebtn" onclick="reset()"><i class="icon-remove"></i></button>');
+        //            //$newinput.after('<button type="button" class="delbtn removebtn" onclick="reset()"><i class="icon-remove"></i></button>');
         //        }
         //        reader.readAsDataURL(this.files[0]);
         //    }
         //}
         //$("#imageInput").change(readURL);
-        ////$(".delbtn").on('click', function (e) {
-        ////    alert(1);
-        ////    reset($(this));
-        ////});
+        //$(".delbtn").on('click', function (e) {
+        //    alert(1);
+        //    reset($(this));
+        //});
 
-        //function reset() {
-        //    var elm = $("#imageInput").val();
-        //    if (elm && elm.length > 0) {
-        //        var $input = elm;
-        //        $('#imgsrc').attr('src', 'https://cafe.shopfast.net/images/thumbs/default-image_100.png');
+        function reset() {
+            var elm = $("#imageInput").val();
+            if (elm && elm.length > 0) {
+                var $input = elm;
+                $('#imgsrc').attr('src', 'https://cafe.shopfast.net/images/thumbs/default-image_100.png');
 
-        //        $($input).parent().parent().parent().find('input#imageInput ').val("");
-        //       // $(".removebtn").addClass("resetbtns");
-        //        //input.fileUpload and input#uploadre both need to empty values for particular div
+                $($input).parent().parent().parent().find('input#imageInput').val("");
+                // $(".removebtn").addClass("resetbtns");
+                //input.fileUpload and input#uploadre both need to empty values for particular div
 
 
-        //    }
-        //}
-
+            }
+        }
+        function ConfirmDelete() {
+            return confirm("Are you sure you want to delete this Product?");
+        }
         tinymce.init({
             selector: '#FullDescription',
             plugins: [
@@ -473,6 +518,20 @@
             height: 400
 
         });
+        $(document).ready(function () { $("#Price").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000 USD" }) });
+        function Checkvalidate() {
+            var flag = true;
+            var pname = $("#ProductName").val();
+            if (pname.trim().length == 0) {
+                $(".pnameerror").text("Only white space not allowed.");
+                $("#ProductName").val("");
+                flag = true;
+            }
+            return flag;
+        }
+        $(document).ready(function () { $("#StockQuantity").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+        $(document).ready(function () { $("#displayorder").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+
         // JavaScript to toggle the accordion
         function toggleAccordion(event) {
             var accordionHeader = event.target;
@@ -484,6 +543,7 @@
                 accordionContent.style.display = "block";
             }
         }
+
         $('.select2').select2({
             closeOnSelect: false
         });
@@ -494,7 +554,6 @@
                 $("#drptaxcategoryid").show();
             }
             var InventoryMethod = $('#InventoryMethod').val();
-
             if (InventoryMethod == 1)
                 $("#stockID").show();
             else
@@ -583,7 +642,7 @@
                             tr.append("<td>" + response.data[i].Displayorder + "</td>");
                             tr.append("<td>" + response.data[i].AltImage + "</td>");
                             tr.append("<td>" + response.data[i].Title + "</td>");
-                            tr.append("<td><button type='button' class='btn' onclick='DeleteImage(" + response.data[i].ImageID + ");'>Delete</button></td>");
+                            tr.append("<td><button type='button' class='btn btn-link' onclick='DeleteImage(" + response.data[i].ImageID + ");'>Delete</button></td>");
                             $('#Imagegrid').append(tr);
 
                         }
@@ -591,7 +650,9 @@
                         $('#imageInput').val('');
                         $("#altimage").val("");
                         $("#Title").val("");
-                        $("#displayorder").val("");
+                        //$("#displayorder").val(0);
+                        var numeric = $("#displayorder").data("kendoNumericTextBox");
+                        numeric.value(null);
                         $('#Imagegrid').DataTable({
                             pagingType: 'full_numbers',
                             searching: false,
@@ -634,7 +695,7 @@
                             tr.append("<td>" + response.data[i].Displayorder + "</td>");
                             tr.append("<td>" + response.data[i].AltImage + "</td>");
                             tr.append("<td>" + response.data[i].Title + "</td>");
-                            tr.append("<td><button type='button' class='btn' onclick='DeleteImage(" + response.data[i].ImageID + ");'>Delete</button></td>");
+                            tr.append("<td><button type='button' class='btn btn-link' onclick='DeleteImage(" + response.data[i].ImageID + ");'>Delete</button></td>");
 
                             $('#Imagegrid').append(tr);
 
@@ -643,7 +704,8 @@
                         $('#imageInput').val('');
                         $("#altimage").val("");
                         $("#Title").val("");
-                        $("#displayorder").val("");
+                        var numeric = $("#displayorder").data("kendoNumericTextBox");
+                        numeric.value(null);
                         $('#Imagegrid').DataTable({
                             pagingType: 'full_numbers',
                             searching: false,

@@ -1261,7 +1261,11 @@
     <None Remove="lib_npm\typeahead.js\typeahead.bundle.min.js" />
     <None Remove="lib_npm\typeahead.js\typeahead.jquery.min.js" />
     <None Remove="plugin.json" />
+    <None Remove="Views\AddProduct - Copy.cshtml" />
     <None Remove="Views\AddProduct.cshtml" />
+    <None Remove="Views\Category\AddCategory.cshtml" />
+    <None Remove="Views\Category\CategoryList.cshtml" />
+    <None Remove="Views\Category\EditCategory.cshtml" />
     <None Remove="Views\EditProduct.cshtml" />
     <None Remove="Views\ProductList.cshtml" />
     <None Remove="Content\bootstrap.min.css" />
@@ -6305,6 +6309,18 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <Content Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\AddProduct - Copy.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Category\AddCategory.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Category\EditCategory.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Category\CategoryList.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\EditProduct.cshtml">

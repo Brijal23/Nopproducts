@@ -21,9 +21,59 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
     {
 
         [HttpGet]
-        public ActionResult CategoryList(string CategoryName = "", string published = "All")
+        public ActionResult CategoryList(/*string CategoryName = "", string published = "All"*/)
         {
 
+            List<Category> categories = new();
+            try
+            {
+                string constr = @"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True";
+
+                using (SqlConnection connection = new SqlConnection(constr))
+                {
+                    connection.Open();
+                    string Query = "";
+                    Query = "SELECT * FROM Categories AS C WHERE IsActive=1";
+                    //if (CategoryName != "" && CategoryName != null)
+                    //{
+                    //    Query += " AND C.CategoryName LIKE '%" + CategoryName + "%'";
+                    //}
+                    //if (published != "All")
+                    //{
+                    //    int Ipublished = Convert.ToInt32(published);
+                    //    Query += " AND C.IsPublished =" + Ipublished + "";
+                    //}
+                    using (SqlCommand command = new SqlCommand(Query, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                categories.Add(new Category
+                                {
+                                    CategoryName = reader["CategoryName"].ToString(),
+                                    CategoryID = Convert.ToInt32(reader["CategoryID"].ToString()),
+                                    Displayorder = Convert.ToInt32(reader["Displayorder"].ToString()),
+                                    IsPublished = Convert.ToBoolean(reader["IsPublished"].ToString()) == true ? true : false,
+                                });
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.SuccessMessage = ex.Message.ToString();
+                return View("~/Plugins/Widgets.BasicPlugins/Views/Category/CategoryList.cshtml", categories);
+            }
+            //ViewBag.Categorynamesearch = CategoryName;
+            //ViewBag.publishedsearch = published;
+            return View("~/Plugins/Widgets.BasicPlugins/Views/Category/CategoryList.cshtml", categories);
+        }
+        [HttpGet]
+        public ActionResult Search(string CategoryName, string published)
+        {
             List<Category> categories = new();
             try
             {
@@ -65,13 +115,12 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             catch (Exception ex)
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
-                return View("~/Plugins/Widgets.BasicPlugins/Views/Category/CategoryList.cshtml", categories);
+                return Json(new { data = categories, status = "error" });
             }
-            ViewBag.Categorynamesearch = CategoryName;
-            ViewBag.publishedsearch = published;
-            return View("~/Plugins/Widgets.BasicPlugins/Views/Category/CategoryList.cshtml", categories);
+            
+            return Json(new { data = categories, status = "success" });
         }
-        [HttpGet]
+            [HttpGet]
         public ActionResult AddCategory(int id = 0)
         {
             Category category = new();
@@ -217,7 +266,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
         [HttpPost]
         public ActionResult EditCategory(Category category,string Command)
         {
-            // GetAllMethods(product);
+            GetAllMethods(category);
             try
             {
                 if (!ModelState.IsValid)

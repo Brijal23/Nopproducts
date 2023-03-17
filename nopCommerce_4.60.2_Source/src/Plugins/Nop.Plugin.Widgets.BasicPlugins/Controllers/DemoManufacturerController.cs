@@ -21,9 +21,59 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
     {
 
         [HttpGet]
-        public ActionResult ManufacturerList(string ManufacturerName = "", string published = "All")
+        public ActionResult ManufacturerList(/*string ManufacturerName = "", string published = "All"*/)
         {
 
+            List<Manufacturer> Manufacturers = new();
+            try
+            {
+                string constr = @"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True";
+
+                using (SqlConnection connection = new SqlConnection(constr))
+                {
+                    connection.Open();
+                    string Query = "";
+                    Query = "SELECT * FROM Manufacturers AS C WHERE IsActive=1";
+                    //if (ManufacturerName != "" && ManufacturerName != null)
+                    //{
+                    //    Query += " AND C.ManufacturerName LIKE '%" + ManufacturerName + "%'";
+                    //}
+                    //if (published != "All")
+                    //{
+                    //    int Ipublished = Convert.ToInt32(published);
+                    //    Query += " AND C.IsPublished =" + Ipublished + "";
+                    //}
+                    using (SqlCommand command = new SqlCommand(Query, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Manufacturers.Add(new Manufacturer
+                                {
+                                    ManufacturerName = reader["ManufacturerName"].ToString(),
+                                    ManufacturerID = Convert.ToInt32(reader["ManufacturerID"].ToString()),
+                                    Displayorder = Convert.ToInt32(reader["Displayorder"].ToString()),
+                                    IsPublished = Convert.ToBoolean(reader["IsPublished"].ToString()) == true ? true : false,
+                                });
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.SuccessMessage = ex.Message.ToString();
+                return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/ManufacturerList.cshtml", Manufacturers);
+            }
+            //ViewBag.Manufacturernamesearch = ManufacturerName;
+            //ViewBag.publishedsearch = published;
+            return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/ManufacturerList.cshtml", Manufacturers);
+        }
+        [HttpGet]
+        public ActionResult Search(string ManufacturerName, string published)
+        {
             List<Manufacturer> Manufacturers = new();
             try
             {
@@ -56,7 +106,6 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                     Displayorder = Convert.ToInt32(reader["Displayorder"].ToString()),
                                     IsPublished = Convert.ToBoolean(reader["IsPublished"].ToString()) == true ? true : false,
                                 });
-
                             }
                         }
                     }
@@ -65,11 +114,9 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             catch (Exception ex)
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
-                return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/ManufacturerList.cshtml", Manufacturers);
+                return Json(new { data = Manufacturers, status = "error" });
             }
-            ViewBag.Manufacturernamesearch = ManufacturerName;
-            ViewBag.publishedsearch = published;
-            return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/ManufacturerList.cshtml", Manufacturers);
+            return Json(new { data = Manufacturers, status = "success" });
         }
         [HttpGet]
         public ActionResult AddManufacturer(int id = 0)
@@ -201,7 +248,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/EditManufacturer.cshtml", Manufacturer);
         }
         [HttpPost]
-        public ActionResult EditManufacturer(Manufacturer Manufacturer,string Command)
+        public ActionResult EditManufacturer(Manufacturer Manufacturer, string Command)
         {
             // GetAllMethods(product);
             try

@@ -60,18 +60,17 @@
         <div class="accordion">
             <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-search">&nbsp;&nbsp;&nbsp;</i>Search</div>
             <div class="accordion-content">
-
+@*
                 @using (Html.BeginForm("CategoryList", "DemoCategory", FormMethod.Get, new { @onsubmit = "return checkvalidation()" }))
-                {
+                {*@
                     <div>
                         <div class="row">
                             <div class="col-sm-3" style="margin-left: 93px"><label>Category name</label></div>
                             <div class="col-sm-3" style="margin-left: -160px;margin-right: 150px;">
-                                <input type="text" name="CategoryName" id="CategoryName" class="form-control" value="@ViewBag.Categorynamesearch" />
+                                <input type="text" name="CategoryName" id="CategoryName" class="form-control" />
                             </div>
                             <div class="col-sm-3"><label>Published</label></div>
                             <div class="col-sm-3" style="margin-left: -160px;">
-                                <input type="hidden" id="hiddenpublished" value="@ViewBag.publishedsearch" />
                                 <select class="form-control" id="SearchPublishedId" name="published">
                                     <option value="All">All</option>
                                     <option value="1">Published only</option>
@@ -81,12 +80,12 @@
                         </div>
                         <br><br>
                         <div style="text-align:center;">
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i>&nbsp; Search</button>
+                        <button type="button" class="btn btn-primary" onclick="SearchList();"><i class="fa fa-search"></i>&nbsp; Search</button>
                         </div>
                     </div>
-                }
+               @* }
 
-
+*@
             </div>
         </div>
 
@@ -174,6 +173,59 @@
                 ]
             });
         });
+        function SearchList() {
+            var CategoryName = $("#CategoryName").val();
+            var SearchPublishedId = $("#SearchPublishedId").val();
+
+            $.ajax({
+                type: 'Get',
+                url: "/Admin/DemoCategory/Search?CategoryName=" + CategoryName + "&published=" + SearchPublishedId + "",
+                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status == "success") {
+                        //var table = $('#Imagegrid').DataTable();
+                        //table.clear().draw();
+                        if ($.fn.DataTable.isDataTable('#example')) {
+                            $('#example').DataTable().destroy();
+                        }
+                        $('#example tbody').empty();
+
+                        //table.fnClearTable();
+                        var tr;
+                        //Append each row to html table
+                        for (var i = 0; i < response.data.length; i++) {
+                            console.log(response.data);
+                            tr = $('<tr/>');
+                            tr.append("<td hidden>" + response.data[i].CategoryID + "</td>");
+                            tr.append("<td><input type='checkbox' name='itemIds' class='checkboxGroups' value='" + response.data[i].CategoryID + "' /></td>");
+                            tr.append("<td>" + response.data[i].CategoryName + "</td>");
+                            if (response.data[i].IsPublished == true)
+                                tr.append("<td><p>Yes</p></td>");
+                            else tr.append("<td><p>No</p></td>");
+                            tr.append("<td>" + response.data[i].Displayorder + "</td>");
+                            tr.append('<td><a href="/Admin/DemoCategory/EditCategory/' + response.data[i].CategoryID + '">Edit</a></td>');
+                            $('#example').append(tr);
+                        }
+                        $('#example').DataTable({
+                            pagingType: 'full_numbers',
+                            searching: false,
+                            sorting: [[0, 'desc']],
+                            aoColumnDefs: [
+                                {
+                                    bSortable: false,
+                                    aTargets: [1, 5]
+                                }
+                            ]
+                        });
+
+                    }
+                },
+                error: function (err) {
+                    alert("Error occurs" + err.responseText);
+                }
+            });
+        }
         //$(document).ready(function () {
         //    $("#example input[id='chkAll']:checkbox").click(function () {
         //        if ($(this).is(":checked")) {

@@ -60,23 +60,19 @@
         <div class="accordion">
             <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-search">&nbsp;&nbsp;&nbsp;</i>Search</div>
             <div class="accordion-content">
-
-                @using (Html.BeginForm("ProductTagList", "DemoProductTag", FormMethod.Get, new { @onsubmit = "return checkvalidation()" }))
-                {
                     <div>
                         <div class="row">
                             <div class="col-sm-3" style="margin-left: 93px"><label>Tag name</label></div>
                             <div class="col-sm-3" style="margin-left: -160px;margin-right: 150px;">
-                                <input type="text" name="ProductTagName" id="ProductTagName" class="form-control" value="@ViewBag.ProductTagnamesearch" />
+                                <input type="text" name="ProductTagName" id="ProductTagName" class="form-control" />
                             </div>
                             
                         </div>
                         <br><br>
                         <div style="text-align:center;">
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i>&nbsp; Search</button>
+                            <button type="button" class="btn btn-primary" onclick="SearchList();"><i class="fa fa-search"></i>&nbsp; Search</button>
                         </div>
                     </div>
-                }
             </div>
         </div>
         <div class="form-group">
@@ -146,7 +142,54 @@
                 ]
             });
         });
-        
+        function SearchList() {
+            var ProductTagName = $("#ProductTagName").val();
+            $.ajax({
+                type: 'Get',
+                url: "/Admin/DemoProductTag/Search?ProductTagName=" + ProductTagName + "",
+                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status == "success") {
+                        //var table = $('#Imagegrid').DataTable();
+                        //table.clear().draw();
+                        if ($.fn.DataTable.isDataTable('#example')) {
+                            $('#example').DataTable().destroy();
+                        }
+                        $('#example tbody').empty();
+
+                        //table.fnClearTable();
+                        var tr;
+                        //Append each row to html table
+                        for (var i = 0; i < response.data.length; i++) {
+                            console.log(response.data);
+                            tr = $('<tr/>');
+                            tr.append("<td hidden>" + response.data[i].ProductTagID + "</td>");
+                            tr.append("<td><input type='checkbox' name='itemIds' class='checkboxGroups' value='" + response.data[i].ProductTagID + "' /></td>");
+                            tr.append("<td>" + response.data[i].ProductTagName + "</td>");
+                            tr.append("<td>0</td>");
+                            tr.append('<td><a href="/Admin/DemoProductTag/EditProductTag/' + response.data[i].ProductTagID + '">Edit</a></td>');
+                            $('#example').append(tr);
+                        }
+                        $('#example').DataTable({
+                            pagingType: 'full_numbers',
+                            searching: false,
+                            sorting: [[0, 'desc']],
+                            aoColumnDefs: [
+                                {
+                                    bSortable: false,
+                                    aTargets: [1, 4]
+                                }
+                            ]
+                        });
+
+                    }
+                },
+                error: function (err) {
+                    alert("Error occurs" + err.responseText);
+                }
+            });
+        }
         $(document).ready(function () {
             $('#chkAll').click(function () {
                 var isChecked = $(this).prop("checked");

@@ -1263,7 +1263,9 @@
     <None Remove="plugin.json" />
     <None Remove="Views\AddProduct - Copy.cshtml" />
     <None Remove="Views\AddProduct.cshtml" />
+    <None Remove="Views\ProductAttribute\AddPredefineValue.cshtml" />
     <None Remove="Views\ProductAttribute\AddProductAttribute.cshtml" />
+    <None Remove="Views\ProductAttribute\EditPredefineValue.cshtml" />
     <None Remove="Views\ProductAttribute\EditProductAttribute.cshtml" />
     <None Remove="Views\ProductAttribute\ProductAttributeList.cshtml" />
     <None Remove="Views\ProductTag\AddProductTag.cshtml" />
@@ -6321,6 +6323,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\AddProduct - Copy.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\ProductAttribute\EditPredefineValue.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\ProductAttribute\AddPredefineValue.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\ProductAttribute\AddProductAttribute.cshtml">

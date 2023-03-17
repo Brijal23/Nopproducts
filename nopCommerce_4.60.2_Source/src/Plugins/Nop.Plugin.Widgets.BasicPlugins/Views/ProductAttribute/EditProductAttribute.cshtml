@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css" />
 
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.2.510/styles/kendo.common.min.css">
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.2.510/styles/kendo.default.min.css">
@@ -132,8 +133,76 @@
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Predefined values</div>
                 <div class="accordion-content">
-                    Predefined (default) values are helpful for a store owner when creating new products. Then when you add the attribute to a product, you don't have to create the values again.
+                    <p>Predefined (default) values are helpful for a store owner when creating new products. Then when you add the attribute to a product, you don't have to create the values again.</p><br>
+                    <table class="table table-bordered table-hover display" id="predefineexample">
+                        <thead>
+                            <tr>
+                                <th hidden></th>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Price adjustment
+                                </th>
+                                <th>
+                                    Weight adjustment
+                                </th>
+                                <th>
+                                    Is pre-selected
+                                </th>
+                                <th>
+                                    Display order
+                                </th>
+                                <th>
+                                    Edit
+                                </th>
+                                <th>
+                                    Delete
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.PredefineValues != null)
+                            {
+                                @foreach (var item in Model.PredefineValues)
+                                {
+                                    <tr>
+                                        <td hidden>@item.PredefinevalueID</td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ValueName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.sPriceadjustment)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.sWeightadjustment)
+                                        </td>
+                                        <td>
+                                            @if (item.Ispreselected == true)
+                                            {
+                                                <p>Yes</p>
+                                            }
+                                            else
+                                            {
+                                                <p>No</p>
+                                            }
 
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Displayorder)
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-link" onclick="EditValues(@item.PredefinevalueID);">Edit</button>
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Delete", "DeletePredefinevalue", new { id=item.PredefinevalueID,ids=Model.ProductAttributeID},new{@Onclick="return ConfirmDelete();"})
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <button type="button" id="addPredefineValue" class="btn btn-primary" onclick="AddPredefineValues()">Add Predefine Value</button>
                 </div>
             </div>
         }
@@ -142,7 +211,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-   
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+
     <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5-stable/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
@@ -155,18 +225,27 @@
 
     <script>
 
-        function Checkvalidate() {
-            var flag = true;
-            var pname = $("#ProductAttributeName").val();
-            if (pname.trim().length == 0) {
-                $(".pnameerror").text("Only white space not allowed.");
-                $("#ProductAttributeName").val("");
-                flag = true;
-            }
-            return flag;
-        }
+        //function Checkvalidate() {
+        //    var flag = true;
+        //    var pname = $("#ProductAttributeName").val();
+        //    if (pname.trim().length == 0) {
+        //        $(".pnameerror").text("Only white space not allowed.");
+        //        $("#ProductAttributeName").val("");
+        //        flag = true;
+        //    }
+        //    return flag;
+        //}
+        $('#predefineexample').DataTable({
+            pagingType: 'full_numbers',
+            searching: false,
+            sorting: [[0, 'desc']],
+            columnDefs: [{
+                targets: [6, 7], // column index (start from 0)
+                orderable: false, // set orderable false for selected columns
+            }]
+        });
         function ConfirmDelete() {
-            return confirm("Are you sure you want to delete this ProductAttribute?");
+            return confirm("Are you sure you want to perform this action?");
         }
         tinymce.init({
             selector: '#Description',
@@ -198,6 +277,18 @@
             if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
                 return false;
             return true;
+        }
+        function AddPredefineValues() {
+            var ProductAttributeId = $("#ProductAttributeID").val();
+            var url = "https://localhost:51590/Admin/DemoProductAttribute/AddPredefineValue?ProductAttributeId=" + ProductAttributeId + "";
+            window.open(url, '_blank ');
+
+        }
+        function EditValues(id) {
+            var ProductAttributeId = $("#ProductAttributeID").val();
+            var url = "https://localhost:51590/Admin/DemoProductAttribute/EditPredefineValue?ProductAttributeId=" + ProductAttributeId + "&PredefinevalueID=" + id + "";
+            window.open(url, '_blank ');
+
         }
     </script>
 </body>

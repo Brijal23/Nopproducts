@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
+using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Widgets.BasicPlugins.Models;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using DateTime = System.DateTime;
+using ProductTag = Nop.Plugin.Widgets.BasicPlugins.Models.ProductTag;
 
 namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
 {
@@ -21,7 +23,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
     {
 
         [HttpGet]
-        public ActionResult ProductTagList(string ProductTagName = "")
+        public ActionResult ProductTagList()
         {
 
             List<ProductTag> ProductTags = new();
@@ -34,10 +36,6 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     connection.Open();
                     string Query = "";
                     Query = "SELECT * FROM ProductTags AS C WHERE IsActive=1";
-                    if (ProductTagName != "" && ProductTagName != null)
-                    {
-                        Query += " AND C.ProductTagName LIKE '%" + ProductTagName + "%'";
-                    }
                    
                     using (SqlCommand command = new SqlCommand(Query, connection))
                     {
@@ -61,8 +59,49 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                 ViewBag.SuccessMessage = ex.Message.ToString();
                 return View("~/Plugins/Widgets.BasicPlugins/Views/ProductTag/ProductTagList.cshtml", ProductTags);
             }
-            ViewBag.ProductTagnamesearch = ProductTagName;
             return View("~/Plugins/Widgets.BasicPlugins/Views/ProductTag/ProductTagList.cshtml", ProductTags);
+        }
+        [HttpGet]
+        public ActionResult Search(string ProductTagName = "")
+        {
+            List<ProductTag> ProductTags = new();
+            try
+            {
+                string constr = @"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True";
+
+                using (SqlConnection connection = new SqlConnection(constr))
+                {
+                    connection.Open();
+                    string Query = "";
+                    Query = "SELECT * FROM ProductTags AS C WHERE IsActive=1";
+                    if (ProductTagName != "" && ProductTagName != null)
+                    {
+                        Query += " AND C.ProductTagName LIKE '%" + ProductTagName + "%'";
+                    }
+
+                    using (SqlCommand command = new SqlCommand(Query, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                ProductTags.Add(new ProductTag
+                                {
+                                    ProductTagName = reader["ProductTagName"].ToString(),
+                                    ProductTagID = Convert.ToInt32(reader["ProductTagID"].ToString()),
+                                });
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.SuccessMessage = ex.Message.ToString();
+                return Json(new { data = ProductTags, status = "error" });
+            }
+            return Json(new { data = ProductTags, status = "success" });
         }
         [HttpGet]
         public ActionResult AddProductTag(int id = 0)
@@ -151,6 +190,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             }
             return View("~/Plugins/Widgets.BasicPlugins/Views/ProductTag/AddProductTag.cshtml", ProductTag);
         }
+
         [HttpGet]
         public ActionResult EditProductTag(int id)
         {

@@ -34,10 +34,10 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
     {
 
         [HttpGet]
-        public ActionResult ProductList(string productName = "", string published = "All", string category = "0")
+        public ActionResult ProductList(/*string productName = "", string published = "All", string category = "0"*/)
         {
-            if (string.IsNullOrWhiteSpace(productName))
-                productName = null;
+            //if (string.IsNullOrWhiteSpace(productName))
+            //    productName = null;
             List<Product> Products = new();
             try
             {
@@ -50,24 +50,24 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     string Query1 = "";
                     string Query2 = "";
                     string Query3 = "";
-                    if (category != "0")
-                    {
-                       Query = " INNER JOIN [dbo].[CategoryDetail] as C on C.ProductID = P.ProductID";
-                    }
-                    if (category != "0")
-                    {
-                        int Icategory = Convert.ToInt32(category);
-                        Query1 = " AND C.CategoryID =" + Icategory + "";
-                    }
-                    if (productName != "" && productName != null)
-                    {
-                        Query2 = " AND P.ProductName LIKE '%" + productName + "%'";
-                    }
-                    if (published != "All")
-                    {
-                        int Ipublished = Convert.ToInt32(published);
-                        Query3 = " AND P.IsPublished =" + Ipublished + "";
-                    }
+                    //if (category != "0")
+                    //{
+                    //   Query = " INNER JOIN [dbo].[CategoryDetail] as C on C.ProductID = P.ProductID";
+                    //}
+                    //if (category != "0")
+                    //{
+                    //    int Icategory = Convert.ToInt32(category);
+                    //    Query1 = " AND C.CategoryID =" + Icategory + "";
+                    //}
+                    //if (productName != "" && productName != null)
+                    //{
+                    //    Query2 = " AND P.ProductName LIKE '%" + productName + "%'";
+                    //}
+                    //if (published != "All")
+                    //{
+                    //    int Ipublished = Convert.ToInt32(published);
+                    //    Query3 = " AND P.IsPublished =" + Ipublished + "";
+                    //}
                     string Q = "SELECT P.ProductID,P.ProductName,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID" + Query + " WHERE P.IsActive=1 "+ Query1 + Query2 + Query3 + " and I.ImageID IN (SELECT MAX(ImageID) FROM ImageDetail GROUP BY ProductID) Union SELECT * FROM (SELECT P.ProductID,P.ProductName,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID " + Query + " WHERE P.IsActive=1 "+ Query1 + Query2 + Query3 + ") as X WHERE X.ImageData is null";
                     using (SqlCommand command = new SqlCommand(Q, connection))
                     {
@@ -91,9 +91,9 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                     }
                 }
-                ViewBag.productnamesearch = productName;
-                ViewBag.publishedsearch = published;
-                ViewBag.categorysearch = category;
+                //ViewBag.productnamesearch = productName;
+                //ViewBag.publishedsearch = published;
+                //ViewBag.categorysearch = category;
                 return View("~/Plugins/Widgets.BasicPlugins/Views/ProductList.cshtml", Products);
             }
             catch (Exception ex)
@@ -101,6 +101,72 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                 ViewBag.SuccessMessage = ex.Message.ToString();
                 return View("~/Plugins/Widgets.BasicPlugins/Views/ProductList.cshtml", Products);
             }            
+        }
+        [HttpGet]
+        public ActionResult Search(string productName, string SearchCategoryId, string SearchPublishedId)
+        {
+            List<Product> Products = new();
+            try
+            {
+                string constr = @"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True";
+
+                using (SqlConnection connection = new SqlConnection(constr))
+                {
+                    connection.Open();
+                    string Query = "";
+                    string Query1 = "";
+                    string Query2 = "";
+                    string Query3 = "";
+                    if (SearchCategoryId != "0" && SearchCategoryId != null && SearchCategoryId != "")
+                    {
+                        Query = " INNER JOIN [dbo].[CategoryDetail] as C on C.ProductID = P.ProductID";
+                    }
+                    if (SearchCategoryId != "0" && SearchCategoryId != null && SearchCategoryId != "")
+                    {
+                        int Icategory = Convert.ToInt32(SearchCategoryId);
+                        Query1 = " AND C.CategoryID =" + Icategory + "";
+                    }
+                    if (productName != "" && productName != null)
+                    {
+                        Query2 = " AND P.ProductName LIKE '%" + productName + "%'";
+                    }
+                    if (SearchPublishedId != "All")
+                    {
+                        int Ipublished = Convert.ToInt32(SearchPublishedId);
+                        Query3 = " AND P.IsPublished =" + Ipublished + "";
+                    }
+                    string Q = "SELECT P.ProductID,P.ProductName,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID" + Query + " WHERE P.IsActive=1 " + Query1 + Query2 + Query3 + " and I.ImageID IN (SELECT MAX(ImageID) FROM ImageDetail GROUP BY ProductID) Union SELECT * FROM (SELECT P.ProductID,P.ProductName,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID " + Query + " WHERE P.IsActive=1 " + Query1 + Query2 + Query3 + ") as X WHERE X.ImageData is null";
+                    using (SqlCommand command = new SqlCommand(Q, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Products.Add(new Product
+                                {
+                                    SFile = reader["ImageData"].ToString() != "" ? RetrieveImage((byte[])reader["ImageData"]) : "https://cafe.shopfast.net/images/thumbs/default-image_100.png",
+                                    ProductName = reader["ProductName"].ToString(),
+                                    ProductID = Convert.ToInt32(reader["ProductID"].ToString()),
+                                    SKU = reader["SKU"].ToString(),
+                                    SPrice = reader["Price"].ToString().Replace(".0000", "") + " USD",
+                                    IsPublished = Convert.ToBoolean(reader["IsPublished"].ToString()) == true ? true : false,
+                                    StockQuantity = Convert.ToInt32(reader["StockQuantity"].ToString()),
+                                    CreatedDate = Convert.ToDateTime(reader["CreatedDate"])
+                                });
+
+                            }
+                        }
+                    }
+                }
+
+                return Json(new { data = Products, status = "success" });
+            }
+            catch (Exception ex)
+            {
+                ViewBag.SuccessMessage = ex.Message.ToString();
+                return Json(new { data = Products, status = "error" });
+            }
+            
         }
         [HttpGet]
         public ActionResult AddProduct(int id = 0)

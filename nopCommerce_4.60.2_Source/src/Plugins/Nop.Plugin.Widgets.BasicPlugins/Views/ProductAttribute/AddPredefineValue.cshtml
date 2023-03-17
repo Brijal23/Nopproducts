@@ -1,12 +1,13 @@
-﻿@model Nop.Plugin.Widgets.BasicPlugins.Models.ProductAttribute
+﻿@model Nop.Plugin.Widgets.BasicPlugins.Models.PredefineValues
 <!DOCTYPE html>
 <html>
 <head>
     <title>Create Product Attribute</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css" />
 
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.2.510/styles/kendo.common.min.css">
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.2.510/styles/kendo.default.min.css">
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.2.510/styles/kendo.mobile.all.min.css">
@@ -38,8 +39,7 @@
             padding: 10px;
             /* display: none;*/
         }
-
-            .accordion-content.show {
+         .accordion-content.show {
                 display: block;
             }
 
@@ -73,27 +73,16 @@
 <body>
     <div class="container" style="padding: 10px; max-width:1600px;">
 
-        @using (Html.BeginForm("AddProductAttribute", "DemoProductAttribute", FormMethod.Post, new { @class = "form-horizontal" }))
+        @using (Html.BeginForm("AddPredefineValue", "DemoProductAttribute", FormMethod.Post, new { @class = "form-horizontal" }))
         {
-
             <div class="row">
                 <div class="col-md-6">
-                    <h2>Add Product Attribute </h2>
+                    <h2>Add  Predefine Value </h2>
                 </div>
-                @* <div class="col-md-5">
-            </div>*@
                 <div class="col-md-6">
-                    <a href='@Url.Action("ProductAttributeList", "DemoProductAttribute")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to ProductAttribute List</a>
-                    <button type="submit" class="btn btn-primary text-center" style="float:right; margin-left: 15px;" value="saveedit" name="Command">Save and Continue Edit</button>
                     <button type="submit" class="btn btn-primary text-center" style="float:right;" value="save" name="Command">Save</button>
                 </div>
-
             </div>
-            @*<div class="row">
-        <div class="col-md-3">
-        <input type="checkbox" id="togbutton" checked data-toggle="toggle" data-on="Advanced" data-off="Basic" data-onstyle="primary" data-offstyle="light">
-        </div>
-        </div>*@
             <div class="form-group">
                 <div style="text-align:center;">
                     @if (ViewBag.SuccessMessage != null)
@@ -105,30 +94,64 @@
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Info</div>
                 <div class="accordion-content">
-
+                    @Html.HiddenFor(m => m.ProductAttributeID, new {})
                     <div class="row mb-2">
                         <div class="col-md-2">
-                            @Html.LabelFor(m => m.ProductAttributeName, new { @class = "required" })
+                            @Html.LabelFor(m => m.ValueName, new { @class = "required" })
                         </div>
                         <div class="col-md-10">
-                            @Html.TextBoxFor(m => m.ProductAttributeName, new { @id = "ProductAttributeName", @class = "form-control",@autocomplete="off",@onkeydown="return Checkvalidate();"})
-                            @Html.ValidationMessageFor(m => m.ProductAttributeName, "", new { @class = "text-danger pnameerror" })
+                            @Html.TextBoxFor(m => m.ValueName, new { @id = "ValueName", @class = "form-control",@autocomplete="off",@onkeydown="return Checkvalidate();"})
+                            @Html.ValidationMessageFor(m => m.ValueName, "", new { @class = "text-danger pnameerror" })
                         </div>
                     </div>
-
                     <div class="row mb-2">
-                        @Html.LabelFor(m => m.Description, new { @class = "col-md-2" })
+                        @Html.LabelFor(m => m.Priceadjustment, new { @class = "col-md-2" })
                         <div class="col-md-10">
-                            @Html.TextAreaFor(m => m.Description, new { @id = "Description", @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                            @Html.TextBoxFor(m => m.Priceadjustment, new { @id = "Priceadjustment", @class = "form-control" ,@min="0",@onkeydown="javascript: return event.keyCode == 69 ? false : true",@onblur="if(this.value==''){this.value=0;}"})
+                            @Html.ValidationMessageFor(m => m.Priceadjustment, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                </div>
-            </div>
-             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Predefined values</div>
-                <div class="accordion-content">
-                    You need to save the product attribute before you can add values for this page.
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.IsUsepercentage)
+                        </div>
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.IsUsepercentage)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        @Html.LabelFor(m => m.Weightadjustment, new { @class = "col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Weightadjustment, new { @id = "Weightadjustment", @class = "form-control" ,@min="0",@onkeydown="javascript: return event.keyCode == 69 ? false : true",@onblur="if(this.value==''){this.value=0;}"})
+                            @Html.ValidationMessageFor(m => m.Weightadjustment, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        @Html.LabelFor(m => m.Cost, new { @class = "col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Cost, new { @id = "Cost", @class = "form-control" ,@min="0",@onkeydown="javascript: return event.keyCode == 69 ? false : true",@onblur="if(this.value==''){this.value=0;}"})
+                            @Html.ValidationMessageFor(m => m.Cost, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.Ispreselected)
+                        </div>
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.Ispreselected)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        @Html.LabelFor(m => m.Displayorder, new { @class = "col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Displayorder, new { @id = "Displayorder", @class = "form-control" ,@type="number",@min="0",@onkeypress="return onlyNumberKey(event)",@onblur="if(this.value==''){this.value=0;}"})
+                            @Html.ValidationMessageFor(m => m.Displayorder, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
                 </div>
             </div>
         }
@@ -136,10 +159,8 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-    <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5-stable/tinymce.min.js" referrerpolicy="origin"></script>
-    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.js"></script>
     <script src="https://kendo.cdn.telerik.com/2023.1.117/js/kendo.all.min.js"></script>
@@ -150,35 +171,11 @@
 
     <script>
 
-        //function Checkvalidate() {
-        //    var flag = true;
-        //    var pname = $("#ProductAttributeName").val();
-        //    if (pname.trim().length == 0) {
-        //        $(".pnameerror").text("Only white space not allowed.");
-        //        //$("#ProductAttributeName").val("");
-        //        flag = false;
-        //    }
-        //    else{
-        //        flag = true;
-        //    }
-        //    return flag;
-        //}
-        tinymce.init({
-            selector: '#Description',
-            plugins: [
-                'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview',
-                'anchor', 'pagebreak',
-                'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code',
-                'fullscreen', 'insertdatetime',
-                'media', 'table', 'emoticons', 'template', 'help'
-            ],
-            height: 400
-        });
+        $(document).ready(function () { $("#Displayorder").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
+        $(document).ready(function () { $("#Priceadjustment").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000" }) });
+        $(document).ready(function () { $("#Weightadjustment").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000" }) });
+        $(document).ready(function () { $("#Cost").kendoNumericTextBox({ min: 0, max: 99999999.9999, decimals: 2, restrictDecimals: !0, format: "#.0000" }) });
 
-        $(document).ready(function () { $("#Displayorder").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# ", validationMessage: "Please enter value less than 99999999." }) });
-        //var numericBox = $("#Displayorder").data("kendoNumericTextBox");
-        //numericBox.max(99999999);
-        //numericBox.validationMessage = "Please enter value less than 99999999.";
         // JavaScript to toggle the accordion
         function toggleAccordion(event) {
             var accordionHeader = event.target;

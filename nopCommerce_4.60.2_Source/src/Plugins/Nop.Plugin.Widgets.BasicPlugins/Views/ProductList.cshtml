@@ -62,43 +62,45 @@
             <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-search">&nbsp;&nbsp;&nbsp;</i>Search</div>
             <div class="accordion-content">
 
-                @using (Html.BeginForm("ProductList", "DemoProduct", FormMethod.Get, new { @onsubmit = "return checkvalidation()" }))
-                {
-                    <div>
-                        <div class="row mb-2">
-                                <div class="col-sm-4"><label>Product name</label>
-                                
-                                    <input type="text" name="productName" id="productName" class="form-control" value="@ViewBag.productnamesearch" autocomplete="off"/>
-                                </div>
-                                <div class="col-sm-4"><label>Category</label>
-                                
-                                    <input type="hidden" id="hiddencategory" value="@ViewBag.categorysearch" />
-                                    <select class="form-control" id="SearchCategoryId" name="category">
-                                        <option value="0">All</option>
-                                        <option value="2">Breakfast &amp; Brunch</option>
-                                        <option value="1">Lunch &amp; Dinner</option>
-                                        <option value="3">Baked Goods &amp; Desserts</option>
-                                        <option value="4">Drinks</option>
-                                    </select>
-                                </div>
-                           
-                                <div class="col-sm-4"><label>Published</label>
-                                    <input type="hidden" id="hiddenpublished" value="@ViewBag.publishedsearch" />
-                                    <select class="form-control" id="SearchPublishedId" name="published">
-                                        <option value="All">All</option>
-                                        <option value="1">Published only</option>
-                                        <option value="0">Unpublished only</option>
-                                    </select>
-                                </div>
-                           
-                        </div>
-                        <br><br>
-                        <div style="text-align:center;">
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i>&nbsp; Search</button>
-                        </div>
-                    </div>
-                }
+                @*@using (Html.BeginForm("ProductList", "DemoProduct", FormMethod.Get, new { }))
+                {*@
+                <div>
+                    <div class="row mb-2">
+                        <div class="col-sm-4">
+                            <label>Product name</label>
 
+                            <input type="text" name="productName" id="productName" class="form-control" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Category</label>
+
+                            <select class="form-control" id="SearchCategoryId" name="category">
+                                <option value="0">All</option>
+                                <option value="2">Breakfast &amp; Brunch</option>
+                                <option value="1">Lunch &amp; Dinner</option>
+                                <option value="3">Baked Goods &amp; Desserts</option>
+                                <option value="4">Drinks</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label>Published</label>
+
+                            <select class="form-control" id="SearchPublishedId" name="published">
+                                <option value="All">All</option>
+                                <option value="1">Published only</option>
+                                <option value="0">Unpublished only</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <br><br>
+                    <div style="text-align:center;">
+                        <button type="button" class="btn btn-primary" onclick="SearchList();"><i class="fa fa-search"></i>&nbsp; Search</button>
+                    </div>
+                </div>
+                @* }
+                *@
 
             </div>
         </div>
@@ -120,7 +122,7 @@
                             <th hidden></th>
                             <th><input type="checkbox" id="chkAll" /></th>
                             <th>
-                            Picture
+                                Picture
                             </th>
                             <th>
                                 Product name
@@ -149,17 +151,17 @@
                             <tr>
                                 <td hidden>@item.ProductID</td>
                                 <td><input type="checkbox" name="itemIds" class="checkboxGroups" value="@item.ProductID" /></td>
-                                 <td>
-                            @if (item.SFile == null)
-                            {
-                            <img src="https://cafe.shopfast.net/images/thumbs/default-image_100.png" style="height: 100px; width: 150px;">
-                            }
-                            else
-                            {
-                            <img src="@item.SFile" style="height: 100px; width: 150px;" />
-                            }
+                                <td>
+                                    @if (item.SFile == null)
+                                    {
+                                        <img src="https://cafe.shopfast.net/images/thumbs/default-image_100.png" style="height: 100px; width: 150px;">
+                                    }
+                                    else
+                                    {
+                                        <img src="@item.SFile" style="height: 100px; width: 150px;" />
+                                    }
 
-                            </td>
+                                </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.ProductName)
                                 </td>
@@ -184,11 +186,8 @@
                                     }
 
                                 </td>
-
                                 <td>
-                                    @Html.ActionLink("Edit", "EditProduct", new { id=item.ProductID},new{/*@class="btn btn-Se"*/})
-                                    @*@Html.ActionLink("Delete", "DeleteProduct", new { id=item.ProductID},new{@Onclick="return ConfirmDelete();"})
-                                *@
+                                    @Html.ActionLink("Edit", "EditProduct", new { id=item.ProductID},new{})
                                 </td>
                             </tr>
                         }
@@ -209,11 +208,68 @@
                 aoColumnDefs: [
                     {
                         bSortable: false,
-                        aTargets: [1,2,8]
+                        aTargets: [1, 2, 8]
                     }
                 ]
             });
         });
+        function SearchList() {
+            var productName = $("#productName").val();
+            var SearchCategoryId = $("#SearchCategoryId").val();
+            var SearchPublishedId = $("#SearchPublishedId").val();
+
+            $.ajax({
+                type: 'Get',
+                url: "/Admin/DemoProduct/Search?productName=" + productName + "&SearchCategoryId=" + SearchCategoryId + "&SearchPublishedId=" + SearchPublishedId + "",
+                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status == "success") {
+                        //var table = $('#Imagegrid').DataTable();
+                        //table.clear().draw();
+                        if ($.fn.DataTable.isDataTable('#example')) {
+                            $('#example').DataTable().destroy();
+                        }
+                        $('#example tbody').empty();
+
+                        //table.fnClearTable();
+                        var tr;
+                        //Append each row to html table
+                        for (var i = 0; i < response.data.length; i++) {
+                            console.log(response.data);
+                            tr = $('<tr/>');
+                            tr.append("<td hidden>" + response.data[i].ProductID + "</td>");
+                            tr.append("<td><input type='checkbox' name='itemIds' class='checkboxGroups' value='" + response.data[i].ProductID + "' /></td>");
+                            tr.append("<td><img src='" + response.data[i].SFile + "' style='height: 100px; width: 150px;'></img></td>");
+                            tr.append("<td>" + response.data[i].ProductName + "</td>");
+                            tr.append("<td>" + response.data[i].SKU + "</td>");
+                            tr.append("<td>" + response.data[i].SPrice + "</td>");
+                            tr.append("<td>" + response.data[i].StockQuantity + "</td>");
+                            if (response.data[i].IsPublished == true)
+                                tr.append("<td><p>Yes</p></td>");
+                            else tr.append("<td><p>No</p></td>");
+                            tr.append('<td><a href="/Admin/DemoProduct/EditProduct/' + response.data[i].ProductID + '">Edit</a></td>');
+                            $('#example').append(tr);
+                        }
+                        $('#example').DataTable({
+                            pagingType: 'full_numbers',
+                            searching: false,
+                            sorting: [[0, 'desc']],
+                            aoColumnDefs: [
+                                {
+                                    bSortable: false,
+                                    aTargets: [1, 2, 8]
+                                }
+                            ]
+                        });
+
+                    }
+                },
+                error: function (err) {
+                    alert("Error occurs" + err.responseText);
+                }
+            });
+        }
         //$(document).ready(function () {
         //    $("#example input[id='chkAll']:checkbox").click(function () {
         //        if ($(this).is(":checked")) {
@@ -284,7 +340,7 @@
                             //});
                         }
                     });
-                    
+
                 }
             }
             else {

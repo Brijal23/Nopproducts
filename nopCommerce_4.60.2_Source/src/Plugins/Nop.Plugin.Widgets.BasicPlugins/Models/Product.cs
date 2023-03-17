@@ -27,7 +27,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Models
         [Required(AllowEmptyStrings = false, ErrorMessage = "Enter SKU.")]
         public string? SKU { get; set; }
         [RegularExpression(@"^(0|\d{0,8}(\.\d{0,4})?)$", ErrorMessage = "Enter valid price.")]
-        [Range(0, 99999999.99, ErrorMessage = "Please enter price between 0 to 99999999.99")]
+        [Range(0, 99999999.9999, ErrorMessage = "Please enter price between 0 to 99999999.9999")]
         [Required(ErrorMessage = "Enter price.")]
         //[MaxLength(11, ErrorMessage = "Enter valid price.")]
         public decimal Price { get; set; }

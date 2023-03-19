@@ -368,7 +368,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "Product Name Alredy Exist.";
+                            ViewBag.SuccessMessage = "Product Name Already Exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/AddProduct.cshtml", product);
                         }
                     }
@@ -568,7 +568,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         else
                         {
 
-                            ViewBag.SuccessMessage = "Product Name Alredy Exist.";
+                            ViewBag.SuccessMessage = "Product Name Already Exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/AddProduct.cshtml", product);
                         }
 

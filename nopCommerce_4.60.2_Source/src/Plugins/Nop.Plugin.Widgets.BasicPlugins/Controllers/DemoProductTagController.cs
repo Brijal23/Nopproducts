@@ -177,7 +177,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "Tag Name Alredy Exist.";
+                            ViewBag.SuccessMessage = "Tag Name Already Exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/ProductTag/AddProductTag.cshtml", ProductTag);
                         }
                     }
@@ -272,7 +272,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "Tag Name Alredy Exist.";
+                            ViewBag.SuccessMessage = "Tag Name Already Exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/ProductTag/EditProductTag.cshtml", ProductTag);
                         }
                     }

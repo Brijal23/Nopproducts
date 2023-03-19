@@ -183,7 +183,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "ProductAttribute Name Alredy Exist.";
+                            ViewBag.SuccessMessage = "ProductAttribute Name Already Exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/ProductAttribute/AddProductAttribute.cshtml", ProductAttribute);
                         }
                     }

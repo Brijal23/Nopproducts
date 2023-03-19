@@ -52,8 +52,8 @@
                 <h2>Categories</h2>
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-danger" style="float:right; margin-left: 15px;" id="btnDelete">Delete(selected)</button>
-                <a href='@Url.Action("AddCategory", "DemoCategory")' class="btn btn-primary" style="float: right;">Add Category</a>
+                <button type="button" class="btn btn-danger" style="float:right; margin-left: 15px;" id="btnDelete">Delete (selected)</button>
+                <a href='@Url.Action("AddCategory", "DemoCategory")' class="btn btn-primary" style="float: right;">Add category</a>
             </div>
         </div>
 
@@ -261,9 +261,8 @@
             //Get all the Checked CheckBoxes.
             var checked = $("#example td input[type=checkBox]:checked");
             if (checked.length > 0) {
-
                 //Display Confirmation Message.
-                if (confirm("Are you sure to delete " + checked.length + " row(s)?")) {
+                if (confirm("Are you sure you want to perform this action?")) {
 
                     //Loop and build an Array of CustomerId to be deleted.
                     var customerIds = new Array();
@@ -320,7 +319,7 @@
             }
         }
         function ConfirmDelete() {
-            return confirm("Are you sure you want to delete this Category?");
+            return confirm("Are you sure you want to delete this item?");
         }
     </script>
 </body>

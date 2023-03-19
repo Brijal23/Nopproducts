@@ -194,7 +194,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "Manufacturer Name Alredy Exist.";
+                            ViewBag.SuccessMessage = "Manufacturer Name Already Exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/AddManufacturer.cshtml", Manufacturer);
                         }
                     }
@@ -297,7 +297,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "Manufacturer Name Alredy Exist.";
+                            ViewBag.SuccessMessage = "Manufacturer Name Already Exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/Manufacturer/EditManufacturer.cshtml", Manufacturer);
                         }
                     }

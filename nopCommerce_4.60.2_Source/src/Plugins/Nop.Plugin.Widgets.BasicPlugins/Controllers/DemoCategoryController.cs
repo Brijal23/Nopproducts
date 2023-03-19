@@ -23,7 +23,6 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
         [HttpGet]
         public ActionResult CategoryList(/*string CategoryName = "", string published = "All"*/)
         {
-
             List<Category> categories = new();
             try
             {
@@ -208,7 +207,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "Category Name Alredy Exist.";
+                            ViewBag.SuccessMessage = "Category Name Already Exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/Category/AddCategory.cshtml", category);
                         }
                     }
@@ -313,7 +312,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "Category Name Alredy Exist.";
+                            ViewBag.SuccessMessage = "Category Name Already Exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/Category/EditCategory.cshtml", category);
                         }
                     }

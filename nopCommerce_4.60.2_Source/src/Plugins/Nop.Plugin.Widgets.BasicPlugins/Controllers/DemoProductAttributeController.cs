@@ -135,7 +135,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[ProductAttributes] where ProductAttributeName='" + model.ProductAttributeName + "'";
+                        string q = "select Count(*) as Count from [dbo].[ProductAttributes] where ProductAttributeName='" + model.ProductAttributeName.Trim() + "'";
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
                             using (SqlDataReader r = command.ExecuteReader())
@@ -158,7 +158,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             if (cmd.ExecuteNonQuery() == 1)
                             {
                                 connection.Close();
-                                string query1 = "select ProductAttributeID from [dbo].[ProductAttributes] where ProductAttributeName='" + model.ProductAttributeName + "'";
+                                string query1 = "select ProductAttributeID from [dbo].[ProductAttributes] where ProductAttributeName='" + model.ProductAttributeName.Trim() + "'";
                                 connection.Open();
                                 using (SqlCommand command = new SqlCommand(query1, connection))
                                 {
@@ -183,7 +183,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "ProductAttribute Name Already Exist.";
+                            ViewBag.SuccessMessage = "Name already exist";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/ProductAttribute/AddProductAttribute.cshtml", ProductAttribute);
                         }
                     }
@@ -279,7 +279,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[ProductAttributes] where ProductAttributeName='" + ProductAttribute.ProductAttributeName + "'and ProductAttributeID!='" + ProductAttribute.ProductAttributeID + "'";
+                        string q = "select Count(*) as Count from [dbo].[ProductAttributes] where ProductAttributeName='" + ProductAttribute.ProductAttributeName.Trim() + "'and ProductAttributeID!='" + ProductAttribute.ProductAttributeID + "'";
 
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
@@ -296,7 +296,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             if (ProductAttribute.Description != null)
                                 ProductAttribute.Description = HttpUtility.UrlEncode(ProductAttribute.Description);
 
-                            string query = "Update ProductAttributes set ProductAttributeName='" + ProductAttribute.ProductAttributeName + "',Description='" + ProductAttribute.Description + "',IsActive=1,UpdatedDate=GETDATE() where ProductAttributeID='" + ProductAttribute.ProductAttributeID + "'";
+                            string query = "Update ProductAttributes set ProductAttributeName='" + ProductAttribute.ProductAttributeName.Trim() + "',Description='" + ProductAttribute.Description + "',IsActive=1,UpdatedDate=GETDATE() where ProductAttributeID='" + ProductAttribute.ProductAttributeID + "'";
                             SqlCommand cmd = new SqlCommand(query, connection);
                             if (cmd.ExecuteNonQuery() == 1)
                             {
@@ -400,7 +400,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[PredefineValues] where ValueName='" + model.ValueName + "'";
+                        string q = "select Count(*) as Count from [dbo].[PredefineValues] where ValueName='" + model.ValueName.Trim() + "'";
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
                             using (SqlDataReader r = command.ExecuteReader())
@@ -495,7 +495,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[PredefineValues] where ValueName='" + model.ValueName + "'and PredefinevalueID!='" + model.PredefinevalueID + "'";
+                        string q = "select Count(*) as Count from [dbo].[PredefineValues] where ValueName='" + model.ValueName.Trim() + "'and PredefinevalueID!='" + model.PredefinevalueID + "'";
 
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
@@ -510,7 +510,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         if (Count == 0)
                         {
                             
-                            string query = "Update PredefineValues set ValueName='" + model.ValueName + "',Priceadjustment='" + model.Priceadjustment + "',Weightadjustment='" + model.Weightadjustment + "',Ispreselected='" + model.Ispreselected + "',Cost='" + model.Cost + "',IsUsepercentage='" + model.IsUsepercentage + "',Displayorder='" + model.Displayorder + "',IsActive=1,UpdatedDate=GETDATE() where PredefinevalueID='" + model.PredefinevalueID + "'";
+                            string query = "Update PredefineValues set ValueName='" + model.ValueName.Trim() + "',Priceadjustment='" + model.Priceadjustment + "',Weightadjustment='" + model.Weightadjustment + "',Ispreselected='" + model.Ispreselected + "',Cost='" + model.Cost + "',IsUsepercentage='" + model.IsUsepercentage + "',Displayorder='" + model.Displayorder + "',IsActive=1,UpdatedDate=GETDATE() where PredefinevalueID='" + model.PredefinevalueID + "'";
                             SqlCommand cmd = new SqlCommand(query, connection);
                             if (cmd.ExecuteNonQuery() == 1)
                             {

@@ -79,12 +79,12 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <h2>Edit product attribute - @Model.ProductAttributeName </h2>
+                    <h4>Edit product attribute - @Model.ProductAttributeName </h4>
                 </div>
                 @* <div class="col-md-5">
             </div>*@
                 <div class="col-md-6">
-                    <a href='@Url.Action("ProductAttributeList", "DemoProductAttribute")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to ProductAttribute List</a>
+                    <a href='@Url.Action("ProductAttributeList", "DemoProductAttribute")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Product Attribute List</a>
                     @Html.ActionLink("Delete", "Delete", new { id=Model.ProductAttributeID},new{@Onclick="return ConfirmDelete();",@class="btn btn-primary text-center",style="float:right; margin-left: 15px;"})
 
                     <button type="submit" class="btn btn-primary text-center" style="float:right; margin-left: 15px;" value="saveedit" name="Command">Save and Continue Edit</button>
@@ -195,7 +195,7 @@
                                             <button type="button" class="btn btn-link" onclick="EditValues(@item.PredefinevalueID);">Edit</button>
                                         </td>
                                         <td>
-                                            @Html.ActionLink("Delete", "DeletePredefinevalue", new { id=item.PredefinevalueID,ids=Model.ProductAttributeID},new{@Onclick="return ConfirmDelete();"})
+                                            @Html.ActionLink("Delete", "DeletePredefinevalue", new { id=item.PredefinevalueID,ids=Model.ProductAttributeID},new{@Onclick="return ConfirmDelete();",@class="btn btn-link"})
                                         </td>
                                     </tr>
                                 }
@@ -245,7 +245,7 @@
             }]
         });
         function ConfirmDelete() {
-            return confirm("Are you sure you want to perform this action?");
+            return confirm("Are you sure you want to delete this item?");
         }
         tinymce.init({
             selector: '#Description',
@@ -282,7 +282,7 @@
             var ProductAttributeId = $("#ProductAttributeID").val();
             var url = "https://localhost:51590/Admin/DemoProductAttribute/AddPredefineValue?ProductAttributeId=" + ProductAttributeId + "";
             window.open(url, '_blank ');
-
+            //window.location.href=url;
         }
         function EditValues(id) {
             var ProductAttributeId = $("#ProductAttributeID").val();

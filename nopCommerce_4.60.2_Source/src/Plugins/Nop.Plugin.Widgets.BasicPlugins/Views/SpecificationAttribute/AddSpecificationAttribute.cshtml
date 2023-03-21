@@ -1,8 +1,8 @@
-﻿@model Nop.Plugin.Widgets.BasicPlugins.Models.Manufacturer
+﻿@model Nop.Plugin.Widgets.BasicPlugins.Models.SpecificationAttribute
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Create Manufacturer</title>
+    <title>Create Specification Attribute</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
@@ -73,17 +73,17 @@
 <body>
     <div class="container" style="padding: 10px; max-width:1600px;">
 
-        @using (Html.BeginForm("AddManufacturer", "DemoManufacturer", FormMethod.Post, new { @class = "form-horizontal" }))
+        @using (Html.BeginForm("AddSpecificationAttribute", "DemoSpecificationAttribute", FormMethod.Post, new { @class = "form-horizontal" }))
         {
 
             <div class="row">
                 <div class="col-md-6">
-                    <h4>Add manufacturer </h4>
+                    <h4>Add specification attribute </h4>
                 </div>
                 @* <div class="col-md-5">
             </div>*@
                 <div class="col-md-6">
-                    <a href='@Url.Action("ManufacturerList", "DemoManufacturer")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Manufacturer List</a>
+                    <a href='@Url.Action("SpecificationAttributeList", "DemoSpecificationAttribute")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Specification Attribute List</a>
                     <button type="submit" class="btn btn-primary text-center" style="float:right; margin-left: 15px;" value="saveedit" name="Command">Save and Continue Edit</button>
                     <button type="submit" class="btn btn-primary text-center" style="float:right;" value="save" name="Command">Save</button>
                 </div>
@@ -103,49 +103,32 @@
                 </div>
             </div>
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Manufacturer Info</div>
+                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Attribute info</div>
                 <div class="accordion-content">
 
                     <div class="row mb-2">
                         <div class="col-md-2">
-                            @Html.LabelFor(m => m.ManufacturerName, new { @class = "required" })
+                            @Html.LabelFor(m => m.SpecificationAttributeName, new { @class = "required" })
                         </div>
                         <div class="col-md-10">
-                            @Html.TextBoxFor(m => m.ManufacturerName, new { @id = "ManufacturerName", @class = "form-control",@autocomplete="off",@onkeydown="return Checkvalidate();"})
-                            @Html.ValidationMessageFor(m => m.ManufacturerName, "", new { @class = "text-danger pnameerror" })
+                            @Html.TextBoxFor(m => m.SpecificationAttributeName, new { @id = "SpecificationAttributeName", @class = "form-control",@autocomplete="off",@onkeydown="return Checkvalidate();"})
+                            @Html.ValidationMessageFor(m => m.SpecificationAttributeName, "", new { @class = "text-danger pnameerror" })
                         </div>
                     </div>
 
                     <div class="row mb-2">
-                        @Html.LabelFor(m => m.Description, new { @class = "col-md-2" })
+                        @Html.LabelFor(m => m.Displayorder, new { @class = "col-md-2" })
                         <div class="col-md-10">
-                            @Html.TextAreaFor(m => m.Description, new { @id = "Description", @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                   
-                    <div class="row mb-2">
-                        <div class="col-md-2">
-                            @Html.LabelFor(m => m.IsPublished)
-                        </div>
-                        <div class="col-md-10">
-                            <div class="checkbox">
-                                @Html.CheckBoxFor(m => m.IsPublished)
-                            </div>
+                            @Html.TextAreaFor(m => m.Displayorder, new { @id = "Displayorder", @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Displayorder, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 </div>
             </div>
              <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Display</div>
+                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Options</div>
                 <div class="accordion-content">
-                    <div class="row mb-2">
-                        @Html.LabelFor(m => m.Displayorder, new { @class = "col-md-2" })
-                        <div class="col-md-10">
-                            @Html.TextBoxFor(m => m.Displayorder, new { @id = "Displayorder", @class = "form-control" ,@type="number",@min="0",@onkeypress="return onlyNumberKey(event)",@onblur="if(this.value==''){this.value=0;}"})
-                            @Html.ValidationMessageFor(m => m.Displayorder, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
+                    You need to save the specification attribute before you can add options for this specification attribute page.
                 </div>
             </div>
         }
@@ -166,30 +149,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tag-editor/1.0.20/jquery.tag-editor.min.js" integrity="sha512-wexRM3SVzXnR9XDRR32JUDTyDZP3XGAsrsbVl+rBMupJsHZqbUCBMxVHDDzCpvKVhJqerRYoInsRA2ySEzpYLg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
-
-        //function Checkvalidate() {
-        //    var flag = true;
-        //    var pname = $("#ManufacturerName").val();
-        //    if (pname.trim().length == 0) {
-        //        $(".pnameerror").text("Only white space not allowed.");
-        //        $("#ManufacturerName").val("");
-        //        flag = true;
-        //    }
-        //    return flag;
-        //}
-        tinymce.init({
-            selector: '#Description',
-            plugins: [
-                'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview',
-                'anchor', 'pagebreak',
-                'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code',
-                'fullscreen', 'insertdatetime',
-                'media', 'table', 'emoticons', 'template', 'help'
-            ],
-            height: 400
-        });
-
-        $(document).ready(function () { $("#Displayorder").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# ", validationMessage: "Please enter value less than 99999999." }) });
+        
+        $(document).ready(function () { $("#Displayorder").kendoNumericTextBox({ min: 0, max: 99999999, decimals: 0, restrictDecimals: !0, format: "# " }) });
         //var numericBox = $("#Displayorder").data("kendoNumericTextBox");
         //numericBox.max(99999999);
         //numericBox.validationMessage = "Please enter value less than 99999999.";

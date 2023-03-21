@@ -49,7 +49,7 @@
     <div class="container" style="padding: 10px; max-width:1600px;">
         <div class="row">
             <div class="col-md-6">
-                <h2>Categories</h2>
+                <h4>Categories</h4>
             </div>
             <div class="col-md-6">
                 <button type="button" class="btn btn-danger" style="float:right; margin-left: 15px;" id="btnDelete">Delete (selected)</button>
@@ -100,7 +100,7 @@
         <div class="form-horizontal">
 
             <div class="form-group">
-                <table class="table table-bordered table-hover display" id="example">
+                <table class="table table-bordered table-hover display table-responsive-md" id="example">
                     <thead>
                         <tr>
                             <th hidden></th>
@@ -127,8 +127,9 @@
                             <tr>
                                 <td hidden>@item.CategoryID</td>
                                 <td><input type="checkbox" name="itemIds" class="checkboxGroups" value="@item.CategoryID" /></td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.CategoryName)
+                                <td style="word-wrap: anywhere !important;">
+                                    @*<p> @item.CategoryName.Replace(" ","&nbsp;")</p>*@
+                                    <pre>@Html.DisplayFor(modelItem => item.CategoryName)</pre>
                                 </td>
                                 <td>
                                     @if (item.IsPublished == true)
@@ -172,7 +173,10 @@
                     }
                 ]
             });
+           
         });
+        
+       // \u0000
         function SearchList() {
             var CategoryName = $("#CategoryName").val();
             var SearchPublishedId = $("#SearchPublishedId").val();

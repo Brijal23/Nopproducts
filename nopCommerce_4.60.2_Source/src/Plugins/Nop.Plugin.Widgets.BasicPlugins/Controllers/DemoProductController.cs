@@ -303,7 +303,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[Product] where ProductName='" + model.ProductName + "'";
+                        string q = "select Count(*) as Count from [dbo].[Product] where ProductName='" + model.ProductName.Trim() + "'";
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
                             using (SqlDataReader r = command.ExecuteReader())
@@ -328,7 +328,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             if (cmd.ExecuteNonQuery() == 1)
                             {
                                 connection.Close();
-                                string query1 = "select ProductID from [dbo].[Product] where ProductName='" + model.ProductName + "'";
+                                string query1 = "select ProductID from [dbo].[Product] where ProductName='" + model.ProductName.Trim() + "'";
                                 connection.Open();
                                 using (SqlCommand command = new SqlCommand(query1, connection))
                                 {
@@ -368,7 +368,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "Product Name Already Exist.";
+                            ViewBag.SuccessMessage = "Name already exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/AddProduct.cshtml", product);
                         }
                     }
@@ -498,7 +498,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[Product] where ProductName='" + product.ProductName + "'and ProductID!='" + product.ProductID + "'";
+                        string q = "select Count(*) as Count from [dbo].[Product] where ProductName='" + product.ProductName.Trim() + "'and ProductID!='" + product.ProductID + "'";
 
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
@@ -516,11 +516,11 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                 product.FullDescription = HttpUtility.UrlEncode(product.FullDescription);
                             if (product.ShortDescription != null)
                                 product.ShortDescription = HttpUtility.UrlEncode(product.ShortDescription);
-                            string query = "Update Product set ProductName='" + product.ProductName + "',ShortDescription='" + product.ShortDescription + "',FullDescription='" + product.FullDescription + "',SKU='" + product.SKU + "',IsPublished='" + product.IsPublished + "',Price='" + product.Price + "',IsTextexempt='" + product.IsTextexempt + "',Taxcategory='" + product.Taxcategory + "',IsShippingEnabled='" + product.IsShippingEnable + "',InventoryMethod='" + product.InventoryMethod + "',StockQuantity='" + product.StockQuantity + "',IsActive=1,UpdatedDate=GETDATE() where ProductID='" + product.ProductID + "'";
+                            string query = "Update Product set ProductName='" + product.ProductName.Trim() + "',ShortDescription='" + product.ShortDescription + "',FullDescription='" + product.FullDescription + "',SKU='" + product.SKU + "',IsPublished='" + product.IsPublished + "',Price='" + product.Price + "',IsTextexempt='" + product.IsTextexempt + "',Taxcategory='" + product.Taxcategory + "',IsShippingEnabled='" + product.IsShippingEnable + "',InventoryMethod='" + product.InventoryMethod + "',StockQuantity='" + product.StockQuantity + "',IsActive=1,UpdatedDate=GETDATE() where ProductID='" + product.ProductID + "'";
                             SqlCommand cmd = new SqlCommand(query, connection);
                             if (cmd.ExecuteNonQuery() == 1)
                             {
-                                string query1 = "select ProductID from [dbo].[Product] where ProductName='" + product.ProductName + "'";
+                                string query1 = "select ProductID from [dbo].[Product] where ProductName='" + product.ProductName.Trim() + "'";
 
                                 using (SqlCommand command = new SqlCommand(query1, connection))
                                 {
@@ -568,7 +568,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         else
                         {
 
-                            ViewBag.SuccessMessage = "Product Name Already Exist.";
+                            ViewBag.SuccessMessage = "Name already exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/AddProduct.cshtml", product);
                         }
 

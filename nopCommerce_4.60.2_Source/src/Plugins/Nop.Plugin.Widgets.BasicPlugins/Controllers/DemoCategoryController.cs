@@ -159,7 +159,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[Categories] where CategoryName='" + model.CategoryName + "'";
+                        string q = "select Count(*) as Count from [dbo].[Categories] where CategoryName='" + model.CategoryName.Trim() + "'";
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
                             using (SqlDataReader r = command.ExecuteReader())
@@ -182,7 +182,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             if (cmd.ExecuteNonQuery() == 1)
                             {
                                 connection.Close();
-                                string query1 = "select CategoryID from [dbo].[Categories] where CategoryName='" + model.CategoryName + "'";
+                                string query1 = "select CategoryID from [dbo].[Categories] where CategoryName='" + model.CategoryName.Trim() + "'";
                                 connection.Open();
                                 using (SqlCommand command = new SqlCommand(query1, connection))
                                 {
@@ -207,7 +207,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "Category Name Already Exist.";
+                            ViewBag.SuccessMessage = "Name already exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/Category/AddCategory.cshtml", category);
                         }
                     }
@@ -280,7 +280,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[Categories] where CategoryName='" + category.CategoryName + "'and CategoryID!='" + category.CategoryID + "'";
+                        string q = "select Count(*) as Count from [dbo].[Categories] where CategoryName='" + category.CategoryName.Trim() + "'and CategoryID!='" + category.CategoryID + "'";
 
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
@@ -297,7 +297,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             if (category.Description != null)
                                 category.Description = HttpUtility.UrlEncode(category.Description);
 
-                            string query = "Update Categories set CategoryName='" + category.CategoryName + "',Description='" + category.Description + "',IsPublished='" + category.IsPublished + "',ParentcategoryId='" + category.ParentcategoryId + "',Displayorder='" + category.Displayorder + "',IsActive=1,UpdatedDate=GETDATE() where CategoryID='" + category.CategoryID + "'";
+                            string query = "Update Categories set CategoryName='" + category.CategoryName.Trim() + "',Description='" + category.Description + "',IsPublished='" + category.IsPublished + "',ParentcategoryId='" + category.ParentcategoryId + "',Displayorder='" + category.Displayorder + "',IsActive=1,UpdatedDate=GETDATE() where CategoryID='" + category.CategoryID + "'";
                             SqlCommand cmd = new SqlCommand(query, connection);
                             if (cmd.ExecuteNonQuery() == 1)
                             {
@@ -312,7 +312,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "Category Name Already Exist.";
+                            ViewBag.SuccessMessage = "Name already exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/Category/EditCategory.cshtml", category);
                         }
                     }

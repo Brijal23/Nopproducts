@@ -131,7 +131,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[ProductTags] where ProductTagName='" + model.ProductTagName + "'";
+                        string q = "select Count(*) as Count from [dbo].[ProductTags] where ProductTagName='" + model.ProductTagName.Trim() + "'";
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
                             using (SqlDataReader r = command.ExecuteReader())
@@ -152,7 +152,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             if (cmd.ExecuteNonQuery() == 1)
                             {
                                 connection.Close();
-                                string query1 = "select ProductTagID from [dbo].[ProductTags] where ProductTagName='" + model.ProductTagName + "'";
+                                string query1 = "select ProductTagID from [dbo].[ProductTags] where ProductTagName='" + model.ProductTagName.Trim() + "'";
                                 connection.Open();
                                 using (SqlCommand command = new SqlCommand(query1, connection))
                                 {
@@ -177,7 +177,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "Tag Name Already Exist.";
+                            ViewBag.SuccessMessage = "Name already exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/ProductTag/AddProductTag.cshtml", ProductTag);
                         }
                     }
@@ -242,7 +242,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[ProductTags] where ProductTagName='" + ProductTag.ProductTagName + "'and ProductTagID!='" + ProductTag.ProductTagID + "'";
+                        string q = "select Count(*) as Count from [dbo].[ProductTags] where ProductTagName='" + ProductTag.ProductTagName.Trim() + "'and ProductTagID!='" + ProductTag.ProductTagID + "'";
 
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
@@ -257,7 +257,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         if (Count == 0)
                         {
                             
-                            string query = "Update ProductTags set ProductTagName='" + ProductTag.ProductTagName + "',IsActive=1,UpdatedDate=GETDATE() where ProductTagID='" + ProductTag.ProductTagID + "'";
+                            string query = "Update ProductTags set ProductTagName='" + ProductTag.ProductTagName.Trim() + "',IsActive=1,UpdatedDate=GETDATE() where ProductTagID='" + ProductTag.ProductTagID + "'";
                             SqlCommand cmd = new SqlCommand(query, connection);
                             if (cmd.ExecuteNonQuery() == 1)
                             {
@@ -272,7 +272,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         else
                         {
-                            ViewBag.SuccessMessage = "Tag Name Already Exist.";
+                            ViewBag.SuccessMessage = "Name already exist.";
                             return View("~/Plugins/Widgets.BasicPlugins/Views/ProductTag/EditProductTag.cshtml", ProductTag);
                         }
                     }

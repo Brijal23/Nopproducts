@@ -1263,6 +1263,10 @@
     <None Remove="plugin.json" />
     <None Remove="Views\AddProduct - Copy.cshtml" />
     <None Remove="Views\AddProduct.cshtml" />
+    <None Remove="Views\SpecificationAttribute\AddOption.cshtml" />
+    <None Remove="Views\SpecificationAttribute\AddSpecificationAttribute.cshtml" />
+    <None Remove="Views\SpecificationAttribute\EditOption.cshtml" />
+    <None Remove="Views\SpecificationAttribute\EditSpecificationAttribute.cshtml" />
     <None Remove="Views\ProductAttribute\AddPredefineValue.cshtml" />
     <None Remove="Views\ProductAttribute\AddProductAttribute.cshtml" />
     <None Remove="Views\ProductAttribute\EditPredefineValue.cshtml" />
@@ -1285,6 +1289,8 @@
     <None Remove="Content\rte.js" />
     <None Remove="Content\all_plugins.js" />
     <None Remove="Views\ProductTag\ProductTagList.cshtml" />
+    <None Remove="Views\SpecificationAttribute\fyll4hg1.rjt~" />
+    <None Remove="Views\SpecificationAttribute\SpecificationAttributeList.cshtml" />
     <None Remove="Views\_FileUpload.cshtml" />
   </ItemGroup>
 
@@ -6323,6 +6329,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\AddProduct - Copy.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\SpecificationAttribute\AddOption.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\SpecificationAttribute\AddSpecificationAttribute.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\SpecificationAttribute\EditOption.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\SpecificationAttribute\EditSpecificationAttribute.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\SpecificationAttribute\SpecificationAttributeList.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\ProductAttribute\EditPredefineValue.cshtml">

@@ -78,10 +78,9 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <h2>Add category </h2>
+                    <h4>Add category </h4>
                 </div>
-                @* <div class="col-md-5">
-            </div>*@
+                
                 <div class="col-md-6">
                     <a href='@Url.Action("CategoryList", "DemoCategory")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Category List</a>
                     <button type="submit" class="btn btn-primary text-center" style="float:right; margin-left: 15px;" value="saveedit" name="Command">Save and Continue Edit</button>
@@ -102,6 +101,7 @@
                     }
                 </div>
             </div>
+            <br>
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Category Info</div>
                 <div class="accordion-content">

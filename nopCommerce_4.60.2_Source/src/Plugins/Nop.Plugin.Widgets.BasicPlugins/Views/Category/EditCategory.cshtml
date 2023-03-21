@@ -80,8 +80,7 @@
                 <div class="col-md-6">
                     <h4>Edit category - @Model.CategoryName </h4>
                 </div>
-                @* <div class="col-md-5">
-            </div>*@
+                
                 <div class="col-md-6">
                     <a href='@Url.Action("CategoryList", "DemoCategory")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Category List</a>
                     @Html.ActionLink("Delete", "Delete", new { id=Model.CategoryID},new{@Onclick="return ConfirmDelete();",@class="btn btn-primary text-center",style="float:right; margin-left: 15px;"})
@@ -91,11 +90,22 @@
                 </div>
 
             </div>
+             @*<div>
+                <div class="pull-left">
+                    <h4>Edit category - @Model.CategoryName </h4>
+                </div>
+                <div class="pull-right">
+                    <a href='@Url.Action("CategoryList", "DemoCategory")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Category List</a>
+                    <button type="submit" class="btn btn-primary text-center" style="float:right; margin-left: 15px;" value="saveedit" name="Command">Save and Continue Edit</button>
+                    <button type="submit" class="btn btn-primary text-center" style="float:right;" value="save" name="Command">Save</button>
+                </div>
+            </div>*@
             @*<div class="row">
         <div class="col-md-3">
         <input type="checkbox" id="togbutton" checked data-toggle="toggle" data-on="Advanced" data-off="Basic" data-onstyle="primary" data-offstyle="light">
         </div>
         </div>*@
+            <br>
             <div class="form-group">
                 <div style="text-align:center;">
                     @if (ViewBag.SuccessMessage != null)

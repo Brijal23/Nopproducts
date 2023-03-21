@@ -16,6 +16,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Models
         [DisplayName("Name")]
         [RegularExpression(@"^[a-zA-Z0-9\s]*$", ErrorMessage = "Please enter valid name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Enter name.")]
+        [StringLength(80, MinimumLength = 0, ErrorMessage = "Name length must be between 0 and 80 characters.")]
         public string ProductAttributeName { get; set; }
         [DisplayName("Description")]
         public string? Description { get; set; }
@@ -31,6 +32,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Models
         [DisplayName("Name")]
         [RegularExpression(@"^[a-zA-Z0-9\s]*$", ErrorMessage = "Please enter valid name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Enter name.")]
+        [StringLength(80, MinimumLength = 0, ErrorMessage = "Name length must be between 0 and 80 characters.")]
         public string ValueName { get; set; }
 
         [RegularExpression(@"^(0|\d{0,8}(\.\d{0,4})?)$", ErrorMessage = "Enter valid price.")]

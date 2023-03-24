@@ -1,16 +1,6 @@
-﻿using System;
-using System.Formats.Tar;
-using System.Globalization;
+﻿
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
-using System.Xml.Linq;
-using DocumentFormat.OpenXml.EMMA;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Vml;
-using MaxMind.GeoIP2.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,10 +24,8 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
     {
 
         [HttpGet]
-        public ActionResult ProductList(/*string productName = "", string published = "All", string category = "0"*/)
+        public ActionResult ProductList()
         {
-            //if (string.IsNullOrWhiteSpace(productName))
-            //    productName = null;
             List<Product> Products = new();
             try
             {
@@ -50,24 +38,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     string Query1 = "";
                     string Query2 = "";
                     string Query3 = "";
-                    //if (category != "0")
-                    //{
-                    //   Query = " INNER JOIN [dbo].[CategoryDetail] as C on C.ProductID = P.ProductID";
-                    //}
-                    //if (category != "0")
-                    //{
-                    //    int Icategory = Convert.ToInt32(category);
-                    //    Query1 = " AND C.CategoryID =" + Icategory + "";
-                    //}
-                    //if (productName != "" && productName != null)
-                    //{
-                    //    Query2 = " AND P.ProductName LIKE '%" + productName + "%'";
-                    //}
-                    //if (published != "All")
-                    //{
-                    //    int Ipublished = Convert.ToInt32(published);
-                    //    Query3 = " AND P.IsPublished =" + Ipublished + "";
-                    //}
+                  
                     string Q = "SELECT P.ProductID,P.ProductName,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID" + Query + " WHERE P.IsActive=1 "+ Query1 + Query2 + Query3 + " and I.ImageID IN (SELECT MAX(ImageID) FROM ImageDetail GROUP BY ProductID) Union SELECT * FROM (SELECT P.ProductID,P.ProductName,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID " + Query + " WHERE P.IsActive=1 "+ Query1 + Query2 + Query3 + ") as X WHERE X.ImageData is null";
                     using (SqlCommand command = new SqlCommand(Q, connection))
                     {
@@ -91,15 +62,12 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                     }
                 }
-                //ViewBag.productnamesearch = productName;
-                //ViewBag.publishedsearch = published;
-                //ViewBag.categorysearch = category;
-                return View("~/Plugins/Widgets.BasicPlugins/Views/ProductList.cshtml", Products);
+                return View("~/Plugins/Widgets.BasicPlugins/Views/Product/ProductList.cshtml", Products);
             }
             catch (Exception ex)
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
-                return View("~/Plugins/Widgets.BasicPlugins/Views/ProductList.cshtml", Products);
+                return View("~/Plugins/Widgets.BasicPlugins/Views/Product/ProductList.cshtml", Products);
             }            
         }
         [HttpGet]
@@ -173,7 +141,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
         {
             Product product = new();
             GetAllMethods(product);
-            return View("~/Plugins/Widgets.BasicPlugins/Views/AddProduct.cshtml", product);
+            return View("~/Plugins/Widgets.BasicPlugins/Views/Product/AddProduct.cshtml", product);
         }
 
         private void GetAllMethods(Product product)
@@ -293,7 +261,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return View("~/Plugins/Widgets.BasicPlugins/Views/AddProduct.cshtml", product);
+                    return View("~/Plugins/Widgets.BasicPlugins/Views/Product/AddProduct.cshtml", product);
                 }
                 else
                 {
@@ -369,7 +337,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         else
                         {
                             ViewBag.SuccessMessage = "Name already exist.";
-                            return View("~/Plugins/Widgets.BasicPlugins/Views/AddProduct.cshtml", product);
+                            return View("~/Plugins/Widgets.BasicPlugins/Views/Product/AddProduct.cshtml", product);
                         }
                     }
                 }
@@ -377,9 +345,9 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             catch (Exception ex)
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
-                return View("~/Plugins/Widgets.BasicPlugins/Views/AddProduct.cshtml", product);
+                return View("~/Plugins/Widgets.BasicPlugins/Views/Product/AddProduct.cshtml", product);
             }
-            return View("~/Plugins/Widgets.BasicPlugins/Views/AddProduct.cshtml", product);
+            return View("~/Plugins/Widgets.BasicPlugins/Views/Product/AddProduct.cshtml", product);
         }
         [HttpGet]
         public ActionResult EditProduct(int id)
@@ -472,9 +440,9 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             catch (Exception ex)
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
-                return View("~/Plugins/Widgets.BasicPlugins/Views/EditProduct.cshtml", product);
+                return View("~/Plugins/Widgets.BasicPlugins/Views/Product/EditProduct.cshtml", product);
             }
-            return View("~/Plugins/Widgets.BasicPlugins/Views/EditProduct.cshtml", product);
+            return View("~/Plugins/Widgets.BasicPlugins/Views/Product/EditProduct.cshtml", product);
         }
         [HttpPost]
         public ActionResult EditProduct(Product product, string Command)
@@ -489,7 +457,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                 if (!ModelState.IsValid)
                 {
                     ViewBag.SuccessMessage = "Enter required fields.";
-                    return View("~/Plugins/Widgets.BasicPlugins/Views/EditProduct.cshtml", product);
+                    return View("~/Plugins/Widgets.BasicPlugins/Views/Product/EditProduct.cshtml", product);
                 }
                 else
                 {
@@ -569,7 +537,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         {
 
                             ViewBag.SuccessMessage = "Name already exist.";
-                            return View("~/Plugins/Widgets.BasicPlugins/Views/AddProduct.cshtml", product);
+                            return View("~/Plugins/Widgets.BasicPlugins/Views/Product/AddProduct.cshtml", product);
                         }
 
                     }
@@ -578,9 +546,9 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             catch (Exception ex)
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
-                return View("~/Plugins/Widgets.BasicPlugins/Views/EditProduct.cshtml", product);
+                return View("~/Plugins/Widgets.BasicPlugins/Views/Product/EditProduct.cshtml", product);
             }
-            return View("~/Plugins/Widgets.BasicPlugins/Views/EditProduct.cshtml", product);
+            return View("~/Plugins/Widgets.BasicPlugins/Views/Product/EditProduct.cshtml", product);
         }
         [HttpGet]
         public ActionResult DeleteProduct(string data)

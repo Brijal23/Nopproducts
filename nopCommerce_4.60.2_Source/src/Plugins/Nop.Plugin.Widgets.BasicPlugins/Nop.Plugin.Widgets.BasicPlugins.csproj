@@ -1262,7 +1262,7 @@
     <None Remove="lib_npm\typeahead.js\typeahead.jquery.min.js" />
     <None Remove="plugin.json" />
     <None Remove="Views\AddProduct - Copy.cshtml" />
-    <None Remove="Views\AddProduct.cshtml" />
+    <None Remove="Views\Product\AddProduct.cshtml" />
     <None Remove="Views\SpecificationAttribute\AddOption.cshtml" />
     <None Remove="Views\SpecificationAttribute\AddSpecificationAttribute.cshtml" />
     <None Remove="Views\SpecificationAttribute\EditOption.cshtml" />
@@ -1291,7 +1291,6 @@
     <None Remove="Views\ProductTag\ProductTagList.cshtml" />
     <None Remove="Views\SpecificationAttribute\fyll4hg1.rjt~" />
     <None Remove="Views\SpecificationAttribute\SpecificationAttributeList.cshtml" />
-    <None Remove="Views\_FileUpload.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -6328,7 +6327,10 @@
     <Content Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\AddProduct - Copy.cshtml">
+    <Content Include="Views\Product\AddProduct - Copy.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Product\AddProduct.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\SpecificationAttribute\AddOption.cshtml">
@@ -6388,13 +6390,10 @@
     <Content Include="Views\Category\CategoryList.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\EditProduct.cshtml">
+    <Content Include="Views\Product\EditProduct.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\AddProduct.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\ProductList.cshtml">
+    <Content Include="Views\Product\ProductList.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\bootstrap.min.css">
@@ -6413,9 +6412,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\all_plugins.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_FileUpload.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

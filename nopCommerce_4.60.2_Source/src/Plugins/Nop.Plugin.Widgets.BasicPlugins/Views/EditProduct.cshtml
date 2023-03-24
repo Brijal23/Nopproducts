@@ -104,6 +104,10 @@
             border: 1px solid #ced4da !important;
         }
 
+        .tox-statusbar__path {
+            display: none !important;
+        }
+
         .testClass input {
             pointer-events: none;
         }
@@ -116,12 +120,11 @@
         @using (Html.BeginForm("EditProduct", "DemoProduct", FormMethod.Post, new { }))
         {
 
-            <div class="row">
-                <div class="col-md-6">
+            <div style="position:relative;flex-wrap:wrap;justify-content:space-between;">
+                <div class="pull-left">
                     <h4>Edit product - @Model.ProductName</h4>
                 </div>
-
-                <div class="col-md-6">
+                <div class="pull-right">
                     <a href='@Url.Action("ProductList", "DemoProduct")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Product List</a>
                     @*<button type="submit" class="btn btn-primary text-center" style="float:right; margin-left: 15px;" value="delete" name="Command">Delete</button>*@
                     @Html.ActionLink("Delete", "Delete", new { id=Model.ProductID},new{@Onclick="return ConfirmDelete();",@class="btn btn-primary text-center",style="float:right; margin-left: 15px;"})
@@ -129,6 +132,7 @@
                     <button type="submit" class="btn btn-primary text-center" style="float:right;" value="save" name="Command">Save</button>
                 </div>
             </div>
+            <br>
             <div class="form-group">
                 <div style="text-align:center;">
                     @if (ViewBag.SuccessMessage != null)
@@ -137,7 +141,7 @@
                     }
                 </div>
             </div>
-            <br>
+            
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion(event)">Product Info</div>
                 <div class="accordion-content">

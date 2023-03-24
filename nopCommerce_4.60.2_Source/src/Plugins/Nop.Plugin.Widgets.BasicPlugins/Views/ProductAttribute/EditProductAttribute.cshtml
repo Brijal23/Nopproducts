@@ -68,6 +68,9 @@
             pointer-events: none;
         }
 
+        .tox-statusbar__path {
+            display: none !important;
+        }
     </style>
 
 </head>
@@ -77,20 +80,17 @@
         @using (Html.BeginForm("EditProductAttribute", "DemoProductAttribute", FormMethod.Post, new { @class = "form-horizontal" }))
         {
 
-            <div class="row">
-                <div class="col-md-6">
+            <div style="position:relative;flex-wrap:wrap;justify-content:space-between;">
+                <div class="pull-left">
                     <h4>Edit product attribute - @Model.ProductAttributeName </h4>
                 </div>
-                @* <div class="col-md-5">
-            </div>*@
-                <div class="col-md-6">
+                <div class="pull-right">
                     <a href='@Url.Action("ProductAttributeList", "DemoProductAttribute")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Product Attribute List</a>
                     @Html.ActionLink("Delete", "Delete", new { id=Model.ProductAttributeID},new{@Onclick="return ConfirmDelete();",@class="btn btn-primary text-center",style="float:right; margin-left: 15px;"})
 
                     <button type="submit" class="btn btn-primary text-center" style="float:right; margin-left: 15px;" value="saveedit" name="Command">Save and Continue Edit</button>
                     <button type="submit" class="btn btn-primary text-center" style="float:right;" value="save" name="Command">Save</button>
                 </div>
-
             </div>
             @*<div class="row">
         <div class="col-md-3">
@@ -106,7 +106,7 @@
                 </div>
             </div>
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Info</div>
+                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>Info</div>
                 <div class="accordion-content">
                     @Html.HiddenFor(m => m.ProductAttributeID, new {})
                     @Html.HiddenFor(m => m.IsActive, new {})
@@ -132,7 +132,7 @@
             </div>
             <br>
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Predefined values</div>
+                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>Predefined values</div>
                 <div class="accordion-content">
                     <p>Predefined (default) values are helpful for a store owner when creating new products. Then when you add the attribute to a product, you don't have to create the values again.</p><br>
                     <table class="table table-bordered table-hover display table-responsive-md" id="predefineexample">

@@ -9,39 +9,43 @@
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css" />
     <style>
-        /* Styling for the accordion */
-        .accordion {
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-
-        .accordion-header {
-            background-color: #f1f1f1;
-            padding: 10px;
-            cursor: pointer;
-        }
-
-            .accordion-header:hover {
-                background-color: #ddd;
-            }
-
-            .accordion-header.active {
-                background-color: #ccc;
-            }
-
-        .accordion-content {
-            padding: 10px;
-            /* display: none;*/
-        }
-
-            .accordion-content.show {
-                display: block;
-            }
-
         .row {
             width: 100%;
         }
+        .set {
+            position: relative;
+            width: 100%;
+            height: auto;
+            background-color: #f5f5f5;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+           
+        }
+            .set > a {
+                display: block;
+                padding: 10px 15px;
+                text-decoration: none;
+                color: #555;
+                font-weight: 600;
+               /* border-bottom: 1px solid #ddd;*/
+                -webkit-transition: all 0.2s linear;
+                -moz-transition: all 0.2s linear;
+                transition: all 0.2s linear;
+            }
+                .set > a i {
+                    float: right;
+                    margin-top: 2px;
+                }
+        .content {
+            background-color: #fff;
+            /*border-bottom: 1px solid #ddd;
+            display: none;
+            */
+        }
+            .content p {
+                padding: 10px 15px;
+                margin: 0;
+                color: #333;
+            }
     </style>
 
 </head>
@@ -52,110 +56,136 @@
                 <h4>Categories</h4>
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-danger" style="float:right; margin-left: 15px;" id="btnDelete">Delete (selected)</button>
+                <button type="button" class="btn btn-danger" style="float:right; margin-left: 15px;" id="btnDelete">Delete</button>
                 <a href='@Url.Action("AddCategory", "DemoCategory")' class="btn btn-primary" style="float: right;">Add category</a>
             </div>
         </div>
         <br>
-        <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-search">&nbsp;&nbsp;&nbsp;</i>Search</div>
-            <div class="accordion-content">
-@*
-                @using (Html.BeginForm("CategoryList", "DemoCategory", FormMethod.Get, new { @onsubmit = "return checkvalidation()" }))
-                {*@
-                    <div>
-                        <div class="row">
-                            <div class="col-sm-3" style="margin-left: 93px"><label>Category name</label></div>
-                            <div class="col-sm-3" style="margin-left: -160px;margin-right: 150px;">
-                                <input type="text" name="CategoryName" id="CategoryName" class="form-control" />
-                            </div>
-                            <div class="col-sm-3"><label>Published</label></div>
-                            <div class="col-sm-3" style="margin-left: -160px;">
-                                <select class="form-control" id="SearchPublishedId" name="published">
-                                    <option value="All">All</option>
-                                    <option value="1">Published only</option>
-                                    <option value="0">Unpublished only</option>
-                                </select>
-                            </div>
+        <div class="accordion-container">
+            <div class="set">
+                <a href="#">
+                   Search
+                    <i class="fa fa-angle-up"></i>
+                </a>
+                <div class="content">
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-3" style="margin-left: 93px"><label>Category name</label></div>
+                        <div class="col-sm-3" style="margin-left: -160px;margin-right: 150px;">
+                            <input type="text" name="CategoryName" id="CategoryName" class="form-control" />
                         </div>
-                        <br><br>
-                        <div style="text-align:center;">
-                        <button type="button" class="btn btn-primary" onclick="SearchList();"><i class="fa fa-search"></i>&nbsp; Search</button>
+                        <div class="col-sm-2"><label>Published</label></div>
+                        <div class="col-sm-3">
+                            <select class="form-control" id="SearchPublishedId" name="published">
+                                <option value="All">All</option>
+                                <option value="1">Published only</option>
+                                <option value="0">Unpublished only</option>
+                            </select>
                         </div>
+                        <div class="col-sm-1"></div>
                     </div>
-               @* }
-
-*@
+                    <br>
+                    <div style="text-align:center;">
+                        <button type="button" class="btn btn-primary" onclick="SearchList();"><i class="fa fa-search"></i>&nbsp; Search</button>
+                    </div>
+                    <br>
+                </div>
             </div>
         </div>
+    @* <div class="accordion">
+    <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-search">&nbsp;&nbsp;&nbsp;</i>Search</div>
+    <div class="accordion-content">
+    <div>
+    <div class="row">
+    <div class="col-sm-3" style="margin-left: 93px"><label>Category name</label></div>
+    <div class="col-sm-3" style="margin-left: -160px;margin-right: 150px;">
+    <input type="text" name="CategoryName" id="CategoryName" class="form-control" />
+    </div>
+    <div class="col-sm-2"><label>Published</label></div>
+    <div class="col-sm-3">
+    <select class="form-control" id="SearchPublishedId" name="published">
+    <option value="All">All</option>
+    <option value="1">Published only</option>
+    <option value="0">Unpublished only</option>
+    </select>
+    </div>
+    <div class="col-sm-1"></div>
+    </div>
+    <br><br>
+    <div style="text-align:center;">
+    <button type="button" class="btn btn-primary" onclick="SearchList();"><i class="fa fa-search"></i>&nbsp; Search</button>
+    </div>
+    </div>
+    </div>
+    </div>*@
+
+    <div class="form-group">
+        <div style="text-align:center;">
+            @if (ViewBag.SuccessMessage != null)
+            {
+                <label style="color:green;">@ViewBag.SuccessMessage</label>
+            }
+        </div>
+    </div>
+    <div class="form-horizontal">
 
         <div class="form-group">
-            <div style="text-align:center;">
-                @if (ViewBag.SuccessMessage != null)
-                {
-                    <label style="color:green;">@ViewBag.SuccessMessage</label>
-                }
-            </div>
-        </div>
-        <div class="form-horizontal">
+            <table class="table table-bordered table-hover display table-responsive-md" id="example">
+                <thead>
+                    <tr>
+                        <th hidden></th>
+                        <th><input type="checkbox" id="chkAll" /></th>
 
-            <div class="form-group">
-                <table class="table table-bordered table-hover display table-responsive-md" id="example">
-                    <thead>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CategoryName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsPublished)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Displayorder)
+                        </th>
+                        <th>
+                            Edit
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
                         <tr>
-                            <th hidden></th>
-                            <th><input type="checkbox" id="chkAll" /></th>
+                            <td hidden>@item.CategoryID</td>
+                            <td><input type="checkbox" name="itemIds" class="checkboxGroups" value="@item.CategoryID" /></td>
+                            <td style="word-wrap: break-word !important; max-width:300px !important;">
+                                <div> @item.CategoryName </div>
+                                @* <p>@Html.DisplayFor(modelItem => item.CategoryName)</p>*@
+                            </td>
+                            <td>
+                                @if (item.IsPublished == true)
+                                {
+                                    <p>Yes</p>
+                                    @*<i class="fa fa-check true-icon"></i>*@
+                                }
+                                else
+                                {
+                                    <p>No</p>
+                                }
 
-                            <th>
-                                @Html.DisplayNameFor(model => model.CategoryName)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.IsPublished)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Displayorder)
-                            </th>
-                            <th>
-                                Edit
-                            </th>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Displayorder)
+                            </td>
 
+                            <td>
+                                @Html.ActionLink("Edit", "EditCategory", new { id=item.CategoryID},new{/*@class="btn btn-Se"*/})
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td hidden>@item.CategoryID</td>
-                                <td><input type="checkbox" name="itemIds" class="checkboxGroups" value="@item.CategoryID" /></td>
-                                <td style="word-wrap: break-word !important; max-width:300px !important;">
-                                    <div> @item.CategoryName </div>
-                                   @* <p>@Html.DisplayFor(modelItem => item.CategoryName)</p>*@
-                                </td>
-                                <td>
-                                    @if (item.IsPublished == true)
-                                    {
-                                        <p>Yes</p>
-                                        @*<i class="fa fa-check true-icon"></i>*@
-                                    }
-                                    else
-                                    {
-                                        <p>No</p>
-                                    }
-
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Displayorder)
-                                </td>
-
-                                <td>
-                                    @Html.ActionLink("Edit", "EditCategory", new { id=item.CategoryID},new{/*@class="btn btn-Se"*/})
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                </tbody>
+            </table>
         </div>
+    </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
@@ -169,14 +199,41 @@
                 aoColumnDefs: [
                     {
                         bSortable: false,
-                        aTargets: [1,5]
+                        aTargets: [1, 5]
                     }
                 ]
             });
-           
+
         });
-        
-       // \u0000
+        $(document).ready(function () {
+            $(".set > a").on("click", function () {
+                if ($(this).hasClass("active")) {
+                    $(this).removeClass("active");
+                    $(this)
+                        .siblings(".content")
+                        .slideUp(200);
+                    $(".set > a i")
+                        .removeClass("fa-angle-down")
+                        .addClass("fa-angle-up");
+                } else {
+                    $(".set > a i")
+                        .removeClass("fa-angle-down")
+                        .addClass("fa-angle-up");
+                    $(this)
+                        .find("i")
+                        .removeClass("fa-angle-up")
+                        .addClass("fa-angle-down");
+                    $(".set > a").removeClass("active");
+                    $(this).addClass("active");
+                    $(".content").slideUp(200);
+                    $(this)
+                        .siblings(".content")
+                        .slideDown(200);
+                }
+            });
+        });
+
+        // \u0000
         function SearchList() {
             var CategoryName = $("#CategoryName").val();
             var SearchPublishedId = $("#SearchPublishedId").val();
@@ -287,13 +344,13 @@
                             if (response.status == "success") {
                                 window.location.href = "/Admin/DemoCategory/CategoryList";
                             }
-                            
+
                         }
                     });
-                    
+
                 }
             }
-            else{
+            else {
                 alert("Please select row.");
             }
         });

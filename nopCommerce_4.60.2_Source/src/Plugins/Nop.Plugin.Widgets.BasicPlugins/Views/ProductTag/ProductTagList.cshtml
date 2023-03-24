@@ -10,35 +10,42 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css" />
     <style>
         /* Styling for the accordion */
-        .accordion {
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
+        .set {
+            position: relative;
+            width: 100%;
+            height: auto;
+            background-color: #f5f5f5;
+            border: 1px solid rgba(0, 0, 0, 0.3);
         }
 
-        .accordion-header {
-            background-color: #f1f1f1;
-            padding: 10px;
-            cursor: pointer;
-        }
-
-            .accordion-header:hover {
-                background-color: #ddd;
-            }
-
-            .accordion-header.active {
-                background-color: #ccc;
-            }
-
-        .accordion-content {
-            padding: 10px;
-            /* display: none;*/
-        }
-
-            .accordion-content.show {
+            .set > a {
                 display: block;
+                padding: 10px 15px;
+                text-decoration: none;
+                color: #555;
+                font-weight: 600;
+                /* border-bottom: 1px solid #ddd;*/
+                -webkit-transition: all 0.2s linear;
+                -moz-transition: all 0.2s linear;
+                transition: all 0.2s linear;
             }
 
+                .set > a i {
+                    float: right;
+                    margin-top: 2px;
+                }
+
+        .content {
+            background-color: #fff;
+            /*border-bottom: 1px solid #ddd;
+                    display: none;*/
+        }
+
+            .content p {
+                padding: 10px 15px;
+                margin: 0;
+                color: #333;
+            }
         .row {
             width: 100%;
         }
@@ -52,15 +59,19 @@
                 <h4>Product tags</h4>
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-danger" style="float:right; margin-left: 15px;" id="btnDelete">Delete (selected)</button>
+                <button type="button" class="btn btn-danger" style="float:right; margin-left: 15px;" id="btnDelete">Delete</button>
                 <a href='@Url.Action("AddProductTag", "DemoProductTag")' class="btn btn-primary" style="float: right;">Add tag</a>
             </div>
         </div>
         <br>
-        <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-search">&nbsp;&nbsp;&nbsp;</i>Search</div>
-            <div class="accordion-content">
-                    <div>
+        <div class="accordion-container">
+            <div class="set">
+                <a href="#">
+                   Search
+                    <i class="fa fa-angle-up"></i>
+                </a>
+                <div class="content">
+                    <br>
                         <div class="row">
                             <div class="col-sm-3" style="margin-left: 93px"><label>Tag name</label></div>
                             <div class="col-sm-3" style="margin-left: -160px;margin-right: 150px;">
@@ -68,11 +79,12 @@
                             </div>
                             
                         </div>
-                        <br><br>
+                        <br>
                         <div style="text-align:center;">
                             <button type="button" class="btn btn-primary" onclick="SearchList();"><i class="fa fa-search"></i>&nbsp; Search</button>
                         </div>
-                    </div>
+                    <br>
+                </div>
             </div>
         </div>
         <div class="form-group">
@@ -142,6 +154,34 @@
                 ]
             });
         });
+        $(document).ready(function () {
+            $(".set > a").on("click", function () {
+                if ($(this).hasClass("active")) {
+                    $(this).removeClass("active");
+                    $(this)
+                        .siblings(".content")
+                        .slideUp(200);
+                    $(".set > a i")
+                        .removeClass("fa-angle-down")
+                        .addClass("fa-angle-up");
+                } else {
+                    $(".set > a i")
+                        .removeClass("fa-angle-down")
+                        .addClass("fa-angle-up");
+                    $(this)
+                        .find("i")
+                        .removeClass("fa-angle-up")
+                        .addClass("fa-angle-down");
+                    $(".set > a").removeClass("active");
+                    $(this).addClass("active");
+                    $(".content").slideUp(200);
+                    $(this)
+                        .siblings(".content")
+                        .slideDown(200);
+                }
+            });
+        });
+
         function SearchList() {
             var ProductTagName = $("#ProductTagName").val();
             $.ajax({

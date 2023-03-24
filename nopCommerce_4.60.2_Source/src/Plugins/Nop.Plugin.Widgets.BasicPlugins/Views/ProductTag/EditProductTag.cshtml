@@ -4,8 +4,8 @@
 <head>
     <title>Edit Tag</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    
-   
+
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tag-editor/1.0.20/jquery.tag-editor.css" integrity="sha512-FILySSY3nAOje2KkIZUxajmYnEDpcPsSjvTSBlo9jHsMXbtNongJIh75cRp9jsG5R1GYO8fYRWQ66FLbSZfTGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -72,13 +72,12 @@
         @using (Html.BeginForm("EditProductTag", "DemoProductTag", FormMethod.Post, new { @class = "form-horizontal" }))
         {
 
-            <div class="row">
-                <div class="col-md-3">
+            <div style="position:relative;flex-wrap:wrap;justify-content:space-between;">
+                <div class="pull-left">
                     <h4>Edit tag - @Model.ProductTagName </h4>
                 </div>
-                @* <div class="col-md-5">
-            </div>*@
-                <div class="col-md-9">
+
+                <div class="pull-right">
                     <a href='@Url.Action("ProductTagList", "DemoProductTag")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to ProductTag List</a>
                     @Html.ActionLink("Delete", "Delete", new { id=Model.ProductTagID},new{@Onclick="return ConfirmDelete();",@class="btn btn-primary text-center",style="float:right; margin-left: 15px;"})
 
@@ -92,7 +91,7 @@
         <input type="checkbox" id="togbutton" checked data-toggle="toggle" data-on="Advanced" data-off="Basic" data-onstyle="primary" data-offstyle="light">
         </div>
         </div>*@
-        <br>
+            <br>
             <div class="form-group">
                 <div style="text-align:center;">
                     @if (ViewBag.SuccessMessage != null)
@@ -102,7 +101,7 @@
                 </div>
             </div>
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Tag Info</div>
+                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>Tag Info</div>
                 <div class="accordion-content">
                     @Html.HiddenFor(m => m.ProductTagID, new {})
                     @Html.HiddenFor(m => m.IsActive, new {})
@@ -118,7 +117,7 @@
                     </div>
                 </div>
             </div>
-           
+
         }
 
     </div>
@@ -127,7 +126,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.js"></script>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/caret/1.3.7/jquery.caret.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tag-editor/1.0.20/jquery.tag-editor.min.js" integrity="sha512-wexRM3SVzXnR9XDRR32JUDTyDZP3XGAsrsbVl+rBMupJsHZqbUCBMxVHDDzCpvKVhJqerRYoInsRA2ySEzpYLg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

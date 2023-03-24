@@ -77,13 +77,11 @@
         @using (Html.BeginForm("EditSpecificationAttribute", "DemoSpecificationAttribute", FormMethod.Post, new { @class = "form-horizontal" }))
         {
 
-            <div class="row">
-                <div class="col-md-6">
+             <div style="position:relative;flex-wrap:wrap;justify-content:space-between;">
+                <div class="pull-left">
                     <h4>Edit specification attribute - @Model.SpecificationAttributeName </h4>
-                </div>
-                @* <div class="col-md-5">
-            </div>*@
-                <div class="col-md-6">
+                 </div>
+                <div class="pull-right">
                     <a href='@Url.Action("SpecificationAttributeList", "DemoSpecificationAttribute")' class="btn btn-primary text-center" style="float:right; margin-left:15px;">Back to Specification Attribute List</a>
                     @Html.ActionLink("Delete", "Delete", new { id=Model.SpecificationAttributeID},new{@Onclick="return ConfirmDelete();",@class="btn btn-primary text-center",style="float:right; margin-left: 15px;"})
 
@@ -107,7 +105,7 @@
                 </div>
             </div>
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Attribute info</div>
+                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>Attribute info</div>
                 <div class="accordion-content">
                     @Html.HiddenFor(m => m.SpecificationAttributeID, new {})
                     @Html.HiddenFor(m => m.IsActive, new {})
@@ -132,7 +130,7 @@
                 </div>
             </div>
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>&nbsp; Options</div>
+                <div class="accordion-header" onclick="toggleAccordion(event)"><i class="fa fa-info panel-icon"></i>Options</div>
                 <div class="accordion-content">
                     <table class="table table-bordered table-hover display table-responsive-md" id="optionexample">
                         <thead>

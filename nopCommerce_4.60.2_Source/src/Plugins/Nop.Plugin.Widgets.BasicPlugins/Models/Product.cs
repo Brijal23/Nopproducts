@@ -49,6 +49,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Models
         public DateTime UpdatedDate { get; set; }
         public string? SFile { get; set; }
         public List<UploadFileModel>? UploadFileModel { get; set; }
+        public List<ShoppingCart>? ShoppingCartList { get; set; }
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "Enter valid GTIN.")]
         [MaxLength(13)]
         [DisplayName("GTIN (Global Trade Item Number)")]

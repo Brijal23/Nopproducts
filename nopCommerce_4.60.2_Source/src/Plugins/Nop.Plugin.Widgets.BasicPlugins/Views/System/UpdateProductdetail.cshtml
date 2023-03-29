@@ -1,4 +1,4 @@
-﻿
+﻿@model Nop.Plugin.Widgets.BasicPlugins.Models.ShoppingCart
 <!DOCTYPE html>
 <html lang=en class=html-home-page>
 <head>
@@ -52,7 +52,7 @@
                                     There are <a href="/System/Cart">@ViewBag.Count item(s)</a> in your cart.
                                 </div>
                                 <div class="items">
-                                    @foreach (var item in @ViewBag.ShoppingCart)
+                                    @foreach (var item in ViewBag.ShoppingCart)
                                     {
                                         <div class="item">
                                             <div class="picture">
@@ -120,14 +120,14 @@
                     <div class="page product-details-page">
                         <div class="page-body">
                             <form method="post" id="product-details-form" action="/caf%C3%A9-latte" novalidate="novalidate">
-                                <div itemscope="" itemtype="http://schema.org/Product"><meta itemprop="name" content="@Model.ProductName"><meta itemprop="sku" content="@Model.SKU"><meta itemprop="gtin"><meta itemprop="mpn"><meta itemprop="description" content="@Model.ShortDescription"><meta itemprop="image" content="https://cafe.shopfast.net/images/thumbs/0004475_cafe-au-lait_550.jpeg"><div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer"><meta itemprop="url" content="https://cafe.shopfast.net/caf%c3%a9-latte"><meta itemprop="price" content="@Model.Price"><meta itemprop="priceCurrency" content="USD"><meta itemprop="priceValidUntil"><meta itemprop="availability" content="http://schema.org/OutOfStock"></div><div itemprop="review" itemscope="" itemtype="http://schema.org/Review"><meta itemprop="author" content="ALL"><meta itemprop="url" content="/productreviews/60"></div></div><div data-productid="60">
+                                <div itemscope="" itemtype="http://schema.org/Product"><meta itemprop="name" content="@Model.ProductName"><meta itemprop="sku"><meta itemprop="gtin"><meta itemprop="mpn"><meta itemprop="description"><meta itemprop="image" content="https://cafe.shopfast.net/images/thumbs/0004475_cafe-au-lait_550.jpeg"><div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer"><meta itemprop="url" content="https://cafe.shopfast.net/caf%c3%a9-latte"><meta itemprop="price" content="@Model.Price"><meta itemprop="priceCurrency" content="USD"><meta itemprop="priceValidUntil"><meta itemprop="availability" content="http://schema.org/OutOfStock"></div><div itemprop="review" itemscope="" itemtype="http://schema.org/Review"><meta itemprop="author" content="ALL"><meta itemprop="url" content="/productreviews/60"></div></div><div data-productid="60">
                                     <div class="product-essential">
                                         <div class="gallery">
                                             <div class="picture">
-                                                <img alt="Picture of @Model.ProductName" src="@Model.SFile" title="Picture of @Model.ProductName" id="main-product-img" width="550" height="500">
+                                                <img alt="Picture of @Model.ProductName" src="@Model.ImageData" title="Picture of @Model.ProductName" id="main-product-img" width="550" height="500">
                                             </div>
                                             <div class="picture-thumbs">
-                                                @if (Model.UploadFileModel.Count > 1)
+                                                @if (Model.UploadFileModel.Count() > 1)
                                                 {
                                                     @foreach (var item in Model.UploadFileModel)
                                                     {
@@ -138,32 +138,51 @@
                                         </div><div class="overview">
                                             <input type="hidden" id="product-id" value="@Model.ProductID" />
                                             <div class="product-name"><h1>@Model.ProductName</h1></div>
-                                            <div class="short-description">@Model.ShortDescription</div>
+                                            @*<div class="short-description">@Model.ShortDescription</div>*@
                                             <div class="additional-details"></div>
                                             <div class="attributes">
                                                 <dl>
                                                     <dt id="product_attribute_label_30"><label class="text-prompt"> Size </label> <span class="required">*</span></dt>
                                                     <dd id="product_attribute_input_30">
                                                         <ul class="option-list">
-                                                            <li><input id="product_attribute_S" type="radio" name="product_attribute" value="S" checked> <label for="product_attribute_30_73">Small</label></li>
-                                                            <li><input id="product_attribute_M" type="radio" name="product_attribute" value="M"> <label for="product_attribute_30_74">Medium [+$1.00]</label></li>
-                                                            <li><input id="product_attribute_L" type="radio" name="product_attribute" value="L"> <label for="product_attribute_30_75">Large [+$1.50]</label></li>
+                                                            @if (Model.Size == "S")
+                                                            {
+                                                                <li><input id="product_attribute_S" type="radio" name="product_attribute" value="S" checked> <label for="product_attribute_30_73">Small</label></li>
+                                                                <li><input id="product_attribute_M" type="radio" name="product_attribute" value="M"> <label for="product_attribute_30_74">Medium [+$1.00]</label></li>
+                                                                <li><input id="product_attribute_L" type="radio" name="product_attribute" value="L"> <label for="product_attribute_30_75">Large [+$1.50]</label></li>
+
+                                                            }
+                                                            else if (Model.Size == "M")
+                                                            {
+                                                                <li><input id="product_attribute_S" type="radio" name="product_attribute" value="S"> <label for="product_attribute_30_73">Small</label></li>
+
+                                                                <li><input id="product_attribute_M" type="radio" name="product_attribute" value="M" checked> <label for="product_attribute_30_74">Medium [+$1.00]</label></li>
+                                                                <li><input id="product_attribute_L" type="radio" name="product_attribute" value="L"> <label for="product_attribute_30_75">Large [+$1.50]</label></li>
+
+                                                            }
+                                                            else if (Model.Size == "L")
+                                                            {
+                                                                <li><input id="product_attribute_S" type="radio" name="product_attribute" value="S"> <label for="product_attribute_30_73">Small</label></li>
+                                                                <li><input id="product_attribute_M" type="radio" name="product_attribute" value="M"> <label for="product_attribute_30_74">Medium [+$1.00]</label></li>
+
+                                                                <li><input id="product_attribute_L" type="radio" name="product_attribute" value="L" checked> <label for="product_attribute_30_75">Large [+$1.50]</label></li>
+                                                            }
                                                         </ul>
                                                     </dd>
                                                 </dl>
                                             </div>
                                             <div class="prices">
                                                 <div class="product-price">
-                                                    <span id="price-value-hidden" class="price-value" hidden>$@Model.FPrice</span>
+                                                    <span id="price-value-hidden" class="price-value" hidden>$@Model.FEPrice</span>
                                                     <span id="price-value" class="price-value">$@Model.FPrice</span>
                                                 </div>
                                             </div>
                                             <div class="add-to-cart">
                                                 <div class="add-to-cart-panel">
-                                                    <label class="qty-label" for="addtocart_60_EnteredQuantity">Qty:</label> <input id="product_enteredQuantity" class="qty-input valid" onkeypress="return isNumber(event)" aria-label="Enter a quantity" data-val="true" data-val-required="The Qty field is required." name="addtocart_60.EnteredQuantity" value="1"
+                                                    <label class="qty-label" for="addtocart_60_EnteredQuantity">Qty:</label> <input id="product_enteredQuantity" class="qty-input valid" onkeypress="return isNumber(event)" aria-label="Enter a quantity" data-val="true" data-val-required="The Qty field is required." name="addtocart_60.EnteredQuantity" value="@Model.Quantity"
                                                                                                                                     aria-describedby="product_enteredQuantity_60-error" aria-invalid="false">
-                                                    <input type="button" id="add-to-cart-button-60" class="button-1 add-to-cart-button valid" value="Add to cart"
-                                                           data-productid="60" aria-invalid="false" onclick="Addtocart()">
+                                                    <input type="button" id="add-to-cart-button-60" class="button-1 add-to-cart-button valid" value="Update"
+                                                           data-productid="60" aria-invalid="false" onclick="Updatetocart()">
                                                 </div>
                                             </div>
                                             <div class="overview-buttons">
@@ -222,7 +241,7 @@
             return true;
         }
         //Add value to shopping cart
-        function Addtocart() {
+        function Updatetocart() {
             var Quantity = $("#product_enteredQuantity").val();
             var Size = $("input[name='product_attribute']:checked").val();
             var Price = $("#price-value").text().replace("$", "");
@@ -248,14 +267,17 @@
         function SubmitForm(FormData) {
             $.ajax({
                 type: 'POST',
-                url: '/System/Addtocart',
+                url: '/System/Updatetocart',
                 headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
                 data: FormData,
                 processData: false,
                 contentType: false,
                 success: function (response) {
                     if (response.status == "success") {
-                       window.location.href="/System/cart";
+                        if(response.status == "success") {
+                            window.location.href = "/System/cart";
+                        }
+                       
                     }
                 },
                 error: function (err) {

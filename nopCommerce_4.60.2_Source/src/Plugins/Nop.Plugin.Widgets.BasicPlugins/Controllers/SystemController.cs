@@ -26,46 +26,48 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
 
         [HttpGet]
         public ActionResult Index()
+        
         {
-            List<Category> categories = new();
+            List<ShoppingCart> carts = new();
             List<Product> Products = new();
             try
             {
+                Common();
                 string constr = @"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True";
 
                 using (SqlConnection connection = new SqlConnection(constr))
                 {
-                    connection.Open();
-                    string Query = "";
-                    Query = "SELECT * FROM Categories AS C WHERE IsActive=1 AND C.ParentcategoryId=0";
-                    using (SqlCommand command = new SqlCommand(Query, connection))
-                    {
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                categories.Add(new Category
-                                {
-                                    CategoryName = reader["CategoryName"].ToString(),
-                                    CategoryID = Convert.ToInt32(reader["CategoryID"].ToString()),
-                                });
-                            }
-                        }
-                    }
-                    connection.Close();
-                    connection.Open();
-                    string q = "Select COUNT(*) as Count FROM [dbo].[ShoppingCart] WHERE IsActive=1";
-                    using (SqlCommand command = new SqlCommand(q, connection))
-                    {
-                        using (SqlDataReader r = command.ExecuteReader())
-                        {
-                            while (r.Read())
-                            {
-                                ViewBag.Count = Convert.ToInt32(r["Count"].ToString());
-                            }
-                        }
-                    }
-                    connection.Close();
+                    //connection.Open();
+                    //string Query = "";
+                    //Query = "SELECT * FROM Categories AS C WHERE IsActive=1 AND C.ParentcategoryId=0";
+                    //using (SqlCommand command = new SqlCommand(Query, connection))
+                    //{
+                    //    using (SqlDataReader reader = command.ExecuteReader())
+                    //    {
+                    //        while (reader.Read())
+                    //        {
+                    //            categories.Add(new Category
+                    //            {
+                    //                CategoryName = reader["CategoryName"].ToString(),
+                    //                CategoryID = Convert.ToInt32(reader["CategoryID"].ToString()),
+                    //            });
+                    //        }
+                    //    }
+                    //}
+                    //connection.Close();
+                    //connection.Open();
+                    //string q = "Select COUNT(Quantity) as Count FROM [dbo].[ShoppingCart] WHERE IsActive=1";
+                    //using (SqlCommand command = new SqlCommand(q, connection))
+                    //{
+                    //    using (SqlDataReader r = command.ExecuteReader())
+                    //    {
+                    //        while (r.Read())
+                    //        {
+                    //            ViewBag.Count = Convert.ToInt32(r["Count"].ToString());
+                    //        }
+                    //    }
+                    //}
+                    //connection.Close();
                 }
 
                 using (SqlConnection conn = new SqlConnection(constr))
@@ -94,48 +96,161 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             }
                         }
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                ViewBag.SuccessMessage = ex.Message.ToString();
-                return View("~/Plugins/Widgets.BasicPlugins/Views/System/Index.cshtml");
-            }
-            ViewBag.Category = categories;
-            ViewBag.Products = Products;
-            return View("~/Plugins/Widgets.BasicPlugins/Views/System/Index.cshtml");
-        }
-
-        [HttpGet]
-        public ActionResult Productdetail(string name)
-        {
-            List<Category> categories = new();
-            Product Product = new();
-            try
-            {
-                string constr = @"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True";
-
-                using (SqlConnection connection = new SqlConnection(constr))
-                {
-                    connection.Open();
-                    string Query = "";
-                    Query = "SELECT * FROM Categories AS C WHERE IsActive=1 AND C.ParentcategoryId=0";
-                    using (SqlCommand command = new SqlCommand(Query, connection))
+                    conn.Close();
+                    conn.Open();
+                    string query = "select S.*,P.ProductName from [dbo].[ShoppingCart] as S Inner join[dbo].[Product] as P on P.ProductID = S.ProductID where S.IsActive = 1";
+                    using (SqlCommand command = new SqlCommand(query, conn))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                categories.Add(new Category
+                                carts.Add(new ShoppingCart
                                 {
-                                    CategoryName = reader["CategoryName"].ToString(),
-                                    CategoryID = Convert.ToInt32(reader["CategoryID"].ToString()),
+                                    CartID = Convert.ToInt32(reader["CartID"].ToString()),
+                                    ImageData = reader["ImageData"].ToString(),
+                                    ProductName = reader["ProductName"].ToString(),
+                                    ProductID = Convert.ToInt32(reader["ProductID"].ToString()),
+                                    Size = reader["Size"].ToString(),
+                                    Quantity = Convert.ToInt32(reader["Quantity"].ToString()),
+                                    FPrice = Convert.ToSingle(reader["Price"].ToString()),
+                                    TotalPrice = (decimal)(Convert.ToInt32(reader["Quantity"].ToString()) * Convert.ToSingle(reader["Price"].ToString())),
                                 });
+
+
                             }
+                            
+                            conn.Close();
                         }
                     }
-                    connection.Close();
-                    ViewBag.Category = categories;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.SuccessMessage = ex.Message.ToString();
+                return View("~/Plugins/Widgets.BasicPlugins/Views/System/Index.cshtml", Products);
+            }
+           // ViewBag.Category = categories;
+            ViewBag.ShoppingCart = carts;
+            return View("~/Plugins/Widgets.BasicPlugins/Views/System/Index.cshtml", Products);
+        }
+        public void Common()
+        {
+            List<Category> categories = new();
+            List<ShoppingCart> carts = new();
+            ListShoppingCart list = new();
+            string constr = @"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True";
+
+            using (SqlConnection connection = new SqlConnection(constr))
+            {
+                connection.Open();
+                string Query = "";
+                Query = "SELECT * FROM Categories AS C WHERE IsActive=1 AND C.ParentcategoryId=0";
+                using (SqlCommand command = new SqlCommand(Query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            categories.Add(new Category
+                            {
+                                CategoryName = reader["CategoryName"].ToString(),
+                                CategoryID = Convert.ToInt32(reader["CategoryID"].ToString()),
+                            });
+                        }
+                    }
+                }
+                connection.Close();
+                ViewBag.Category = categories;
+                connection.Open();
+                string q = "Select Sum(Quantity) as Count FROM [dbo].[ShoppingCart] WHERE IsActive=1";
+                using (SqlCommand command = new SqlCommand(q, connection))
+                {
+                    using (SqlDataReader r = command.ExecuteReader())
+                    {
+                        while (r.Read())
+                        {
+                            ViewBag.Count = r["Count"].ToString()!=""? Convert.ToInt32(r["Count"].ToString()):0;
+                        }
+                    }
+                }
+
+                connection.Close();
+                connection.Open();
+                string query = "select S.*,P.ProductName from [dbo].[ShoppingCart] as S Inner join[dbo].[Product] as P on P.ProductID = S.ProductID where S.IsActive = 1";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            carts.Add(new ShoppingCart
+                            {
+                                CartID = Convert.ToInt32(reader["CartID"].ToString()),
+                                ImageData = reader["ImageData"].ToString(),
+                                ProductName = reader["ProductName"].ToString(),
+                                ProductID = Convert.ToInt32(reader["ProductID"].ToString()),
+                                Size = reader["Size"].ToString(),
+                                Quantity = Convert.ToInt32(reader["Quantity"].ToString()),
+                                FPrice = Convert.ToSingle(reader["Price"].ToString()),
+                                TotalPrice = (decimal)(Convert.ToInt32(reader["Quantity"].ToString()) * Convert.ToSingle(reader["Price"].ToString())),
+                            });
+
+
+                        }
+                        list.ShoppingCartList = carts;
+                        connection.Close();
+                    }
+                }
+                decimal? subtotal = 0;
+                foreach (var item in list.ShoppingCartList)
+                {
+                    subtotal = subtotal + item.TotalPrice;
+                }
+                ViewBag.Subtotal = subtotal;
+            }
+        }
+        [HttpGet]
+        public ActionResult Productdetail(string name)
+        {
+            List<Category> categories = new();
+            Product Product = new();
+            List<ShoppingCart> carts = new();
+            try
+            {
+                Common();
+                string constr = @"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True";
+
+                using (SqlConnection connection = new SqlConnection(constr))
+                {
+                    connection.Open();
+                    string query = "select S.*,P.ProductName from [dbo].[ShoppingCart] as S Inner join[dbo].[Product] as P on P.ProductID = S.ProductID where S.IsActive = 1";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                carts.Add(new ShoppingCart
+                                {
+                                    CartID = Convert.ToInt32(reader["CartID"].ToString()),
+                                    ImageData = reader["ImageData"].ToString(),
+                                    ProductName = reader["ProductName"].ToString(),
+                                    ProductID = Convert.ToInt32(reader["ProductID"].ToString()),
+                                    Size = reader["Size"].ToString(),
+                                    Quantity = Convert.ToInt32(reader["Quantity"].ToString()),
+                                    FPrice = Convert.ToSingle(reader["Price"].ToString()),
+                                    TotalPrice = (decimal)(Convert.ToInt32(reader["Quantity"].ToString()) * Convert.ToSingle(reader["Price"].ToString())),
+                                });
+
+
+                            }
+
+                            connection.Close();
+                        }
+                        ViewBag.ShoppingCart = carts;
+                    }
                     connection.Open();
 
                     // string Q = "SELECT * FROM Product WHERE IsActive=1 and ProductName='" + name + "'";
@@ -186,7 +301,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     }
 
                     connection.Open();
-                    string q = "Select COUNT(*) as Count FROM [dbo].[ShoppingCart] WHERE IsActive=1";
+                    string q = "Select Sum(Quantity) as Count FROM [dbo].[ShoppingCart] WHERE IsActive=1";
                     using (SqlCommand command = new SqlCommand(q, connection))
                     {
                         using (SqlDataReader r = command.ExecuteReader())
@@ -212,46 +327,17 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
         [HttpGet]
         public ActionResult Cart()
         {
-            List<Category> categories = new();
+           // List<Category> categories = new();
             List<ShoppingCart> carts = new();
+            ListShoppingCart list = new();
             try
             {
                 string constr = @"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True";
 
                 using (SqlConnection connection = new SqlConnection(constr))
                 {
-                    connection.Open();
-                    string Query = "";
-                    Query = "SELECT * FROM Categories AS C WHERE IsActive=1 AND C.ParentcategoryId=0";
-                    using (SqlCommand command = new SqlCommand(Query, connection))
-                    {
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                categories.Add(new Category
-                                {
-                                    CategoryName = reader["CategoryName"].ToString(),
-                                    CategoryID = Convert.ToInt32(reader["CategoryID"].ToString()),
-                                });
-                            }
-                        }
-                    }
-                    ViewBag.Category = categories;
-                    connection.Close();
-                    connection.Open();
-                    string q = "Select COUNT(*) as Count FROM [dbo].[ShoppingCart] WHERE IsActive=1";
-                    using (SqlCommand command = new SqlCommand(q, connection))
-                    {
-                        using (SqlDataReader r = command.ExecuteReader())
-                        {
-                            while (r.Read())
-                            {
-                                ViewBag.Count = Convert.ToInt32(r["Count"].ToString());
-                            }
-                        }
-                    }
-                    connection.Close();
+
+
                     connection.Open();
                     string query = "select S.*,P.ProductName from [dbo].[ShoppingCart] as S Inner join[dbo].[Product] as P on P.ProductID = S.ProductID where S.IsActive = 1";
                     using (SqlCommand command = new SqlCommand(query, connection))
@@ -262,32 +348,37 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             {
                                 carts.Add(new ShoppingCart
                                 {
+                                    CartID = Convert.ToInt32(reader["CartID"].ToString()),
                                     ImageData = reader["ImageData"].ToString(),
                                     ProductName = reader["ProductName"].ToString(),
                                     ProductID = Convert.ToInt32(reader["ProductID"].ToString()),
                                     Size = reader["Size"].ToString(),
                                     Quantity = Convert.ToInt32(reader["Quantity"].ToString()),
+                                    FPrice = Convert.ToSingle(reader["Price"].ToString()),
+                                    TotalPrice = (decimal)(Convert.ToInt32(reader["Quantity"].ToString()) * Convert.ToSingle(reader["Price"].ToString())),
                                 });
 
+
                             }
+                            list.ShoppingCartList = carts;
                             connection.Close();
                         }
                     }
 
                 }
-
+                Common();
 
             }
             catch (Exception ex)
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
-                return View("~/Plugins/Widgets.BasicPlugins/Views/System/Cart.cshtml",carts);
+                return View("~/Plugins/Widgets.BasicPlugins/Views/System/Cart.cshtml", list);
             }
-            
-            return View("~/Plugins/Widgets.BasicPlugins/Views/System/Cart.cshtml",carts);
+
+            return View("~/Plugins/Widgets.BasicPlugins/Views/System/Cart.cshtml", list);
         }
         [HttpPost]
-        public void Addtocart(ShoppingCart model)
+        public ActionResult Addtocart(ShoppingCart model)
         {
             int Count = 0;
             int CountProduct = 0;
@@ -329,13 +420,13 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         }
                         connection.Close();
                         connection.Open();
-                        var Price = model.Price + cart.Price;
+                        var Price = model.Price;
                         var Quantity = model.Quantity + cart.Quantity;
                         var TotalPrice = Price * Quantity;
                         string qss = "Update ShoppingCart set Size='" + model.Size + "',Price='" + Price + "',Quantity='" + Quantity + "',TotalPrice='" + TotalPrice + "',IsActive=1,UpdatedDate=GETDATE() where ProductID='" + model.ProductID + "'";
                         SqlCommand cmd = new SqlCommand(qss, connection);
                         if (cmd.ExecuteNonQuery() == 1)
-                        { Getshoppingcart(); }
+                        { return Json(new { status = "success" }); }
                         connection.Close();
                     }
                     else
@@ -357,7 +448,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         {
                             connection.Close();
                             connection.Open();
-                            string qs = "Select COUNT(*) as Count FROM [dbo].[ShoppingCart] WHERE IsActive=1";
+                            string qs = "Select Sum(Quantity) as Count FROM [dbo].[ShoppingCart] WHERE IsActive=1";
                             using (SqlCommand command = new SqlCommand(qs, connection))
                             {
                                 using (SqlDataReader r = command.ExecuteReader())
@@ -370,24 +461,208 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             }
                             connection.Close();
 
-                            //return Json(new {status = "success",count=Count });
+                            return Json(new {status = "success" });
 
                         }
-                        Getshoppingcart();
+                        
                     }
                 }
             }
             catch (Exception ex)
             {
-                //return Json("");
+                return Json(new { status = "error" });
 
             }
-            //return Json("");
+            return Json(new { status = "error" });
         }
-        public PartialViewResult Getshoppingcart()
+        [HttpGet]
+        public ActionResult UpdateProductdetail(int id)
         {
+            List<ShoppingCart> carts = new();
+            List<Category> categories = new();
+            ShoppingCart cart = new();
+            try
+            {
+                string constr = @"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True";
 
-            return PartialView("~/Plugins/Widgets.BasicPlugins/Views/System/_Shoppingcart.cshtml");
+                using (SqlConnection connection = new SqlConnection(constr))
+                {
+                    
+                    connection.Open();
+
+                    // string Q = "SELECT * FROM Product WHERE IsActive=1 and ProductName='" + name + "'";
+                    //string Q = "SELECT P.ProductID,q.ProductName,P.Size,P.Quantity,P.Price,I.ImageData FROM ShoppingCart as P RIGHT JOIN ImageDetail I ON P.ProductID = I.ProductID INNER JOIN Product as q on q.ProductID=p.ProductID WHERE P.IsActive=1 and  P.ProductID='" + id + "'and I.ImageID IN (SELECT MAX(ImageID) FROM ImageDetail GROUP BY ProductID) Union SELECT * FROM (SELECT P.ProductID,q.ProductName,P.Size,P.Quantity,P.Price,I.ImageData FROM ShoppingCart as P RIGHT JOIN ImageDetail I ON P.ProductID = I.ProductID INNER JOIN Product as q on q.ProductID=p.ProductID WHERE P.IsActive=1 and  P.ProductID='" + id + "') as X WHERE X.ImageData is null";
+                    string Q = "SELECT P.ProductID,q.ProductName,P.Size,P.Quantity,P.Price as FPrice,q.Price,P.ImageData FROM ShoppingCart as P RIGHT JOIN Product as q on q.ProductID=P.ProductID WHERE P.IsActive=1 and  P.ProductID='" + id + "'";
+                    using (SqlCommand command = new SqlCommand(Q, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                cart.ImageData = reader["ImageData"].ToString();
+                                cart.ProductName = reader["ProductName"].ToString();
+                                cart.Size = reader["Size"].ToString();
+                                cart.ProductID = Convert.ToInt32(reader["ProductID"].ToString());
+                                cart.FPrice = Convert.ToSingle(reader["FPrice"].ToString());
+                                cart.FEPrice = Convert.ToSingle(reader["Price"].ToString());
+                                cart.Quantity = Convert.ToInt32(reader["Quantity"].ToString());
+                            }
+                        }
+                    }
+                    connection.Close();
+
+                    string Iquery = "select * from [dbo].[ImageDetail] where ProductID='" + cart.ProductID + "'order by ImageID desc";
+                    using (SqlCommand commands = new SqlCommand(Iquery, connection))
+                    {
+                        connection.Open();
+                        List<UploadFileModel> UploadFiles = new List<UploadFileModel>();
+                        using (SqlDataReader readers = commands.ExecuteReader())
+                        {
+                            while (readers.Read())
+                            {
+                                UploadFiles.Add(new UploadFileModel()
+                                {
+                                    ImageID = Convert.ToInt32(readers["ImageID"].ToString()),
+                                    AltImage = readers["Alt"].ToString(),
+                                    ProductID = readers["ProductID"].ToString(),
+                                    Title = readers["Title"].ToString(),
+                                    Displayorder = readers["DisplayOrder"].ToString(),
+                                    sFile = RetrieveImage((byte[])readers["ImageData"])
+
+                                });
+                            }
+                            cart.UploadFileModel = UploadFiles;
+                        }
+                        connection.Close();
+                    }
+                    connection.Open();
+                    string query = "select S.*,P.ProductName from [dbo].[ShoppingCart] as S Inner join[dbo].[Product] as P on P.ProductID = S.ProductID where S.IsActive = 1";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                carts.Add(new ShoppingCart
+                                {
+                                    CartID = Convert.ToInt32(reader["CartID"].ToString()),
+                                    ImageData = reader["ImageData"].ToString(),
+                                    ProductName = reader["ProductName"].ToString(),
+                                    ProductID = Convert.ToInt32(reader["ProductID"].ToString()),
+                                    Size = reader["Size"].ToString(),
+                                    Quantity = Convert.ToInt32(reader["Quantity"].ToString()),
+                                    FPrice = Convert.ToSingle(reader["Price"].ToString()),
+                                    TotalPrice = (decimal)(Convert.ToInt32(reader["Quantity"].ToString()) * Convert.ToSingle(reader["Price"].ToString())),
+                                });
+
+
+                            }
+
+                            connection.Close();
+                        }
+                        ViewBag.ShoppingCart = carts;
+                    }
+                    Common();
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.SuccessMessage = ex.Message.ToString();
+                return View("~/Plugins/Widgets.BasicPlugins/Views/System/UpdateProductdetail.cshtml", cart);
+            }
+
+
+            return View("~/Plugins/Widgets.BasicPlugins/Views/System/UpdateProductdetail.cshtml", cart);
+        }
+
+        [HttpPost]
+        public ActionResult Updatetocart(ShoppingCart model)
+        {
+            int Count = 0;
+            int CountProduct = 0;
+            ShoppingCart cart = new();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
+                {
+
+
+                    connection.Open();
+                    var TotalPrice = model.Price * model.Quantity;
+                    string qss = "Update ShoppingCart set Size='" + model.Size + "',Price='" + model.Price + "',Quantity='" + model.Quantity + "',TotalPrice='" + TotalPrice + "',IsActive=1,UpdatedDate=GETDATE() where ProductID='" + model.ProductID + "'";
+                    SqlCommand cmd = new SqlCommand(qss, connection);
+                    if (cmd.ExecuteNonQuery() == 1)
+                    { }
+                    connection.Close();
+                    return Json(new { status = "success" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = "error" });
+
+            }
+        }
+        [HttpPost]
+        public ActionResult AddShoppingcartvalue(ListShoppingCart model)
+        {
+            List<Category> categories = new();
+            List<ShoppingCart> carts = new();
+            ListShoppingCart list = new();
+            using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
+            {
+                foreach (var item in model.ShoppingCartList)
+                {
+                    if (item.Ischecked == true || item.Quantity == 0)
+                    {
+                        connection.Open();
+                        var TotalPrice = item.Quantity * item.FPrice;
+                        string qss = "DELETE From ShoppingCart WHERE CartID='" + item.CartID + "'";
+                        SqlCommand cmd = new SqlCommand(qss, connection);
+                        cmd.ExecuteNonQuery();
+                        connection.Close();
+                    }
+                    else
+                    {
+                        connection.Open();
+                        var TotalPrice = item.Quantity * item.FPrice;
+                        string qss = "Update ShoppingCart set Quantity='" + item.Quantity + "',TotalPrice='" + TotalPrice + "',IsActive=1,UpdatedDate=GETDATE() where CartID='" + item.CartID + "'";
+                        SqlCommand cmd = new SqlCommand(qss, connection);
+                        cmd.ExecuteNonQuery();
+                        connection.Close();
+                    }
+                }
+                connection.Open();
+                string query = "select S.*,P.ProductName from [dbo].[ShoppingCart] as S Inner join[dbo].[Product] as P on P.ProductID = S.ProductID where S.IsActive = 1";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            carts.Add(new ShoppingCart
+                            {
+                                CartID = Convert.ToInt32(reader["CartID"].ToString()),
+                                ImageData = reader["ImageData"].ToString(),
+                                ProductName = reader["ProductName"].ToString(),
+                                ProductID = Convert.ToInt32(reader["ProductID"].ToString()),
+                                Size = reader["Size"].ToString(),
+                                Quantity = Convert.ToInt32(reader["Quantity"].ToString()),
+                                FPrice = Convert.ToSingle(reader["Price"].ToString()),
+                                TotalPrice = (decimal)(Convert.ToInt32(reader["Quantity"].ToString()) * Convert.ToSingle(reader["Price"].ToString())),
+                            });
+
+
+                        }
+                        list.ShoppingCartList = carts;
+                        connection.Close();
+                    }
+                }
+
+                Common();
+            }
+
+            return View("~/Plugins/Widgets.BasicPlugins/Views/System/Cart.cshtml", list);
         }
         public string RetrieveImage(byte[] ImageData)
         {

@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<Nop.Plugin.Widgets.BasicPlugins.Models.Product>
 <!DOCTYPE html>
 <html lang=en class=html-home-page>
 <head>
@@ -32,17 +32,46 @@
                             <li><a href="/login?returnUrl=%2Flunch-dinner" class="ico-login">Log in</a>
 
                             <li id=topcartlink>
-                                <a href=/cart class=ico-cart>
+                                <a href=/System/Cart class=ico-cart>
                                     <span class=cart-label>Shopping cart</span>
-                                    <span class=cart-qty>(0)</span>
+                                    <span class=cart-qty>(@ViewBag.Count)</span>
                                 </a>
                         </ul>
                     </div>
-                    <div id=flyout-cart class=flyout-cart>
-                        <div class=mini-shopping-cart>
-                            <div class=count>You have no items in your shopping cart.</div>
+                    @if (@ViewBag.Count == 0)
+                    {
+                        <div id=flyout-cart class=flyout-cart>
+                            <div class=mini-shopping-cart>
+                                <div class=count>You have no items in your shopping cart.</div>
+                            </div>
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <div id="flyout-cart" class="flyout-cart active">
+                            <div class="mini-shopping-cart">
+                                <div class="count">
+                                    There are <a href="/System/Cart">@ViewBag.Count item(s)</a> in your cart.
+                                </div>
+                                <div class="items">
+                                    @foreach (var item in @ViewBag.ShoppingCart)
+                                    {
+                                        <div class="item">
+                                            <div class="picture">
+                                                <a href="/System/Productdetail?name=@item.ProductName" title="Show details for Belgian Hot Chocolate">
+                                                    <img alt="Picture of @item.ProductName" src="@item.ImageData" title="Show details for @item.ProductName" width="50" height="50">
+                                                </a>
+                                            </div><div class="product"><div class="name"><a href="/System/Productdetail?name=@item.ProductName">@item.ProductName</a></div><div class="attributes">Size: @item.Size</div><div class="price">Unit price: <span>$@item.FPrice</span></div><div class="quantity">Quantity: <span>@item.Quantity</span></div></div>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="totals">Sub-Total: <strong>$@ViewBag.Subtotal</strong></div><div class="buttons">
+                                    <a href="/System/Cart" class="button-1 cart-button" style="display: inline-block; border: none;background-color: #4ab2f1;padding: 10px 20px; font-size: 12px;color: #fff;text-transform: uppercase;">Go to cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
                 </div>
             </div><div class=header-lower>
                 <div class=header-logo>
@@ -87,7 +116,7 @@
                         <div class=page-body>
                             <div class="product-grid home-page-product-grid">
                                 <div class=title><strong>Featured products</strong></div><div class=item-grid>
-                                    @foreach (var item in @ViewBag.Products)
+                                    @foreach (var item in Model)
                                     {
                                         <div class=item-box>
                                             <div class=product-item data-productid=@item.ProductID>

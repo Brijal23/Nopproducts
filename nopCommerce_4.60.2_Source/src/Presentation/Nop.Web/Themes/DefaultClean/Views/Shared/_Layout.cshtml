@@ -1,0 +1,102 @@
+﻿
+<!DOCTYPE html>
+<html lang=en class=html-home-page>
+<head>
+    <title>Cafe</title>
+    <meta charset=UTF-8>
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <meta name=generator content=ShopFast>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+     <link href="https://localhost:51590/Themes/DefaultClean/Content/styles.css" rel="stylesheet" />
+   
+
+</head>
+<body>
+    <div class=ajax-loading-block-window style=display:none></div>
+    <div id=dialog-notifications-success title=Notification style=display:none></div>
+    <div id=dialog-notifications-error title=Error style=display:none></div>
+    <div id=dialog-notifications-warning title=Warning style=display:none></div>
+    <div id=bar-notification class=bar-notification-container data-close=Close></div><!--[if lte IE 8]><div style=clear:both;height:59px;text-align:center;position:relative><a href=http://www.microsoft.com/windows/internet-explorer/default.aspx target=_blank> <img src=/Themes/DefaultClean/Content/images/ie_warning.jpg height=42 width=820 alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."> </a></div><![endif]-->
+    <div class=master-wrapper-page>
+        <div class=admin-header-links>
+            <a href=/Admin class=administration>Administration</a>
+        </div>
+        <div class=header>
+            <div class=header-upper>
+                <div class=header-selectors-wrapper>
+                </div>
+                <div class=header-links-wrapper>
+                    <div class=header-links>
+                        <ul>
+                            <li><a href="/register?returnUrl=%2Flunch-dinner" class="ico-register">Register</a>
+                            <li><a href="/login?returnUrl=%2Flunch-dinner" class="ico-login">Log in</a>
+                            <li id=topcartlink>
+                                <a href=/cart class=ico-cart>
+                                    <span class=cart-label>Shopping cart</span>
+                                    <span class=cart-qty>(0)</span>
+                                </a>
+                        </ul>
+                    </div>
+                    <div id=flyout-cart class=flyout-cart>
+                        <div class=mini-shopping-cart>
+                            <div class=count>You have no items in your shopping cart.</div>
+                        </div>
+                    </div>
+                </div>
+            </div><div class=header-lower>
+                <div class=header-logo>
+                    @* <img src="d:\brijal\nopcommerce16032023\nopproducts\nopcommerce_4.60.2_source\src\presentation\nop.web\themes\defaultclean\content\images\logo.png" />*@
+                    <a href="/"> <img alt="CAFE BARBERO" src=https://localhost:51590/Themes/DefaultClean/Content/images/logo.png> </a>
+                </div>
+                <div class="search-box store-search-box">
+                    <form method=get id=small-search-box-form action=/search>
+                        <input type=text class=search-box-text id=small-searchterms autocomplete=off name=q placeholder="Search Store" aria-label="Search store">
+                        <input type=submit class="button-1 search-box-button" value=Search>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class=header-menu>
+            <ul class="top-menu notmobile">
+                <li><a href=/breakfast-brunch>Breakfast &amp; Brunch </a>
+                <li><a href=/lunch-dinner>Lunch &amp; Dinner </a>
+                <li><a href=/baked-goods-desserts>Baked Goods &amp; Desserts </a>
+                <li><a href=/drinks-2>Drinks </a>
+            </ul>
+            <div class=menu-toggle>Categories</div>
+            <ul class="top-menu mobile">
+                <li><a href=/breakfast-brunch>Breakfast &amp; Brunch </a>
+                <li><a href=/lunch-dinner>Lunch &amp; Dinner </a>
+                <li><a href=/baked-goods-desserts>Baked Goods &amp; Desserts </a>
+                <li><a href=/drinks-2>Drinks </a>
+            </ul>
+        </div>
+        <div class="content-wrapper">
+            <nop-antiforgery-token />
+            @RenderBody()
+        </div>
+        <div class=footer>
+            <div class=footer-upper><div class="footer-block information"><div class=title><strong>Information</strong></div><ul class=list><li><a href=/dmca-notice>DMCA Notice</a><li><a href=/terms-of-service>Terms Of Service</a><li><a href=/privacyinfo>Privacy policy</a><li><a href=/contactus>Contact us</a></ul></div><div class="footer-block customer-service"><div class=title><strong>User service</strong></div><ul class=list><li><a href=/search>Search</a></ul></div><div class="footer-block my-account"><div class=title><strong>My account</strong></div><ul class=list><li><a href=/customer/info>My account</a><li><a href=/order/history>Orders</a><li><a href=/customer/addresses>Addresses</a><li><a href=/cart>Shopping cart</a></ul></div><div class="footer-block follow-us"><div class=social><div class=title><strong>Follow us</strong></div><ul class=networks><li class=facebook><a href="https://www.facebook.com/Shopfast-149763908384528/" target=_blank>Facebook</a><li class=twitter><a href=https://twitter.com/shopfast target=_blank>Twitter</a></ul></div></div></div><div class=footer-lower>
+                <div class=footer-info><span class=footer-disclaimer>Copyright &copy; 2023 CAFE BARBERO. All rights reserved.</span></div><div class=footer-powered-by>
+                    Powered by <a target=_blank href="https://shopfast.com/">ShopFast</a>
+                </div>
+            </div>
+        </div>
+    </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    
+    @*<script src=/bundles/9xwqo2cd-vv0ehz4wysrw5d-ck5umvdmfi02qwx3h-s.min.js></script>*@
+    <script>$(document).ready(function () { $(".header").on("mouseenter", "#topcartlink", function () { $("#flyout-cart").addClass("active") }); $(".header").on("mouseleave", "#topcartlink", function () { $("#flyout-cart").removeClass("active") }); $(".header").on("mouseenter", "#flyout-cart", function () { $("#flyout-cart").addClass("active") }); $(".header").on("mouseleave", "#flyout-cart", function () { $("#flyout-cart").removeClass("active") }) })</script>
+    <script>$("#small-search-box-form").on("submit", function (n) { $("#small-searchterms").val() == "" && (alert("Please enter some search keyword"), $("#small-searchterms").focus(), n.preventDefault()) })</script>
+    <script>var localized_data = { AjaxCartFailure: "Failed to add the product. Please refresh the page and try one more time." }; AjaxCart.init(!1, ".header-links .cart-qty", ".header-links .wishlist-qty", "#flyout-cart", localized_data)</script>
+    <script>$(document).ready(function () { $(".menu-toggle").on("click", function () { $(this).siblings(".top-menu.mobile").slideToggle("slow") }); $(".top-menu.mobile .sublist-toggle").on("click", function () { $(this).siblings(".sublist").slideToggle("slow") }) })</script>
+    <script>$(document).ready(function () { $(".footer-block .title").on("click", function () { var n = window, t = "inner", i; "innerWidth" in window || (t = "client", n = document.documentElement || document.body); i = { width: n[t + "Width"], height: n[t + "Height"] }; i.width < 769 && $(this).siblings(".list").slideToggle("slow") }) })</script>
+    <script>$(document).ready(function () { $(".block .title").on("click", function () { var n = window, t = "inner", i; "innerWidth" in window || (t = "client", n = document.documentElement || document.body); i = { width: n[t + "Width"], height: n[t + "Height"] }; i.width < 1001 && $(this).siblings(".listbox").slideToggle("slow") }) })</script>
+</body>
+</html>

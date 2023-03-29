@@ -103,7 +103,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Models
         public string? sMarkasnewEnddate { get; set; }
         [DisplayName("Admin comment")]
         public string? Admincomment { get; set; }
-       
+        public float? FPrice { get; set; }
         public string? SPrice { get; set; }
         [RegularExpression(@"^(0|\d{0,8}(\.\d{0,4})?)$", ErrorMessage = "Enter valid price.")]
         [Range(0, 99999999.99, ErrorMessage = "Please enter price between 0 to 99999999.99")]

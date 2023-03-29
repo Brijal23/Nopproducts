@@ -135,7 +135,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[ProductAttributes] where ProductAttributeName='" + model.ProductAttributeName.Trim() + "'";
+                        string q = "select Count(*) as Count from [dbo].[ProductAttributes] where IsActive=1 and ProductAttributeName='" + model.ProductAttributeName.Trim() + "'";
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
                             using (SqlDataReader r = command.ExecuteReader())
@@ -158,7 +158,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             if (cmd.ExecuteNonQuery() == 1)
                             {
                                 connection.Close();
-                                string query1 = "select ProductAttributeID from [dbo].[ProductAttributes] where ProductAttributeName='" + model.ProductAttributeName.Trim() + "'";
+                                string query1 = "select ProductAttributeID from [dbo].[ProductAttributes]  where IsActive=1 and ProductAttributeName='" + model.ProductAttributeName.Trim() + "'";
                                 connection.Open();
                                 using (SqlCommand command = new SqlCommand(query1, connection))
                                 {
@@ -279,7 +279,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[ProductAttributes] where ProductAttributeName='" + ProductAttribute.ProductAttributeName.Trim() + "'and ProductAttributeID!='" + ProductAttribute.ProductAttributeID + "'";
+                        string q = "select Count(*) as Count from [dbo].[ProductAttributes] where IsActive=1 and ProductAttributeName='" + ProductAttribute.ProductAttributeName.Trim() + "'and ProductAttributeID!='" + ProductAttribute.ProductAttributeID + "'";
 
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
@@ -400,7 +400,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[PredefineValues] where ValueName='" + model.ValueName.Trim() + "'";
+                        string q = "select Count(*) as Count from [dbo].[PredefineValues] where IsActive=1 and ValueName='" + model.ValueName.Trim() + "'";
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
                             using (SqlDataReader r = command.ExecuteReader())
@@ -495,7 +495,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[PredefineValues] where ValueName='" + model.ValueName.Trim() + "'and PredefinevalueID!='" + model.PredefinevalueID + "'";
+                        string q = "select Count(*) as Count from [dbo].[PredefineValues] where IsActive=1 and ValueName='" + model.ValueName.Trim() + "'and PredefinevalueID!='" + model.PredefinevalueID + "'";
 
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {

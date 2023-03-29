@@ -1,0 +1,276 @@
+﻿
+<!DOCTYPE html>
+<html lang=en class=html-home-page>
+<head>
+    <title>Cafe</title>
+    <meta charset=UTF-8>
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <meta name=generator content=ShopFast>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <link href="~/lib_npm/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Plugins/Widgets.BasicPlugins/Content/styles.css" rel="stylesheet" />
+</head>
+<body>
+    <div class=ajax-loading-block-window style=display:none></div>
+    <div id=dialog-notifications-success title=Notification style=display:none></div>
+    <div id=dialog-notifications-error title=Error style=display:none></div>
+    <div id=dialog-notifications-warning title=Warning style=display:none></div>
+    <div id=bar-notification class=bar-notification-container data-close=Close></div><!--[if lte IE 8]><div style=clear:both;height:59px;text-align:center;position:relative><a href=http://www.microsoft.com/windows/internet-explorer/default.aspx target=_blank> <img src=/Themes/DefaultClean/Content/images/ie_warning.jpg height=42 width=820 alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."> </a></div><![endif]-->
+    <div class=master-wrapper-page>
+
+        <div class=header>
+            <div class=header-upper>
+                <div class=header-selectors-wrapper>
+                </div>
+                <div class=header-links-wrapper>
+                    <div class=header-links>
+                        <ul>
+                            <li><a href="/register?returnUrl=%2Flunch-dinner" class="ico-register">Register</a>
+                            <li><a href="/login?returnUrl=%2Flunch-dinner" class="ico-login">Log in</a>
+
+                            <li id=topcartlink>
+                                <a href="/System/Cart" class=ico-cart>
+                                    <span class=cart-label>Shopping cart</span>
+                                    <span class=cart-qty>(@ViewBag.Count)</span>
+                                </a>
+                        </ul>
+                    </div>
+                    @*<div id=flyout-cart class=flyout-cart>
+                    <div class=mini-shopping-cart>
+                    <div class=count>You have no items in your shopping cart.</div>
+                    </div>
+                    </div>*@
+                    <div id="flyout-cart" class="flyout-cart active">
+                        <div class="mini-shopping-cart">
+                            <div class="count">
+                                There are <a href="/System/Cart" id="cartvalue">@ViewBag.Count item(s)</a> in your cart.
+                            </div>
+                            <div class="items">
+                                <div class="item first">
+                                    <div class="picture">
+                                        <a href="/hot-chocolate" title="Show details for Belgian Hot Chocolate">
+                                            <img alt="Picture of Belgian Hot Chocolate" src="https://cafe.shopfast.net/images/thumbs/0004398_belgian-hot-chocolate_47.jpeg" title="Show details for Belgian Hot Chocolate">
+                                        </a>
+                                    </div><div class="product"><div class="name"><a href="/hot-chocolate">Belgian Hot Chocolate</a></div><div class="attributes">Size: Small</div><div class="price">Unit price: <span>$4.00</span></div><div class="quantity">Quantity: <span>11</span></div></div>
+                                </div>
+                            </div><div class="totals">Sub-Total: <strong>$44.00</strong></div><div class="buttons"><input type="button" value="Go to cart" class="button-1 cart-button" onclick="setLocation(&quot;/cart&quot;)"></div>
+                        </div>
+                    </div>
+                </div>
+            </div><div class=header-lower>
+                <div class=header-logo>
+                    @* <img src="d:\brijal\nopcommerce16032023\nopproducts\nopcommerce_4.60.2_source\src\presentation\nop.web\themes\defaultclean\content\images\logo.png" />*@
+                    <a href="/"> <img alt="CAFE BARBERO" src=https://localhost:51590/Themes/DefaultClean/Content/images/logo.png> </a>
+                </div>
+                <div class="search-box store-search-box">
+                    <form method=get id=small-search-box-form action=/search>
+                        <input type=text class=search-box-text id=small-searchterms autocomplete=off name=q placeholder="Search Store" aria-label="Search store">
+                        <input type=submit class="button-1 search-box-button" value=Search>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class=header-menu>
+            <ul class="top-menu notmobile">
+                @foreach (var item in @ViewBag.Category)
+                {
+                    <li><a href=#>@item.CategoryName</a></li>
+                }
+                @*<li><a href=/breakfast-brunch>Breakfast &amp; Brunch </a>
+                <li><a href=/lunch-dinner>Lunch &amp; Dinner </a>
+                <li><a href=/baked-goods-desserts>Baked Goods &amp; Desserts </a>
+                <li><a href=/drinks-2>Drinks </a>*@
+            </ul>
+            <div class=menu-toggle>Categories</div>
+            <ul class="top-menu mobile">
+                @foreach (var item in @ViewBag.Category)
+                {
+                    <li><a href=#>@item.CategoryName</a></li>
+                }
+                @*<li><a href=/breakfast-brunch>Breakfast &amp; Brunch </a>
+                <li><a href=/lunch-dinner>Lunch &amp; Dinner </a>
+                <li><a href=/baked-goods-desserts>Baked Goods &amp; Desserts </a>
+                <li><a href=/drinks-2>Drinks </a>*@
+            </ul>
+        </div>
+        <div class="master-wrapper-content">
+            <div class="breadcrumb">
+                <ul itemscope="" itemtype="http://schema.org/BreadcrumbList">
+                    <li><span> <a href="/System/Index"> <span>Product</span> </a></span> <span class=delimiter>/</span></li>
+                    <li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem"><a href="/System/Productdetail?name=@Model.ProductName" itemprop="item"> <span itemprop="name">@Model.ProductName</span> </a><meta itemprop="position" content="1"></li>
+                    @*<li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem"><strong class="current-item" itemprop="name">Café au Lait</strong> <span itemprop="item" itemscope="" itemtype="http://schema.org/Thing" id="/caf%C3%A9-latte"> </span><meta itemprop="position" content="2"></li>*@
+                </ul>
+            </div>
+            <div class="master-column-wrapper">
+                <div class="center-1">
+                    <div class="page product-details-page">
+                        <div class="page-body">
+                            <form method="post" id="product-details-form" action="/caf%C3%A9-latte" novalidate="novalidate">
+                                <div itemscope="" itemtype="http://schema.org/Product"><meta itemprop="name" content="@Model.ProductName"><meta itemprop="sku" content="@Model.SKU"><meta itemprop="gtin"><meta itemprop="mpn"><meta itemprop="description" content="@Model.ShortDescription"><meta itemprop="image" content="https://cafe.shopfast.net/images/thumbs/0004475_cafe-au-lait_550.jpeg"><div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer"><meta itemprop="url" content="https://cafe.shopfast.net/caf%c3%a9-latte"><meta itemprop="price" content="@Model.Price"><meta itemprop="priceCurrency" content="USD"><meta itemprop="priceValidUntil"><meta itemprop="availability" content="http://schema.org/OutOfStock"></div><div itemprop="review" itemscope="" itemtype="http://schema.org/Review"><meta itemprop="author" content="ALL"><meta itemprop="url" content="/productreviews/60"></div></div><div data-productid="60">
+                                    <div class="product-essential">
+                                        <div class="gallery">
+                                            <div class="picture">
+                                                <img alt="Picture of @Model.ProductName" src="@Model.SFile" title="Picture of @Model.ProductName" id="main-product-img" width="550" height="500">
+                                            </div>
+                                            <div class="picture-thumbs">
+                                                @if (Model.UploadFileModel.Count > 1)
+                                                {
+                                                    @foreach (var item in Model.UploadFileModel)
+                                                    {
+                                                        <div class="thumb-item"><img src="@item.sFile" alt="Picture of @Model.ProductName" title="Picture of @Model.ProductName" data-defaultsize="@item.sFile" data-fullsize="@item.sFile"></div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div><div class="overview">
+                                            <input type="hidden" id="product-id" value="@Model.ProductID" />
+                                            <div class="product-name"><h1>@Model.ProductName</h1></div>
+                                            <div class="short-description">@Model.ShortDescription</div>
+                                            <div class="additional-details"></div>
+                                            <div class="attributes">
+                                                <dl>
+                                                    <dt id="product_attribute_label_30"><label class="text-prompt"> Size </label> <span class="required">*</span></dt>
+                                                    <dd id="product_attribute_input_30">
+                                                        <ul class="option-list">
+                                                            <li><input id="product_attribute_30_73" type="radio" name="product_attribute" value="S" checked=""> <label for="product_attribute_30_73">Small</label></li>
+                                                            <li><input id="product_attribute_30_74" type="radio" name="product_attribute" value="M"> <label for="product_attribute_30_74">Medium [+$1.00]</label></li>
+                                                            <li><input id="product_attribute_30_75" type="radio" name="product_attribute" value="L"> <label for="product_attribute_30_75">Large [+$1.50]</label></li>
+                                                        </ul>
+                                                    </dd>
+                                                </dl>
+                                            </div>
+                                            <div class="prices">
+                                                <div class="product-price">
+                                                    <span id="price-value-hidden" class="price-value" hidden>$@Model.FPrice</span>
+                                                    <span id="price-value" class="price-value">$@Model.FPrice</span>
+                                                </div>
+                                            </div>
+                                            <div class="add-to-cart">
+                                                <div class="add-to-cart-panel">
+                                                    <label class="qty-label" for="addtocart_60_EnteredQuantity">Qty:</label> <input id="product_enteredQuantity" class="qty-input valid" onkeypress="return isNumber(event)" aria-label="Enter a quantity" data-val="true" data-val-required="The Qty field is required." name="addtocart_60.EnteredQuantity" value="1"
+                                                                                                                                    aria-describedby="product_enteredQuantity_60-error" aria-invalid="false">
+                                                    <input type="button" id="add-to-cart-button-60" class="button-1 add-to-cart-button valid" value="Add to cart"
+                                                           data-productid="60" aria-invalid="false" onclick="Addtocart()">
+                                                </div>
+                                            </div>
+                                            <div class="overview-buttons">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="product-collateral"></div>
+                                </div><input name="__RequestVerificationToken" type="hidden" value="CfDJ8AbvH5xMMqhDnQ6lLyGo1LHFPMt8ivt8lOqVTKvwgugcLS8rq6c_1udMtw78xPMBOJ4ofKHo2fAU69riKGrnMFv1_L4UoQQMZ6dttcUpWCTNlfyNfr4lu84V0ibgnMF7fDsbNYHawhgx_is6jevRHho">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class=footer><div class=footer-upper><div class="footer-block information"><div class=title><strong>Information</strong></div><ul class=list><li><a href=/dmca-notice>DMCA Notice</a><li><a href=/terms-of-service>Terms Of Service</a><li><a href=/privacyinfo>Privacy policy</a><li><a href=/contactus>Contact us</a></ul></div><div class="footer-block customer-service"><div class=title><strong>User service</strong></div><ul class=list><li><a href=/search>Search</a></ul></div><div class="footer-block my-account"><div class=title><strong>My account</strong></div><ul class=list><li><a href=/customer/info>My account</a><li><a href=/order/history>Orders</a><li><a href=/customer/addresses>Addresses</a><li><a href=/cart>Shopping cart</a></ul></div><div class="footer-block follow-us"><div class=social><div class=title><strong>Follow us</strong></div><ul class=networks><li class=facebook><a href="https://www.facebook.com/Shopfast-149763908384528/" target=_blank>Facebook</a><li class=twitter><a href=https://twitter.com/shopfast target=_blank>Twitter</a></ul></div></div></div><div class=footer-lower><div class=footer-info><span class=footer-disclaimer>Copyright &copy; 2023 CAFE BARBERO. All rights reserved.</span></div><div class=footer-powered-by>Powered by <a target=_blank href="https://shopfast.com/">ShopFast</a></div></div></div></div>
+    <script src="~/lib_npm/jquery/jquery.min.js"></script>
+    <script src="~/lib_npm/jquery-ui-dist/jquery-ui.min.js"></script>
+    <script>$(document).ready(function () { $(".thumb-item img").on("click", function () { $("#main-product-img").attr("src", $(this).attr("data-defaultsize")); $("#main-product-img").attr("title", $(this).attr("title")); $("#main-product-img").attr("alt", $(this).attr("alt")); $("#main-product-img-lightbox-anchor-60").attr("href", $(this).attr("data-fullsize")); $("#main-product-img-lightbox-anchor-60").attr("title", $(this).attr("title")) }) })</script>
+    <script>$(document).ready(function () { showHideRadioQuantity("product_attribute_30") })</script>
+    <script>function showHideDropdownQuantity(n) { $("select[name=" + n + "] > option").each(function () { $("#" + n + "_" + this.value + "_qty_box").hide() }); $("#" + n + "_" + $("select[name=" + n + "] > option:selected").val() + "_qty_box").css("display", "inline-block") } function showHideRadioQuantity(n) { $("input[name=" + n + "]:radio").each(function () { $("#" + $(this).attr("id") + "_qty_box").hide() }); $("#" + n + "_" + $("input[name=" + n + "]:radio:checked").val() + "_qty_box").css("display", "inline-block") } function showHideCheckboxQuantity(n) { $("#" + n).is(":checked") ? $("#" + n + "_qty_box").css("display", "inline-block") : $("#" + n + "_qty_box").hide() }</script>
+    <script>function attribute_change_handler_60() { $.ajax({ cache: !1, url: "/shoppingcart/productdetails_attributechange?productId=60&validateAttributeConditions=False&loadPicture=True", data: $("#product-details-form").serialize(), type: "POST", success: function (n) { var t; if (n.price && $(".price-value-60").text(n.price), n.basepricepangv ? $("#base-price-pangv-60").text(n.basepricepangv) : $("#base-price-pangv-60").hide(), n.sku ? $("#sku-60").text(n.sku).parent(".sku").show() : $("#sku-60").parent(".sku").hide(), n.mpn ? $("#mpn-60").text(n.mpn).parent(".manufacturer-part-number").show() : $("#mpn-60").parent(".manufacturer-part-number").hide(), n.gtin ? $("#gtin-60").text(n.gtin).parent(".gtin").show() : $("#gtin-60").parent(".gtin").hide(), n.stockAvailability && $("#stock-availability-value-60").text(n.stockAvailability), n.enabledattributemappingids) for (t = 0; t < n.enabledattributemappingids.length; t++)$("#product_attribute_label_" + n.enabledattributemappingids[t]).show(), $("#product_attribute_input_" + n.enabledattributemappingids[t]).show(); if (n.disabledattributemappingids) for (t = 0; t < n.disabledattributemappingids.length; t++)$("#product_attribute_label_" + n.disabledattributemappingids[t]).hide(), $("#product_attribute_input_" + n.disabledattributemappingids[t]).hide(); n.pictureDefaultSizeUrl && $("#main-product-img-60").attr("src", n.pictureDefaultSizeUrl); n.pictureFullSizeUrl && $("#main-product-img-lightbox-anchor-60").attr("href", n.pictureFullSizeUrl); n.message && alert(n.message); $(document).trigger({ type: "product_attributes_changed", changedData: n }) } }) } $(document).ready(function () { attribute_change_handler_60(); $("#product_attribute_30_73").on("click", function () { attribute_change_handler_60() }); $("#product_attribute_30_74").on("click", function () { attribute_change_handler_60() }); $("#product_attribute_30_75").on("click", function () { attribute_change_handler_60() }) })</script>
+    <script>$(document).ready(function () { $("#addtocart_60_EnteredQuantity").on("keydown", function (n) { if (n.keyCode == 13) return $("#add-to-cart-button-60").trigger("click"), !1 }); $("#product_enteredQuantity_60").on("input propertychange paste", function () { var n = { productId: 60, quantity: $("#product_enteredQuantity_60").val() }; $(document).trigger({ type: "product_quantity_changed", changedData: n }) }) })</script>
+    <script>$(document).ready(function () { $(".header").on("mouseenter", "#topcartlink", function () { $("#flyout-cart").addClass("active") }); $(".header").on("mouseleave", "#topcartlink", function () { $("#flyout-cart").removeClass("active") }); $(".header").on("mouseenter", "#flyout-cart", function () { $("#flyout-cart").addClass("active") }); $(".header").on("mouseleave", "#flyout-cart", function () { $("#flyout-cart").removeClass("active") }) })</script>
+    <script>$("#small-search-box-form").on("submit", function (n) { $("#small-searchterms").val() == "" && (alert("Please enter some search keyword"), $("#small-searchterms").focus(), n.preventDefault()) })</script>
+    @*    <script>var localized_data = { AjaxCartFailure: "Failed to add the product. Please refresh the page and try one more time." }; AjaxCart.init(!1, ".header-links .cart-qty", ".header-links .wishlist-qty", "#flyout-cart", localized_data)</script>
+    *@
+    <script>$(document).ready(function () { $(".menu-toggle").on("click", function () { $(this).siblings(".top-menu.mobile").slideToggle("slow") }); $(".top-menu.mobile .sublist-toggle").on("click", function () { $(this).siblings(".sublist").slideToggle("slow") }) })</script>
+    <script>$(document).ready(function () { $(".footer-block .title").on("click", function () { var n = window, t = "inner", i; "innerWidth" in window || (t = "client", n = document.documentElement || document.body); i = { width: n[t + "Width"], height: n[t + "Height"] }; i.width < 769 && $(this).siblings(".list").slideToggle("slow") }) })</script>
+    <script>$(document).ready(function () { $(".block .title").on("click", function () { var n = window, t = "inner", i; "innerWidth" in window || (t = "client", n = document.documentElement || document.body); i = { width: n[t + "Width"], height: n[t + "Height"] }; i.width < 1001 && $(this).siblings(".listbox").slideToggle("slow") }) })</script>
+    <script>
+        //Set Price by selection of size
+        $('input[type=radio][name=product_attribute]').change(function () {
+            debugger;
+            var price = $("#price-value-hidden").text().replace("$", "");
+            if (this.value == 'S') {
+                $("#price-value").text("$" + parseFloat(price));
+            }
+            else if (this.value == 'M') {
+                $("#price-value").text("$" + (parseFloat(price) + 1));
+            }
+            else if (this.value == 'L') {
+                $("#price-value").text("$" + (parseFloat(price) + 1.5));
+            }
+        });
+        //Only enter digit value validation
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+        //Add value to shopping cart
+        function Addtocart() {
+            var Quantity = $("#product_enteredQuantity").val();
+            var Size = $("input[name='product_attribute']").val();
+            var Price = $("#price-value").text().replace("$", "");
+            var productID = $("#product-id").val();
+            var ImageData = $('#main-product-img').attr('src');
+            var formData = new FormData()
+            formData.append("Quantity", Quantity);
+            formData.append("Size", Size);
+            formData.append("Price", Price);
+            formData.append("ProductID", productID);
+            formData.append("ImageData", ImageData);
+            if (Quantity != "") {
+                if (Quantity == 0) {
+                    alert("Quantity should be positive.");
+                }
+                else { SubmitForm(formData); }
+
+            }
+            else {
+                alert("Please enter quantity.");
+            }
+        }
+        function SubmitForm(FormData) {
+            $.ajax({
+                type: 'POST',
+                url: '/System/Addtocart',
+                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                data: FormData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.status == "success") {
+                        $("#cartvalue").text("");
+                        $("#cartvalue").text(response.count + " item(s)");
+                        $(".cart-qty").text("");
+                        $(".cart-qty").text("(" + response.count + ")");
+                        var tr;
+                        //Append each row to html table
+                        for (var i = 0; i < response.data.length; i++) {
+                            console.log(response.data);
+                            tr = $('<tr/>');
+                            tr.append("<td><img src='" + response.data[i].sFile + "' style='height: 100px; width: 150px;'></img></td>");
+                            tr.append("<td>" + response.data[i].Displayorder + "</td>");
+                            tr.append("<td>" + response.data[i].AltImage + "</td>");
+                            tr.append("<td>" + response.data[i].Title + "</td>");
+                            tr.append("<td><button type='button' class='btn btn-link' onclick='DeleteImage(" + response.data[i].ImageID + ");'>Delete</button></td>");
+                            $('#Imagegrid').append(tr);
+                        }
+                        $("#imgsrc").attr('src', 'https://cafe.shopfast.net/images/thumbs/default-image_100.png');
+                        $('#imageInput').val('');
+                        $("#altimage").val("");
+                        $("#Title").val("");
+                        //$("#displayorder").val(0);
+                        var numeric = $("#displayorder").data("kendoNumericTextBox");
+                        numeric.value(null);
+                        
+                    }
+                },
+                error: function (err) {
+                    alert("Error occurs" + err.responseText);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -38,8 +38,8 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     string Query1 = "";
                     string Query2 = "";
                     string Query3 = "";
-                  
-                    string Q = "SELECT P.ProductID,P.ProductName,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID" + Query + " WHERE P.IsActive=1 "+ Query1 + Query2 + Query3 + " and I.ImageID IN (SELECT MAX(ImageID) FROM ImageDetail GROUP BY ProductID) Union SELECT * FROM (SELECT P.ProductID,P.ProductName,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID " + Query + " WHERE P.IsActive=1 "+ Query1 + Query2 + Query3 + ") as X WHERE X.ImageData is null";
+
+                    string Q = "SELECT P.ProductID,P.ProductName,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID" + Query + " WHERE P.IsActive=1 " + Query1 + Query2 + Query3 + " and I.ImageID IN (SELECT MAX(ImageID) FROM ImageDetail GROUP BY ProductID) Union SELECT * FROM (SELECT P.ProductID,P.ProductName,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID " + Query + " WHERE P.IsActive=1 " + Query1 + Query2 + Query3 + ") as X WHERE X.ImageData is null";
                     using (SqlCommand command = new SqlCommand(Q, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -52,7 +52,8 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                     ProductName = reader["ProductName"].ToString(),
                                     ProductID = Convert.ToInt32(reader["ProductID"].ToString()),
                                     SKU = reader["SKU"].ToString(),
-                                    SPrice = reader["Price"].ToString().Replace(".00", "") + " USD",
+                                    SPrice = reader["Price"].ToString().Replace(".0000", "") + " USD",
+                                    FPrice = Convert.ToSingle(reader["Price"].ToString()),
                                     IsPublished = Convert.ToBoolean(reader["IsPublished"].ToString()) == true ? true : false,
                                     StockQuantity = Convert.ToInt32(reader["StockQuantity"].ToString()),
                                     CreatedDate = Convert.ToDateTime(reader["CreatedDate"])
@@ -68,7 +69,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             {
                 ViewBag.SuccessMessage = ex.Message.ToString();
                 return View("~/Plugins/Widgets.BasicPlugins/Views/Product/ProductList.cshtml", Products);
-            }            
+            }
         }
         [HttpGet]
         public ActionResult Search(string productName, string SearchCategoryId, string SearchPublishedId)
@@ -117,6 +118,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                     ProductID = Convert.ToInt32(reader["ProductID"].ToString()),
                                     SKU = reader["SKU"].ToString(),
                                     SPrice = reader["Price"].ToString().Replace(".0000", "") + " USD",
+                                    FPrice = Convert.ToSingle(reader["Price"].ToString()),
                                     IsPublished = Convert.ToBoolean(reader["IsPublished"].ToString()) == true ? true : false,
                                     StockQuantity = Convert.ToInt32(reader["StockQuantity"].ToString()),
                                     CreatedDate = Convert.ToDateTime(reader["CreatedDate"])
@@ -134,7 +136,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                 ViewBag.SuccessMessage = ex.Message.ToString();
                 return Json(new { data = Products, status = "error" });
             }
-            
+
         }
         [HttpGet]
         public ActionResult AddProduct(int id = 0)
@@ -271,7 +273,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[Product] where ProductName='" + model.ProductName.Trim() + "'";
+                        string q = "select Count(*) as Count from [dbo].[Product] where IsActive=1 and ProductName='" + model.ProductName.Trim() + "'";
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
                             using (SqlDataReader r = command.ExecuteReader())
@@ -296,7 +298,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             if (cmd.ExecuteNonQuery() == 1)
                             {
                                 connection.Close();
-                                string query1 = "select ProductID from [dbo].[Product] where ProductName='" + model.ProductName.Trim() + "'";
+                                string query1 = "select ProductID from [dbo].[Product] where IsActive=1 and ProductName='" + model.ProductName.Trim() + "'";
                                 connection.Open();
                                 using (SqlCommand command = new SqlCommand(query1, connection))
                                 {
@@ -318,11 +320,11 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                                                         command1.ExecuteNonQuery();
                                                     }
                                                 }
-                                               
+
 
                                                 ViewBag.SuccessMessage = "Added Product Successful";
-                                                if(Command == "save")
-                                                return RedirectToAction("ProductList", "DemoProduct");
+                                                if (Command == "save")
+                                                    return RedirectToAction("ProductList", "DemoProduct");
                                                 else
                                                 {
                                                     return RedirectToAction("EditProduct", new { id = ProductID });
@@ -448,7 +450,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
         public ActionResult EditProduct(Product product, string Command)
         {
             if (Command == "delete")
-            { 
+            {
                 return RedirectToAction("Delete", new { id = product.ProductID });
             }
             GetAllMethods(product);
@@ -466,7 +468,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[Product] where ProductName='" + product.ProductName.Trim() + "'and ProductID!='" + product.ProductID + "'";
+                        string q = "select Count(*) as Count from [dbo].[Product] where IsActive=1 and ProductName='" + product.ProductName.Trim() + "'and ProductID!='" + product.ProductID + "'";
 
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
@@ -488,7 +490,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             SqlCommand cmd = new SqlCommand(query, connection);
                             if (cmd.ExecuteNonQuery() == 1)
                             {
-                                string query1 = "select ProductID from [dbo].[Product] where ProductName='" + product.ProductName.Trim() + "'";
+                                string query1 = "select ProductID from [dbo].[Product] where IsActive=1 and ProductName='" + product.ProductName.Trim() + "'";
 
                                 using (SqlCommand command = new SqlCommand(query1, connection))
                                 {

@@ -1,0 +1,182 @@
+﻿@model IEnumerable<Nop.Plugin.Widgets.BasicPlugins.Models.ShoppingCart>
+<!DOCTYPE html>
+<html lang=en class=html-home-page>
+<head>
+    <title>Cafe</title>
+    <meta charset=UTF-8>
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <meta name=generator content=ShopFast>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <link href="~/lib_npm/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Plugins/Widgets.BasicPlugins/Content/styles.css" rel="stylesheet" />
+</head>
+<body>
+    <div class=ajax-loading-block-window style=display:none></div>
+    <div id=dialog-notifications-success title=Notification style=display:none></div>
+    <div id=dialog-notifications-error title=Error style=display:none></div>
+    <div id=dialog-notifications-warning title=Warning style=display:none></div>
+    <div id=bar-notification class=bar-notification-container data-close=Close></div><!--[if lte IE 8]><div style=clear:both;height:59px;text-align:center;position:relative><a href=http://www.microsoft.com/windows/internet-explorer/default.aspx target=_blank> <img src=/Themes/DefaultClean/Content/images/ie_warning.jpg height=42 width=820 alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."> </a></div><![endif]-->
+    <div class=master-wrapper-page>
+
+        <div class=header>
+            <div class=header-upper>
+                <div class=header-selectors-wrapper>
+                </div>
+                <div class=header-links-wrapper>
+                    <div class=header-links>
+                        <ul>
+                            <li><a href="/register?returnUrl=%2Flunch-dinner" class="ico-register">Register</a>
+                            <li><a href="/login?returnUrl=%2Flunch-dinner" class="ico-login">Log in</a>
+
+                            <li id=topcartlink>
+                                <a href=/cart class=ico-cart>
+                                    <span class=cart-label>Shopping cart</span>
+                                    <span class=cart-qty>(0)</span>
+                                </a>
+                        </ul>
+                    </div>
+                    @*<div id=flyout-cart class=flyout-cart>
+                    <div class=mini-shopping-cart>
+                    <div class=count>You have no items in your shopping cart.</div>
+                    </div>
+                    </div>*@
+                    <div id="flyout-cart" class="flyout-cart active">
+                        <div class="mini-shopping-cart">
+                            <div class="count">
+                                There are <a href="/cart">@Model.Count() item(s)</a> in your cart.
+                            </div>
+                            <div class="items">
+                                <div class="item first">
+                                    <div class="picture">
+                                        <a href="/hot-chocolate" title="Show details for Belgian Hot Chocolate">
+                                            <img alt="Picture of Belgian Hot Chocolate" src="https://cafe.shopfast.net/images/thumbs/0004398_belgian-hot-chocolate_47.jpeg" title="Show details for Belgian Hot Chocolate">
+                                        </a>
+                                    </div><div class="product"><div class="name"><a href="/hot-chocolate">Belgian Hot Chocolate</a></div><div class="attributes">Size: Small</div><div class="price">Unit price: <span>$4.00</span></div><div class="quantity">Quantity: <span>11</span></div></div>
+                                </div>
+                            </div><div class="totals">Sub-Total: <strong>$44.00</strong></div><div class="buttons"><input type="button" value="Go to cart" class="button-1 cart-button" onclick="setLocation(&quot;/cart&quot;)"></div>
+                        </div>
+                    </div>
+                </div>
+            </div><div class=header-lower>
+                <div class=header-logo>
+                    @* <img src="d:\brijal\nopcommerce16032023\nopproducts\nopcommerce_4.60.2_source\src\presentation\nop.web\themes\defaultclean\content\images\logo.png" />*@
+                    <a href="/"> <img alt="CAFE BARBERO" src=https://localhost:51590/Themes/DefaultClean/Content/images/logo.png> </a>
+                </div>
+                <div class="search-box store-search-box">
+                    <form method=get id=small-search-box-form action=/search>
+                        <input type=text class=search-box-text id=small-searchterms autocomplete=off name=q placeholder="Search Store" aria-label="Search store">
+                        <input type=submit class="button-1 search-box-button" value=Search>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class=header-menu>
+            <ul class="top-menu notmobile">
+                @foreach (var item in @ViewBag.Category)
+                {
+                    <li><a href=#>@item.CategoryName</a></li>
+                }
+                @*<li><a href=/breakfast-brunch>Breakfast &amp; Brunch </a>
+                <li><a href=/lunch-dinner>Lunch &amp; Dinner </a>
+                <li><a href=/baked-goods-desserts>Baked Goods &amp; Desserts </a>
+                <li><a href=/drinks-2>Drinks </a>*@
+            </ul>
+            <div class=menu-toggle>Categories</div>
+            <ul class="top-menu mobile">
+                @foreach (var item in @ViewBag.Category)
+                {
+                    <li><a href=#>@item.CategoryName</a></li>
+                }
+                @*<li><a href=/breakfast-brunch>Breakfast &amp; Brunch </a>
+                <li><a href=/lunch-dinner>Lunch &amp; Dinner </a>
+                <li><a href=/baked-goods-desserts>Baked Goods &amp; Desserts </a>
+                <li><a href=/drinks-2>Drinks </a>*@
+            </ul>
+        </div>
+        <div class="master-wrapper-content">
+            <div class=master-column-wrapper>
+                <div class=center-1>
+                    <div class="page shopping-cart-page">
+                        <div class=page-title><h1>Shopping cart</h1></div><div class=page-body>
+                            <div class=order-summary-content>
+                                <form method=post enctype=multipart/form-data id=shopping-cart-form action=/cart>
+                                    <div class=table-wrapper>
+                                        <table class=cart>
+
+                                            <thead>
+                                                <tr>
+                                                    <th class=remove-from-cart>Remove
+                                                    <th class=product-picture>Image
+                                                    <th class=product>Product(s)
+                                                    <th class=unit-price>Price
+                                                    <th class=quantity>Qty.
+                                                    <th class=subtotal>Total
+                                                </tr>
+                                            <tbody>
+                                                                                @foreach (var item in Model)
+                                                                                {
+                                                    <tr>
+                                                        <td class=remove-from-cart><label class=td-title for=removefromcart5030>Remove:</label> <input type=checkbox name=removefromcart id=removefromcart5030 value=@item.ProductID aria-label=Remove>
+                                                        <td class=product-picture><a href=/hot-chocolate><img alt="Picture of Belgian Hot Chocolate" src="@item.ImageData" title="Show details for Belgian Hot Chocolate"></a>
+                                                        <td class=product><a href=/hot-chocolate class=product-name>@item.ProductName</a><div class=attributes>Size: @item.Size</div><div class=edit-item><a href="https://cafe.shopfast.net/hot-chocolate?updatecartitemid=5030">Edit</a></div>
+                                                        <td class=unit-price><label class=td-title>Price:</label> <span class=product-unit-price>$@item.Price</span>
+                                                        <td class=quantity><label class=td-title for=itemquantity5030>Qty.:</label> <input name=itemquantity5030 id=itemquantity5030 type=text value=@item.Quantity class=qty-input aria-label=Qty.>
+                                                        <td class=subtotal>
+                                                            <label class=td-title>Total:</label> <span class=product-subtotal>$ </span>
+
+                                                    </tr>
+                                                                                }
+                                        </table>
+                                    </div>
+                                    <div class=cart-options>
+                                        <div class=common-buttons><input type=submit name=updatecart value="Update shopping cart" class="button-2 update-cart-button"> <input type=submit name=continueshopping value="Continue shopping" class="button-2 continue-shopping-button"></div>
+                                    </div>
+                                    <div class=cart-footer>
+                                        <div class=totals>
+                                            <div class=total-info>
+                                                <table class=cart-total>
+                                                    <tbody><tr class=order-subtotal><td class=cart-total-left><label>Sub-Total:</label><td class=cart-total-right><span class=value-summary>$71.50</span><tr class=shipping-cost><td class=cart-total-left><label>Shipping:</label><td class=cart-total-right><span>Not required</span><tr class=tax-value><td class=cart-total-left><label>Tax:</label><td class=cart-total-right><span class=value-summary>$0.00</span><tr class=order-total><td class=cart-total-left><label>Total:</label><td class=cart-total-right><span class=value-summary><strong>$71.50</strong></span>
+                                                </table>
+                                            </div>
+                                            <div class=checkout-buttons>
+                                                <button type=submit id=checkout name=checkout value=checkout class="button-1 checkout-button"> Checkout </button>
+                                            </div>
+                                            <div class=addon-buttons>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input name=__RequestVerificationToken type=hidden value=CfDJ8AbvH5xMMqhDnQ6lLyGo1LHFaqBj1XrD-sLzHJVQeuAncih05TIx-UChX-Z057r8UOBFp1R80JmMxcCfcyD8xKwcObxS3qT-y0MLbH4kfssUD3sYdXLF2Jy2x-nFM6ZaWBqazp8o7NJFcKJrGlWSRhE>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class=footer><div class=footer-upper><div class="footer-block information"><div class=title><strong>Information</strong></div><ul class=list><li><a href=/dmca-notice>DMCA Notice</a><li><a href=/terms-of-service>Terms Of Service</a><li><a href=/privacyinfo>Privacy policy</a><li><a href=/contactus>Contact us</a></ul></div><div class="footer-block customer-service"><div class=title><strong>User service</strong></div><ul class=list><li><a href=/search>Search</a></ul></div><div class="footer-block my-account"><div class=title><strong>My account</strong></div><ul class=list><li><a href=/customer/info>My account</a><li><a href=/order/history>Orders</a><li><a href=/customer/addresses>Addresses</a><li><a href=/cart>Shopping cart</a></ul></div><div class="footer-block follow-us"><div class=social><div class=title><strong>Follow us</strong></div><ul class=networks><li class=facebook><a href="https://www.facebook.com/Shopfast-149763908384528/" target=_blank>Facebook</a><li class=twitter><a href=https://twitter.com/shopfast target=_blank>Twitter</a></ul></div></div></div><div class=footer-lower><div class=footer-info><span class=footer-disclaimer>Copyright &copy; 2023 CAFE BARBERO. All rights reserved.</span></div><div class=footer-powered-by>Powered by <a target=_blank href="https://shopfast.com/">ShopFast</a></div></div></div>
+    </div>
+    <script src="~/lib_npm/jquery/jquery.min.js"></script>
+    <script src="~/lib_npm/jquery-ui-dist/jquery-ui.min.js"></script>
+    <script>function checkoutAttributeChange() { $.ajax({ cache: !1, url: "/shoppingcart/checkoutattributechange?isEditable=True", data: $("#shopping-cart-form").serialize(), type: "POST", success: function (n) { var t; if (n.ordetotalssectionhtml && $(".total-info").replaceWith(n.ordetotalssectionhtml), n.selectedcheckoutattributesssectionhtml && $(".selected-checkout-attributes").replaceWith(n.selectedcheckoutattributesssectionhtml), n.enabledattributeids) for (t = 0; t < n.enabledattributeids.length; t++)$("#checkout_attribute_label_" + n.enabledattributeids[t]).show(), $("#checkout_attribute_input_" + n.enabledattributeids[t]).show(); if (n.disabledattributeids) for (t = 0; t < n.disabledattributeids.length; t++)$("#checkout_attribute_label_" + n.disabledattributeids[t]).hide(), $("#checkout_attribute_input_" + n.disabledattributeids[t]).hide(); $(document).trigger({ type: "checkout_attributes_changed", changedData: n }) } }) } $(document).ready(function () { checkoutAttributeChange() })</script>
+    <script>$(document).ready(function () { $("#discountcouponcode").on("keydown", function (n) { if (n.keyCode == 13) return $("#applydiscountcouponcode").trigger("click"), !1 }) })</script>
+    <script>$(document).ready(function () { $("#checkout").on("click", function () { var n = !0; return $("#termsofservice").length > 0 && ($("#termsofservice").is(":checked") ? n = !0 : ($("#terms-of-service-warning-box").dialog(), n = !1)), n }) })</script>
+    <script>$(document).ready(function () { $(".header").on("mouseenter", "#topcartlink", function () { $("#flyout-cart").addClass("active") }); $(".header").on("mouseleave", "#topcartlink", function () { $("#flyout-cart").removeClass("active") }); $(".header").on("mouseenter", "#flyout-cart", function () { $("#flyout-cart").addClass("active") }); $(".header").on("mouseleave", "#flyout-cart", function () { $("#flyout-cart").removeClass("active") }) })</script>
+    <script>$("#small-search-box-form").on("submit", function (n) { $("#small-searchterms").val() == "" && (alert("Please enter some search keyword"), $("#small-searchterms").focus(), n.preventDefault()) })</script>
+    <script>var localized_data = { AjaxCartFailure: "Failed to add the product. Please refresh the page and try one more time." }; AjaxCart.init(!1, ".header-links .cart-qty", ".header-links .wishlist-qty", "#flyout-cart", localized_data)</script>
+    <script>$(document).ready(function () { $(".menu-toggle").on("click", function () { $(this).siblings(".top-menu.mobile").slideToggle("slow") }); $(".top-menu.mobile .sublist-toggle").on("click", function () { $(this).siblings(".sublist").slideToggle("slow") }) })</script>
+    <script>$(document).ready(function () { $(".footer-block .title").on("click", function () { var n = window, t = "inner", i; "innerWidth" in window || (t = "client", n = document.documentElement || document.body); i = { width: n[t + "Width"], height: n[t + "Height"] }; i.width < 769 && $(this).siblings(".list").slideToggle("slow") }) })</script>
+    <script>$(document).ready(function () { $(".block .title").on("click", function () { var n = window, t = "inner", i; "innerWidth" in window || (t = "client", n = document.documentElement || document.body); i = { width: n[t + "Width"], height: n[t + "Height"] }; i.width < 1001 && $(this).siblings(".listbox").slideToggle("slow") }) })</script>
+
+    <script>
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>

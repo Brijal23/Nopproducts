@@ -11,6 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Content\UploadImages\**" />
+    <EmbeddedResource Remove="Content\UploadImages\**" />
+    <None Remove="Content\UploadImages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Content\styles.css" />
     <None Remove="lib_npm\@fortawesome\fontawesome-free\attribution.js" />
     <None Remove="lib_npm\@fortawesome\fontawesome-free\css\all.min.css" />
     <None Remove="lib_npm\@fortawesome\fontawesome-free\css\brands.min.css" />
@@ -1291,9 +1298,19 @@
     <None Remove="Views\ProductTag\ProductTagList.cshtml" />
     <None Remove="Views\SpecificationAttribute\fyll4hg1.rjt~" />
     <None Remove="Views\SpecificationAttribute\SpecificationAttributeList.cshtml" />
+    <None Remove="Views\System\Cart.cshtml" />
+    <None Remove="Views\System\Details.cshtml" />
+    <None Remove="Views\System\Index.cshtml" />
+    <None Remove="Views\System\Productdetail.cshtml" />
+    <None Remove="Views\System\_Shoppingcart.cshtml" />
+    <None Remove="Views\_Layout.cshtml" />
+    <None Remove="Views\_ViewStart.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Content\styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="lib_npm\@fortawesome\fontawesome-free\attribution.js">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -6414,15 +6431,35 @@
     <Content Include="Content\all_plugins.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\System\Details.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\System\Cart.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\System\Productdetail.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\System\Index.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Shared\_Layout.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Views\System\_Shoppingcart.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Views\_ViewStart.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
     <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Content\UploadImages\" />
   </ItemGroup>
 
 </Project>

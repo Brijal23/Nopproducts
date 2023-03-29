@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Nop.Plugin.Widgets.BasicPlugins.Models.ShoppingCart>
+<div id="flyout-cart" class="flyout-cart active">
+    <div class="mini-shopping-cart">
+        <div class="count">
+            There are <a href="/cart" id="cartvalue">11 item(s)</a> in your cart.
+        </div>
+        <div class="items">
+            <div class="item first">
+                <div class="picture">
+                    <a href="/hot-chocolate" title="Show details for Belgian Hot Chocolate">
+                        <img alt="Picture of Belgian Hot Chocolate" src="https://cafe.shopfast.net/images/thumbs/0004398_belgian-hot-chocolate_47.jpeg" title="Show details for Belgian Hot Chocolate">
+                    </a>
+                </div><div class="product"><div class="name"><a href="/hot-chocolate">Belgian Hot Chocolate</a></div><div class="attributes">Size: Small</div><div class="price">Unit price: <span>$4.00</span></div><div class="quantity">Quantity: <span>11</span></div></div>
+            </div>
+        </div><div class="totals">Sub-Total: <strong>$44.00</strong></div><div class="buttons"><input type="button" value="Go to cart" class="button-1 cart-button" onclick="setLocation(&quot;/cart&quot;)"></div>
+    </div>
+</div>

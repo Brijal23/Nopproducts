@@ -146,7 +146,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[Manufacturers] where ManufacturerName='" + model.ManufacturerName.Trim() + "'";
+                        string q = "select Count(*) as Count from [dbo].[Manufacturers] where IsActive=1 and ManufacturerName='" + model.ManufacturerName.Trim() + "'";
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {
                             using (SqlDataReader r = command.ExecuteReader())
@@ -169,7 +169,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                             if (cmd.ExecuteNonQuery() == 1)
                             {
                                 connection.Close();
-                                string query1 = "select ManufacturerID from [dbo].[Manufacturers] where ManufacturerName='" + model.ManufacturerName.Trim() + "'";
+                                string query1 = "select ManufacturerID from [dbo].[Manufacturers] where IsActive=1 and ManufacturerName='" + model.ManufacturerName.Trim() + "'";
                                 connection.Open();
                                 using (SqlCommand command = new SqlCommand(query1, connection))
                                 {
@@ -265,7 +265,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
                     {
                         connection.Open();
-                        string q = "select Count(*) as Count from [dbo].[Manufacturers] where ManufacturerName='" + Manufacturer.ManufacturerName.Trim() + "'and ManufacturerID!='" + Manufacturer.ManufacturerID + "'";
+                        string q = "select Count(*) as Count from [dbo].[Manufacturers] where IsActive=1 and ManufacturerName='" + Manufacturer.ManufacturerName.Trim() + "'and ManufacturerID!='" + Manufacturer.ManufacturerID + "'";
 
                         using (SqlCommand command = new SqlCommand(q, connection))
                         {

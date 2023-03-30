@@ -46,7 +46,7 @@
                     }
                     else
                     {
-                        <div id="flyout-cart" class="flyout-cart active">
+                        <div id="flyout-cart" class="flyout-cart">
                             <div class="mini-shopping-cart">
                                 <div class="count">
                                     There are <a href="/System/Cart">@ViewBag.Count item(s)</a> in your cart.
@@ -145,27 +145,27 @@
                                                     <dt id="product_attribute_label_30"><label class="text-prompt"> Size </label> <span class="required">*</span></dt>
                                                     <dd id="product_attribute_input_30">
                                                         <ul class="option-list">
-                                                            @if (Model.Size == "S")
+                                                            @if (Model.Size == "Small")
                                                             {
-                                                                <li><input id="product_attribute_S" type="radio" name="product_attribute" value="S" checked> <label for="product_attribute_30_73">Small</label></li>
-                                                                <li><input id="product_attribute_M" type="radio" name="product_attribute" value="M"> <label for="product_attribute_30_74">Medium [+$1.00]</label></li>
-                                                                <li><input id="product_attribute_L" type="radio" name="product_attribute" value="L"> <label for="product_attribute_30_75">Large [+$1.50]</label></li>
+                                                                <li><input id="product_attribute_S" type="radio" name="product_attribute" value="Small" checked> <label for="product_attribute_30_73">Small</label></li>
+                                                                <li><input id="product_attribute_M" type="radio" name="product_attribute" value="Medium [+$1.00]"> <label for="product_attribute_30_74">Medium [+$1.00]</label></li>
+                                                                <li><input id="product_attribute_L" type="radio" name="product_attribute" value="Large [+$1.50]"> <label for="product_attribute_30_75">Large [+$1.50]</label></li>
 
                                                             }
-                                                            else if (Model.Size == "M")
+                                                            else if (Model.Size == "Medium [+$1.00]")
                                                             {
-                                                                <li><input id="product_attribute_S" type="radio" name="product_attribute" value="S"> <label for="product_attribute_30_73">Small</label></li>
+                                                                <li><input id="product_attribute_S" type="radio" name="product_attribute" value="Small"> <label for="product_attribute_30_73">Small</label></li>
 
-                                                                <li><input id="product_attribute_M" type="radio" name="product_attribute" value="M" checked> <label for="product_attribute_30_74">Medium [+$1.00]</label></li>
-                                                                <li><input id="product_attribute_L" type="radio" name="product_attribute" value="L"> <label for="product_attribute_30_75">Large [+$1.50]</label></li>
+                                                                <li><input id="product_attribute_M" type="radio" name="product_attribute" value="Medium [+$1.00]" checked> <label for="product_attribute_30_74">Medium [+$1.00]</label></li>
+                                                                <li><input id="product_attribute_L" type="radio" name="product_attribute" value="Large [+$1.50]"> <label for="product_attribute_30_75">Large [+$1.50]</label></li>
 
                                                             }
-                                                            else if (Model.Size == "L")
+                                                            else if (Model.Size == "Large [+$1.50]")
                                                             {
-                                                                <li><input id="product_attribute_S" type="radio" name="product_attribute" value="S"> <label for="product_attribute_30_73">Small</label></li>
-                                                                <li><input id="product_attribute_M" type="radio" name="product_attribute" value="M"> <label for="product_attribute_30_74">Medium [+$1.00]</label></li>
+                                                                <li><input id="product_attribute_S" type="radio" name="product_attribute" value="Small"> <label for="product_attribute_30_73">Small</label></li>
+                                                                <li><input id="product_attribute_M" type="radio" name="product_attribute" value="Medium [+$1.00]"> <label for="product_attribute_30_74">Medium [+$1.00]</label></li>
 
-                                                                <li><input id="product_attribute_L" type="radio" name="product_attribute" value="L" checked> <label for="product_attribute_30_75">Large [+$1.50]</label></li>
+                                                                <li><input id="product_attribute_L" type="radio" name="product_attribute" value="Large [+$1.50]" checked> <label for="product_attribute_30_75">Large [+$1.50]</label></li>
                                                             }
                                                         </ul>
                                                     </dd>
@@ -179,7 +179,7 @@
                                             </div>
                                             <div class="add-to-cart">
                                                 <div class="add-to-cart-panel">
-                                                    <label class="qty-label" for="addtocart_60_EnteredQuantity">Qty:</label> <input id="product_enteredQuantity" class="qty-input valid" onkeypress="return isNumber(event)" aria-label="Enter a quantity" data-val="true" data-val-required="The Qty field is required." name="addtocart_60.EnteredQuantity" value="@Model.Quantity"
+                                                    <label class="qty-label" for="addtocart_60_EnteredQuantity">Qty:</label> <input id="product_enteredQuantity" class="qty-input valid" onkeypress="return isNumber(event)" aria-label="Enter a quantity" data-val="true" data-val-required="The Qty field is required." maxlength="7" name="addtocart_60.EnteredQuantity" value="@Model.Quantity"
                                                                                                                                     aria-describedby="product_enteredQuantity_60-error" aria-invalid="false">
                                                     <input type="button" id="add-to-cart-button-60" class="button-1 add-to-cart-button valid" value="Update"
                                                            data-productid="60" aria-invalid="false" onclick="Updatetocart()">
@@ -208,7 +208,7 @@
     <script>function attribute_change_handler_60() { $.ajax({ cache: !1, url: "/shoppingcart/productdetails_attributechange?productId=60&validateAttributeConditions=False&loadPicture=True", data: $("#product-details-form").serialize(), type: "POST", success: function (n) { var t; if (n.price && $(".price-value-60").text(n.price), n.basepricepangv ? $("#base-price-pangv-60").text(n.basepricepangv) : $("#base-price-pangv-60").hide(), n.sku ? $("#sku-60").text(n.sku).parent(".sku").show() : $("#sku-60").parent(".sku").hide(), n.mpn ? $("#mpn-60").text(n.mpn).parent(".manufacturer-part-number").show() : $("#mpn-60").parent(".manufacturer-part-number").hide(), n.gtin ? $("#gtin-60").text(n.gtin).parent(".gtin").show() : $("#gtin-60").parent(".gtin").hide(), n.stockAvailability && $("#stock-availability-value-60").text(n.stockAvailability), n.enabledattributemappingids) for (t = 0; t < n.enabledattributemappingids.length; t++)$("#product_attribute_label_" + n.enabledattributemappingids[t]).show(), $("#product_attribute_input_" + n.enabledattributemappingids[t]).show(); if (n.disabledattributemappingids) for (t = 0; t < n.disabledattributemappingids.length; t++)$("#product_attribute_label_" + n.disabledattributemappingids[t]).hide(), $("#product_attribute_input_" + n.disabledattributemappingids[t]).hide(); n.pictureDefaultSizeUrl && $("#main-product-img-60").attr("src", n.pictureDefaultSizeUrl); n.pictureFullSizeUrl && $("#main-product-img-lightbox-anchor-60").attr("href", n.pictureFullSizeUrl); n.message && alert(n.message); $(document).trigger({ type: "product_attributes_changed", changedData: n }) } }) } $(document).ready(function () { attribute_change_handler_60(); $("#product_attribute_30_73").on("click", function () { attribute_change_handler_60() }); $("#product_attribute_30_74").on("click", function () { attribute_change_handler_60() }); $("#product_attribute_30_75").on("click", function () { attribute_change_handler_60() }) })</script>
     <script>$(document).ready(function () { $("#addtocart_60_EnteredQuantity").on("keydown", function (n) { if (n.keyCode == 13) return $("#add-to-cart-button-60").trigger("click"), !1 }); $("#product_enteredQuantity_60").on("input propertychange paste", function () { var n = { productId: 60, quantity: $("#product_enteredQuantity_60").val() }; $(document).trigger({ type: "product_quantity_changed", changedData: n }) }) })</script>
     <script>$(document).ready(function () { $(".header").on("mouseenter", "#topcartlink", function () { $("#flyout-cart").addClass("active") }); $(".header").on("mouseleave", "#topcartlink", function () { $("#flyout-cart").removeClass("active") }); $(".header").on("mouseenter", "#flyout-cart", function () { $("#flyout-cart").addClass("active") }); $(".header").on("mouseleave", "#flyout-cart", function () { $("#flyout-cart").removeClass("active") }) })</script>
-    <script>$("#small-search-box-form").on("submit", function (n) { $("#small-searchterms").val() == "" && (alert("Please enter some search keyword"), $("#small-searchterms").focus(), n.preventDefault()) })</script>
+   <script>$("#small-search-box-form").on("submit", function (n) { $("#small-searchterms").val() == "" && (alert("Please enter some search keyword"), $("#small-searchterms").focus(), n.preventDefault()) })</script>
     @*    <script>var localized_data = { AjaxCartFailure: "Failed to add the product. Please refresh the page and try one more time." }; AjaxCart.init(!1, ".header-links .cart-qty", ".header-links .wishlist-qty", "#flyout-cart", localized_data)</script>
     *@
     <script>$(document).ready(function () { $(".menu-toggle").on("click", function () { $(this).siblings(".top-menu.mobile").slideToggle("slow") }); $(".top-menu.mobile .sublist-toggle").on("click", function () { $(this).siblings(".sublist").slideToggle("slow") }) })</script>
@@ -219,14 +219,14 @@
         $('input[type=radio][name=product_attribute]').change(function () {
             debugger;
             var price = $("#price-value-hidden").text().replace("$", "");
-            if (this.value == 'S') {
+            if (this.value == 'Small') {
                 $("#price-value").text("$" + parseFloat(price));
             }
-            else if (this.value == 'M') {
+            else if (this.value == 'Medium [+$1.00]') {
                 $("#price-value").text("$" + (parseFloat(price) + 1));
                 //$("#product_attribute_S").removeAttr('checked');
             }
-            else if (this.value == 'L') {
+            else if (this.value == 'Large [+$1.50]') {
                 $("#price-value").text("$" + (parseFloat(price) + 1.5));
                 //$("#product_attribute_S").removeAttr('checked');
             }
@@ -256,6 +256,8 @@
             if (Quantity != "") {
                 if (Quantity == 0) {
                     alert("Quantity should be positive.");
+                } else if (Quantity.length > 7) {
+                    alert("Please enter quantity maximum 7 digits long.");
                 }
                 else { SubmitForm(formData); }
 
@@ -275,7 +277,7 @@
                 success: function (response) {
                     if (response.status == "success") {
                         if(response.status == "success") {
-                            window.location.href = "/System/cart";
+                            window.location.href = "/System/Cart";
                         }
                        
                     }

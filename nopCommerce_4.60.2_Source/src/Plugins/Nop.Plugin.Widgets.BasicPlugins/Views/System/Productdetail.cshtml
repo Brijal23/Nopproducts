@@ -46,7 +46,7 @@
                     }
                     else
                     {
-                        <div id="flyout-cart" class="flyout-cart active">
+                        <div id="flyout-cart" class="flyout-cart">
                             <div class="mini-shopping-cart">
                                 <div class="count">
                                     There are <a href="/System/Cart">@ViewBag.Count item(s)</a> in your cart.
@@ -145,9 +145,9 @@
                                                     <dt id="product_attribute_label_30"><label class="text-prompt"> Size </label> <span class="required">*</span></dt>
                                                     <dd id="product_attribute_input_30">
                                                         <ul class="option-list">
-                                                            <li><input id="product_attribute_S" type="radio" name="product_attribute" value="S" checked> <label for="product_attribute_30_73">Small</label></li>
-                                                            <li><input id="product_attribute_M" type="radio" name="product_attribute" value="M"> <label for="product_attribute_30_74">Medium [+$1.00]</label></li>
-                                                            <li><input id="product_attribute_L" type="radio" name="product_attribute" value="L"> <label for="product_attribute_30_75">Large [+$1.50]</label></li>
+                                                            <li><input id="product_attribute_S" type="radio" name="product_attribute" value="Small" checked> <label for="product_attribute_30_73">Small</label></li>
+                                                            <li><input id="product_attribute_M" type="radio" name="product_attribute" value="Medium [+$1.00]"> <label for="product_attribute_30_74">Medium [+$1.00]</label></li>
+                                                            <li><input id="product_attribute_L" type="radio" name="product_attribute" value="Large [+$1.50]"> <label for="product_attribute_30_75">Large [+$1.50]</label></li>
                                                         </ul>
                                                     </dd>
                                                 </dl>
@@ -160,7 +160,7 @@
                                             </div>
                                             <div class="add-to-cart">
                                                 <div class="add-to-cart-panel">
-                                                    <label class="qty-label" for="addtocart_60_EnteredQuantity">Qty:</label> <input id="product_enteredQuantity" class="qty-input valid" onkeypress="return isNumber(event)" aria-label="Enter a quantity" data-val="true" data-val-required="The Qty field is required." name="addtocart_60.EnteredQuantity" value="1"
+                                                    <label class="qty-label" for="addtocart_60_EnteredQuantity">Qty:</label> <input id="product_enteredQuantity" class="qty-input valid" onkeypress="return isNumber(event)" maxlength="7" aria-label="Enter a quantity" data-val="true" data-val-required="The Qty field is required." name="addtocart_60.EnteredQuantity" value="1"
                                                                                                                                     aria-describedby="product_enteredQuantity_60-error" aria-invalid="false">
                                                     <input type="button" id="add-to-cart-button-60" class="button-1 add-to-cart-button valid" value="Add to cart"
                                                            data-productid="60" aria-invalid="false" onclick="Addtocart()">
@@ -200,14 +200,14 @@
         $('input[type=radio][name=product_attribute]').change(function () {
             debugger;
             var price = $("#price-value-hidden").text().replace("$", "");
-            if (this.value == 'S') {
+            if (this.value == 'Small') {
                 $("#price-value").text("$" + parseFloat(price));
             }
-            else if (this.value == 'M') {
+            else if (this.value == 'Medium [+$1.00]') {
                 $("#price-value").text("$" + (parseFloat(price) + 1));
                 //$("#product_attribute_S").removeAttr('checked');
             }
-            else if (this.value == 'L') {
+            else if (this.value == 'Large [+$1.50]') {
                 $("#price-value").text("$" + (parseFloat(price) + 1.5));
                 //$("#product_attribute_S").removeAttr('checked');
             }
@@ -238,6 +238,9 @@
                 if (Quantity == 0) {
                     alert("Quantity should be positive.");
                 }
+                //else if (Quantity.length >7){
+                //    alert("Please enter quantity maximum 7 digits long.");
+                //}
                 else { SubmitForm(formData); }
 
             }

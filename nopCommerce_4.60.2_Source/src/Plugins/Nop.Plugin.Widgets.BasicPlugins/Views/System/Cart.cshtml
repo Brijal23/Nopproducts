@@ -46,7 +46,7 @@
                     }
                     else
                     {
-                        <div id="flyout-cart" class="flyout-cart active">
+                        <div id="flyout-cart" class="flyout-cart">
                             <div class="mini-shopping-cart">
                                 <div class="count">
                                     There are <a href="/System/Cart">@ViewBag.Count item(s)</a> in your cart.
@@ -156,7 +156,7 @@
                                                                 <td class=product-picture><a href=/hot-chocolate><img alt="Picture of Belgian Hot Chocolate" src="@item.ImageData" title="Show details for Belgian Hot Chocolate" width="80" height="50"></a>
                                                                 <td class=product><a href="/System/Productdetail?name=@item.ProductName" class=product-name>@item.ProductName</a><div class=attributes>Size: @item.Size</div><div class=edit-item><a href="/System/UpdateProductdetail?id=@item.ProductID">Edit</a></div>
                                                                 <td class=unit-price><label class=td-title>Price:</label> <span class=product-unit-price>$@item.FPrice</span>
-                                                                <td class=quantity><label class=td-title for=itemquantity5030>Qty.:</label> @Html.TextBoxFor(o => o.ShoppingCartList[i].Quantity, new { @id = "itemquantity" + i ,@class="qty-input",@min="1",@onkeypress="return isNumber(event)"})
+                                                                <td class=quantity><label class=td-title for=itemquantity5030>Qty.:</label> @Html.TextBoxFor(o => o.ShoppingCartList[i].Quantity, new { @id = "itemquantity" + i ,@class="qty-input",@min="1",@onkeypress="return isNumber(event)",@maxlength="7"})
                                                                 <td class=subtotal>
                                                                     <label class=td-title>Total:</label> <span class=product-subtotal>$@item.TotalPrice</span>
 
@@ -219,6 +219,11 @@
             }
             return true;
         }
+        //function Checksize(i) {
+        //    var q = $("#itemquantity" + i).val();
+        //    if (q.length > 7) { return false; }
+        //    return true;
+        //}
     </script>
 </body>
 </html>

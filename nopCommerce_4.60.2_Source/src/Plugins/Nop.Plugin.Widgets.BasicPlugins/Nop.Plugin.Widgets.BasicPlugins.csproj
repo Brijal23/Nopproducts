@@ -1303,7 +1303,6 @@
     <None Remove="Views\System\Index.cshtml" />
     <None Remove="Views\System\Productdetail.cshtml" />
     <None Remove="Views\System\UpdateProductdetail.cshtml" />
-    <None Remove="Views\System\_Shoppingcart.cshtml" />
     <None Remove="Views\_Layout.cshtml" />
     <None Remove="Views\_ViewStart.cshtml" />
   </ItemGroup>
@@ -6448,10 +6447,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Shared\_Layout.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Views\System\_Shoppingcart.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

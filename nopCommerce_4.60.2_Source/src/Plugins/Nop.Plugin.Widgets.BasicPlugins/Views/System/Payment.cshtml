@@ -1,0 +1,534 @@
+﻿@model Nop.Plugin.Widgets.BasicPlugins.Models.ListShoppingCart
+<!DOCTYPE html>
+<html lang=en class=html-home-page>
+<head>
+    <title>Cafe</title>
+    <meta charset=UTF-8>
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <meta name=generator content=ShopFast>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <link href="~/lib_npm/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Plugins/Widgets.BasicPlugins/Content/styles.css" rel="stylesheet" />
+</head>
+<body>
+    <div class=ajax-loading-block-window style=display:none></div>
+    <div id=dialog-notifications-success title=Notification style=display:none></div>
+    <div id=dialog-notifications-error title=Error style=display:none></div>
+    <div id=dialog-notifications-warning title=Warning style=display:none></div>
+    <div id=bar-notification class=bar-notification-container data-close=Close></div><!--[if lte IE 8]><div style=clear:both;height:59px;text-align:center;position:relative><a href=http://www.microsoft.com/windows/internet-explorer/default.aspx target=_blank> <img src=/Themes/DefaultClean/Content/images/ie_warning.jpg height=42 width=820 alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."> </a></div><![endif]-->
+    <div class=master-wrapper-page>
+
+        <div class=header>
+            <div class=header-upper>
+                <div class=header-selectors-wrapper>
+                </div>
+                <div class=header-links-wrapper>
+                    <div class=header-links>
+                        <ul>
+                            @if (ViewBag.Login == "1")
+                            {
+                                <li><a href="#" class="ico-register">My Account</a></li>
+                                <li>
+                                    <a href="/System/LogOut" class="ico-login">Log out</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li><a href="#" class="ico-register">Register</a></li>
+                                <li>
+                                    <a href="/System/Login" class="ico-login">Log in</a>
+                                </li>
+                            }
+                            <li id=topcartlink>
+                                <a href=/System/Cart class=ico-cart>
+                                    <span class=cart-label>Shopping cart</span>
+                                    <span class=cart-qty>(@ViewBag.Count)</span>
+                                </a>
+                        </ul>
+                    </div>
+                    @if (@ViewBag.Count == 0)
+                    {
+                        <div id=flyout-cart class=flyout-cart>
+                            <div class=mini-shopping-cart>
+                                <div class=count>You have no items in your shopping cart.</div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="flyout-cart" class="flyout-cart">
+                            <div class="mini-shopping-cart">
+                                <div class="count">
+                                    There are <a href="/System/Cart">@ViewBag.Count item(s)</a> in your cart.
+                                </div>
+                                <div class="items">
+                                    @foreach (var item in Model.ShoppingCartList)
+                                    {
+                                        <div class="item">
+                                            <div class="picture">
+                                                <a href="/System/Productdetail?id=@item.ProductID" title="Show details for Belgian Hot Chocolate">
+                                                    <img alt="Picture of @item.ProductName" src="@item.ImageData" title="Show details for @item.ProductName" width="50" height="50">
+                                                </a>
+                                            </div><div class="product"><div class="name"><a href="/System/Productdetail?id=@item.ProductID">@item.ProductName</a></div><div class="attributes">Size: @item.Size</div><div class="price">Unit price: <span>$@item.FPrice</span></div><div class="quantity">Quantity: <span>@item.Quantity</span></div></div>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="totals">Sub-Total: <strong>$@ViewBag.Subtotal</strong></div><div class="buttons">
+                                    <a href="/System/Cart" class="button-1 cart-button" style="display: inline-block; border: none;background-color: #4ab2f1;padding: 10px 20px; font-size: 12px;color: #fff;text-transform: uppercase;">Go to cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div><div class=header-lower>
+                <div class=header-logo>
+                    @* <img src="d:\brijal\nopcommerce16032023\nopproducts\nopcommerce_4.60.2_source\src\presentation\nop.web\themes\defaultclean\content\images\logo.png" />*@
+                    <a href="/"> <img alt="CAFE BARBERO" src=https://localhost:51590/Themes/DefaultClean/Content/images/logo.png> </a>
+                </div>
+                <div class="search-box store-search-box">
+                    <form method=get id=small-search-box-form action=/search>
+                        <input type=text class=search-box-text id=small-searchterms autocomplete=off name=q placeholder="Search Store" aria-label="Search store">
+                        <input type=submit class="button-1 search-box-button" value=Search>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class=header-menu>
+            <ul class="top-menu notmobile">
+                @foreach (var item in @ViewBag.Category)
+                {
+                    <li><a href=#>@item.CategoryName</a></li>
+                }
+                @*<li><a href=/breakfast-brunch>Breakfast &amp; Brunch </a>
+                <li><a href=/lunch-dinner>Lunch &amp; Dinner </a>
+                <li><a href=/baked-goods-desserts>Baked Goods &amp; Desserts </a>
+                <li><a href=/drinks-2>Drinks </a>*@
+            </ul>
+            <div class=menu-toggle>Categories</div>
+            <ul class="top-menu mobile">
+                @foreach (var item in @ViewBag.Category)
+                {
+                    <li><a href=#>@item.CategoryName</a></li>
+                }
+                @*<li><a href=/breakfast-brunch>Breakfast &amp; Brunch </a>
+                <li><a href=/lunch-dinner>Lunch &amp; Dinner </a>
+                <li><a href=/baked-goods-desserts>Baked Goods &amp; Desserts </a>
+                <li><a href=/drinks-2>Drinks </a>*@
+            </ul>
+        </div>
+        <div class="master-wrapper-content">
+            <div class="master-column-wrapper">
+                <div class="center-1">
+                    <div class="page checkout-page">
+                        <div class="page-title"><h1>Checkout</h1></div><div class="page-body checkout-data">
+                            <ol class="opc" id="checkout-steps">
+                                <li id="opc-billing" class="tab-section allow active"><div class="step-title"><span class="number">1</span><h2 class="title">Billing address</h2></div><div id="checkout-step-billing" class="step a-item" style=""><form id="co-billing-form" novalidate="novalidate"><div id="checkout-billing-load"><div class="checkout-data"><div class="section new-billing-address" id="billing-new-address-form"><div class="enter-address"><input type="hidden" data-val="true" data-val-required="The Id field is required." id="BillingNewAddress_Id" name="BillingNewAddress.Id" value="0"><div class="edit-address"><div class="inputs"><label for="BillingNewAddress_FirstName">First name:</label> <input type="text" data-val="true" data-val-required="First name is required." id="BillingNewAddress_FirstName" name="BillingNewAddress.FirstName" value="Ronnny"> <span class="required">*</span> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.FirstName" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_LastName">Last name:</label> <input type="text" data-val="true" data-val-required="Last name is required." id="BillingNewAddress_LastName" name="BillingNewAddress.LastName" value="Yakovv"> <span class="required">*</span> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.LastName" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_Email">Email:</label> <input type="email" data-val="true" data-val-email="Wrong email" data-val-required="Email is required." id="BillingNewAddress_Email" name="BillingNewAddress.Email" value="cafe@olb.com"> <span class="required">*</span> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.Email" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_Company">Company:</label> <input type="text" id="BillingNewAddress_Company" name="BillingNewAddress.Company"> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.Company" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_City">City:</label> <input type="text" id="BillingNewAddress_City" name="BillingNewAddress.City" value="NY"> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.City" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_Address1">Address 1:</label> <input type="text" id="BillingNewAddress_Address1" name="BillingNewAddress.Address1" value="78 lb road"> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.Address1" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_Address2">Address 2:</label> <input type="text" id="BillingNewAddress_Address2" name="BillingNewAddress.Address2" value="NY"> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.Address2" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_ZipPostalCode">Zip / postal code:</label> <input type="text" id="BillingNewAddress_ZipPostalCode" name="BillingNewAddress.ZipPostalCode" value="10001"> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.ZipPostalCode" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_PhoneNumber">Phone number:</label> <input type="tel" id="BillingNewAddress_PhoneNumber" name="BillingNewAddress.PhoneNumber" value="1234567890"> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.PhoneNumber" data-valmsg-replace="true"></span></div></div></div></div></div></div></form><div class="buttons" id="billing-buttons-container" style="opacity: 1;"><input type="button" title="Continue" class="button-1 new-address-next-step-button" onclick="Billing.save()" value="Continue"> <span class="please-wait" id="billing-please-wait" style="display: none;">Loading next step...</span></div></div></li>
+                                <li id="opc-payment_method" class="tab-section allow active">
+                                    <div class="step-title"><span class="number">2</span><h2 class="title">Payment method</h2></div><div id="checkout-step-payment-method" class="step a-item" style="">
+                                        <form id="co-payment-method-form">
+                                            <div id="checkout-payment-method-load">
+                                                <div class="checkout-data">
+
+                                                    <div class="section payment-method">
+                                                        <div class="use-reward-points">
+                                                            <input onclick="PaymentMethod.toggleUseRewardPoints(this)" type="checkbox" data-val="true" data-val-required="The UseRewardPoints field is required." id="UseRewardPoints" name="UseRewardPoints" value="true"><input name="UseRewardPoints" type="hidden" value="false">
+                                                            <label for="UseRewardPoints">Use my reward points, 9 reward points ($90.00) available for this order</label>
+                                                            <script>
+                                                                $(document).ready(function () {
+                                                                    PaymentMethod.toggleUseRewardPoints($('#UseRewardPoints'));
+                                                                });
+                                                            </script>
+                                                        </div>
+                                                        <ul class="method-list" id="payment-method-block">
+                                                            <li>
+                                                                <div class="method-name">
+                                                                    <div class="payment-logo">
+                                                                        <label for="paymentmethod_0">
+                                                                            <img src="https://cafe.shopfast.net/Plugins/Payments.Crypto/logo.png" alt="Crypto">
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="payment-details">
+                                                                        <input id="paymentmethod_0" type="radio" name="paymentmethod" value="Payments.Crypto" checked="checked">
+                                                                        <label for="paymentmethod_0">Crypto</label>
+                                                                        <div class="payment-description">Pay by Crypto</div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <div class="method-name">
+                                                                    <div class="payment-logo">
+                                                                        <label for="paymentmethod_1">
+                                                                            <img src="https://cafe.shopfast.net/Plugins/Payments.Manual/logo.jpg" alt="Credit Card">
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="payment-details">
+                                                                        <input id="paymentmethod_1" type="radio" name="paymentmethod" value="Payments.Manual">
+                                                                        <label for="paymentmethod_1">Credit Card</label>
+                                                                        <div class="payment-description">Pay by credit / debit card</div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <div class="method-name">
+                                                                    <div class="payment-details">
+                                                                        <input id="paymentmethod_2" type="radio" name="paymentmethod" value="ShopFast.Payments.SecurePay">
+                                                                        <label for="paymentmethod_2">SecurePay</label>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </form><div class="buttons" id="payment-method-buttons-container"><p class="back-link"><a href="#" onclick="return Checkout.back(),!1"><small>« </small>Back</a></p><input type="button" class="button-1 payment-method-next-step-button" onclick="PaymentMethod.save()" value="Continue"> <span class="please-wait" id="payment-method-please-wait" style="display:none">Loading next step...</span></div>
+                                    </div>
+                                </li>
+                                <li id="opc-payment_info" class="tab-section allow active">
+                                    <div class="step-title"><span class="number">3</span><h2 class="title">Payment information</h2></div><div id="checkout-step-payment-info" class="step a-item" style="">
+                                        <form id="co-payment-info-form">
+                                            <div id="checkout-payment-info-load">
+                                                <div class="checkout-data">
+
+                                                    <div class="section payment-info">
+                                                        <div class="info">
+                                                            <table width="100%" cellspacing="2" cellpadding="1" border="0">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <label for="CreditCardTypes">Select credit card:</label>
+                                                                        </td>
+                                                                        <td>
+                                                                            <select class="dropdownlists" id="CreditCardType" name="CreditCardType">
+                                                                                <option value="visa">Visa</option>
+                                                                                <option value="MasterCard">Master card</option>
+                                                                                <option value="Discover">Discover</option>
+                                                                                <option value="Amex">Amex</option>
+                                                                            </select>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <label for="CardholderName">Cardholder name:</label>
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="text" style="width:165px;" autocomplete="off" data-val="true" data-val-required="Enter cardholder name" id="CardholderName" name="CardholderName" value="">
+                                                                            <span class="field-validation-valid" data-valmsg-for="CardholderName" data-valmsg-replace="true"></span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <label for="CardNumber">Card number:</label>
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="text" style="width:165px;" autocomplete="off" maxlength="22" id="CardNumber" name="CardNumber" value="">
+                                                                            <span class="field-validation-valid" data-valmsg-for="CardNumber" data-valmsg-replace="true"></span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <label for="ExpireMonth">Expiration date:</label>
+                                                                        </td>
+                                                                        <td>
+                                                                            <select data-val="true" data-val-required="Expire month is required" id="ExpireMonth" name="ExpireMonth">
+                                                                                <option value="1">01</option>
+                                                                                <option value="2">02</option>
+                                                                                <option value="3">03</option>
+                                                                                <option value="4">04</option>
+                                                                                <option value="5">05</option>
+                                                                                <option value="6">06</option>
+                                                                                <option value="7">07</option>
+                                                                                <option value="8">08</option>
+                                                                                <option value="9">09</option>
+                                                                                <option value="10">10</option>
+                                                                                <option value="11">11</option>
+                                                                                <option value="12">12</option>
+                                                                            </select>
+                                                                            /
+                                                                            <select data-val="true" data-val-required="Expire year is required" id="ExpireYear" name="ExpireYear">
+                                                                                <option value="2023">2023</option>
+                                                                                <option value="2024">2024</option>
+                                                                                <option value="2025">2025</option>
+                                                                                <option value="2026">2026</option>
+                                                                                <option value="2027">2027</option>
+                                                                                <option value="2028">2028</option>
+                                                                                <option value="2029">2029</option>
+                                                                                <option value="2030">2030</option>
+                                                                                <option value="2031">2031</option>
+                                                                                <option value="2032">2032</option>
+                                                                                <option value="2033">2033</option>
+                                                                                <option value="2034">2034</option>
+                                                                                <option value="2035">2035</option>
+                                                                                <option value="2036">2036</option>
+                                                                                <option value="2037">2037</option>
+                                                                            </select>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <label for="CardCode">Card code:</label>
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="text" style="width:60px;" autocomplete="off" maxlength="4" data-val="true" data-val-regex="Wrong card code" data-val-regex-pattern="^[0-9]{3,4}$" id="CardCode" name="CardCode" value="">
+                                                                            <span class="field-validation-valid" data-valmsg-for="CardCode" data-valmsg-replace="true"></span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </form><div class="buttons" id="payment-info-buttons-container" style="opacity: 1;"><p class="back-link"><a href="#" onclick="return Checkout.back(),!1"><small>« </small>Back</a></p><input type="button" class="button-1 payment-info-next-step-button" onclick="PaymentInfo.save()" value="Continue"> <span class="please-wait" id="payment-info-please-wait" style="display: none;">Loading next step...</span></div>
+                                    </div>
+                                </li>
+                                <li id="opc-confirm_order" class="tab-section allow active">
+                                    <div class="step-title"><span class="number">4</span><h2 class="title">Confirm order</h2></div><div id="checkout-step-confirm-order" class="step a-item" style="">
+                                        <div id="checkout-confirm-order-load">
+                                            <div class="checkout-data">
+
+
+                                                <div class="section order-summary">
+                                                    <div class="order-summary-content">
+
+                                                        <div class="order-review-data">
+                                                            <div class="billing-info-wrap">
+                                                                <div class="billing-info">
+                                                                    <div class="title">
+                                                                        <strong>Billing Address</strong>
+                                                                    </div>
+                                                                    <ul class="info-list">
+                                                                        <li class="name">
+                                                                            Ronnny Yakovv
+                                                                        </li>
+                                                                        <li class="email">
+                                                                            Email: cafe@olb.com
+                                                                        </li>
+                                                                        <li class="phone">
+                                                                            Phone: 1234567890
+                                                                        </li>
+                                                                        <li class="address1">
+                                                                            78 lb road
+                                                                        </li>
+                                                                        <li class="address2">
+                                                                            NY
+                                                                        </li>
+                                                                        <li class="city-state-zip">
+                                                                            NY,10001
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="payment-method-info">
+                                                                    <div class="title">
+                                                                        <strong>Payment</strong>
+                                                                    </div>
+                                                                    <ul class="info-list">
+                                                                        <li class="payment-method">
+                                                                            <span class="label">
+                                                                                Payment Method:
+                                                                            </span>
+                                                                            <span class="value">
+                                                                                Credit Card
+                                                                            </span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <form method="post" enctype="multipart/form-data" id="shopping-cart-form" action="/cart">
+                                                            <div class="table-wrapper">
+                                                                <table class="cart">
+                                                                    <colgroup>
+                                                                        <col width="1">
+                                                                        <col>
+                                                                        <col width="1">
+                                                                        <col width="1">
+                                                                        <col width="1">
+                                                                    </colgroup>
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="product-picture">
+                                                                                Image
+                                                                            </th>
+                                                                            <th class="product">
+                                                                                Product(s)
+                                                                            </th>
+                                                                            <th class="unit-price">
+                                                                                Price
+                                                                            </th>
+                                                                            <th class="quantity">
+                                                                                Qty.
+                                                                            </th>
+                                                                            <th class="subtotal">
+                                                                                Total
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td class="product-picture">
+                                                                                <a href="/hot-chocolate"><img alt="Picture of Belgian Hot Chocolate" src="https://cafe.shopfast.net/images/thumbs/0004398_belgian-hot-chocolate_80.jpeg" title="Show details for Belgian Hot Chocolate"></a>
+                                                                            </td>
+                                                                            <td class="product">
+                                                                                <a href="/hot-chocolate" class="product-name">Belgian Hot Chocolate</a>
+                                                                                <div class="attributes">
+                                                                                    Size: Small
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="unit-price">
+                                                                                <label class="td-title">Price:</label>
+                                                                                <span class="product-unit-price">$4.00</span>
+                                                                            </td>
+                                                                            <td class="quantity">
+                                                                                <label class="td-title" for="itemquantity5033">Qty.:</label>
+                                                                                <span class="product-quantity">11</span>
+                                                                            </td>
+                                                                            <td class="subtotal">
+                                                                                <label class="td-title">Total:</label>
+                                                                                <span class="product-subtotal">$44.00</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class="product-picture">
+                                                                                <a href="/caf%C3%A9-latte"><img alt="Picture of Café au Lait" src="https://cafe.shopfast.net/images/thumbs/0004475_cafe-au-lait_80.jpeg" title="Show details for Café au Lait"></a>
+                                                                            </td>
+                                                                            <td class="product">
+                                                                                <a href="/caf%C3%A9-latte" class="product-name">Café au Lait</a>
+                                                                                <div class="attributes">
+                                                                                    Size: Small
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="unit-price">
+                                                                                <label class="td-title">Price:</label>
+                                                                                <span class="product-unit-price">$2.50</span>
+                                                                            </td>
+                                                                            <td class="quantity">
+                                                                                <label class="td-title" for="itemquantity5034">Qty.:</label>
+                                                                                <span class="product-quantity">5</span>
+                                                                            </td>
+                                                                            <td class="subtotal">
+                                                                                <label class="td-title">Total:</label>
+                                                                                <span class="product-subtotal">$12.50</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class="product-picture">
+                                                                                <a href="/caf%C3%A9-latte"><img alt="Picture of Café au Lait" src="https://cafe.shopfast.net/images/thumbs/0004475_cafe-au-lait_80.jpeg" title="Show details for Café au Lait"></a>
+                                                                            </td>
+                                                                            <td class="product">
+                                                                                <a href="/caf%C3%A9-latte" class="product-name">Café au Lait</a>
+                                                                                <div class="attributes">
+                                                                                    Size: Medium [+$1.00]
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="unit-price">
+                                                                                <label class="td-title">Price:</label>
+                                                                                <span class="product-unit-price">$3.50</span>
+                                                                            </td>
+                                                                            <td class="quantity">
+                                                                                <label class="td-title" for="itemquantity5041">Qty.:</label>
+                                                                                <span class="product-quantity">1</span>
+                                                                            </td>
+                                                                            <td class="subtotal">
+                                                                                <label class="td-title">Total:</label>
+                                                                                <span class="product-subtotal">$3.50</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="cart-options">
+                                                                <div class="selected-checkout-attributes">
+                                                                </div>
+                                                            </div>
+                                                            <div class="cart-footer">
+
+                                                                <div class="totals">
+
+                                                                    <div class="total-info">
+                                                                        <table class="cart-total">
+                                                                            <tbody>
+                                                                                <tr class="order-subtotal">
+                                                                                    <td class="cart-total-left">
+                                                                                        <label>Sub-Total:</label>
+                                                                                    </td>
+                                                                                    <td class="cart-total-right">
+                                                                                        <span class="value-summary">$60.00</span>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr class="shipping-cost">
+                                                                                    <td class="cart-total-left">
+                                                                                        <label>Shipping:</label>
+                                                                                    </td>
+                                                                                    <td class="cart-total-right">
+                                                                                        <span>Not required</span>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr class="tax-value">
+                                                                                    <td class="cart-total-left">
+                                                                                        <label>Tax:</label>
+                                                                                    </td>
+                                                                                    <td class="cart-total-right">
+                                                                                        <span class="value-summary">$0.00</span>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr class="order-total">
+                                                                                    <td class="cart-total-left">
+                                                                                        <label>Total:</label>
+                                                                                    </td>
+                                                                                    <td class="cart-total-right">
+                                                                                        <span class="value-summary"><strong>$60.00</strong></span>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr class="earn-reward-points">
+                                                                                    <td class="cart-total-left">
+                                                                                        <label>You will earn:</label>
+                                                                                    </td>
+                                                                                    <td class="cart-total-right">
+                                                                                        <span class="value-summary">6 points</span>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <input name="__RequestVerificationToken" type="hidden" value="CfDJ8AbvH5xMMqhDnQ6lLyGo1LF9-5AvlprRSKJE_A1Igc7zgevGYqmuvnMnDYrifh1e_UF3aOU8adauV16r8muDYNGuDYIHhYGfNFyibgRsDvymNt7x1C-aV7a5o4JR7VG2mL3cCU9qfhlAeKrNySKGpGbo1-jUzEB0zLfzn5LBUJMc9QIgLuMy_LMP_Rmymal5tg">
+                                                        </form>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><div class="buttons" id="confirm-order-buttons-container"><p class="back-link"><a href="#" onclick="return Checkout.back(),!1"><small>« </small>Back</a></p><input type="button" class="button-1 confirm-order-next-step-button" onclick="ConfirmOrder.save()" value="Confirm"> <span class="please-wait" id="confirm-order-please-wait" style="display:none">Submitting order information...</span></div>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class=footer><div class=footer-upper><div class="footer-block information"><div class=title><strong>Information</strong></div><ul class=list><li><a href=/dmca-notice>DMCA Notice</a><li><a href=/terms-of-service>Terms Of Service</a><li><a href=/privacyinfo>Privacy policy</a><li><a href=/contactus>Contact us</a></ul></div><div class="footer-block customer-service"><div class=title><strong>User service</strong></div><ul class=list><li><a href=/search>Search</a></ul></div><div class="footer-block my-account"><div class=title><strong>My account</strong></div><ul class=list><li><a href=/customer/info>My account</a><li><a href=/order/history>Orders</a><li><a href=/customer/addresses>Addresses</a><li><a href=/cart>Shopping cart</a></ul></div><div class="footer-block follow-us"><div class=social><div class=title><strong>Follow us</strong></div><ul class=networks><li class=facebook><a href="https://www.facebook.com/Shopfast-149763908384528/" target=_blank>Facebook</a><li class=twitter><a href=https://twitter.com/shopfast target=_blank>Twitter</a></ul></div></div></div><div class=footer-lower><div class=footer-info><span class=footer-disclaimer>Copyright &copy; 2023 CAFE BARBERO. All rights reserved.</span></div><div class=footer-powered-by>Powered by <a target=_blank href="https://shopfast.com/">ShopFast</a></div></div></div>
+    </div>
+    <script src="~/lib_npm/jquery/jquery.min.js"></script>
+    <script src="~/lib_npm/jquery-ui-dist/jquery-ui.min.js"></script>
+    <script>function checkoutAttributeChange() { $.ajax({ cache: !1, url: "/shoppingcart/checkoutattributechange?isEditable=True", data: $("#shopping-cart-form").serialize(), type: "POST", success: function (n) { var t; if (n.ordetotalssectionhtml && $(".total-info").replaceWith(n.ordetotalssectionhtml), n.selectedcheckoutattributesssectionhtml && $(".selected-checkout-attributes").replaceWith(n.selectedcheckoutattributesssectionhtml), n.enabledattributeids) for (t = 0; t < n.enabledattributeids.length; t++)$("#checkout_attribute_label_" + n.enabledattributeids[t]).show(), $("#checkout_attribute_input_" + n.enabledattributeids[t]).show(); if (n.disabledattributeids) for (t = 0; t < n.disabledattributeids.length; t++)$("#checkout_attribute_label_" + n.disabledattributeids[t]).hide(), $("#checkout_attribute_input_" + n.disabledattributeids[t]).hide(); $(document).trigger({ type: "checkout_attributes_changed", changedData: n }) } }) } $(document).ready(function () { checkoutAttributeChange() })</script>
+    <script>$(document).ready(function () { $("#discountcouponcode").on("keydown", function (n) { if (n.keyCode == 13) return $("#applydiscountcouponcode").trigger("click"), !1 }) })</script>
+    <script>$(document).ready(function () { $("#checkout").on("click", function () { var n = !0; return $("#termsofservice").length > 0 && ($("#termsofservice").is(":checked") ? n = !0 : ($("#terms-of-service-warning-box").dialog(), n = !1)), n }) })</script>
+    <script>$(document).ready(function () { $(".header").on("mouseenter", "#topcartlink", function () { $("#flyout-cart").addClass("active") }); $(".header").on("mouseleave", "#topcartlink", function () { $("#flyout-cart").removeClass("active") }); $(".header").on("mouseenter", "#flyout-cart", function () { $("#flyout-cart").addClass("active") }); $(".header").on("mouseleave", "#flyout-cart", function () { $("#flyout-cart").removeClass("active") }) })</script>
+    <script>$("#small-search-box-form").on("submit", function (n) { $("#small-searchterms").val() == "" && (alert("Please enter some search keyword"), $("#small-searchterms").focus(), n.preventDefault()) })</script>
+
+    <script>$(document).ready(function () { $(".menu-toggle").on("click", function () { $(this).siblings(".top-menu.mobile").slideToggle("slow") }); $(".top-menu.mobile .sublist-toggle").on("click", function () { $(this).siblings(".sublist").slideToggle("slow") }) })</script>
+    <script>$(document).ready(function () { $(".footer-block .title").on("click", function () { var n = window, t = "inner", i; "innerWidth" in window || (t = "client", n = document.documentElement || document.body); i = { width: n[t + "Width"], height: n[t + "Height"] }; i.width < 769 && $(this).siblings(".list").slideToggle("slow") }) })</script>
+    <script>$(document).ready(function () { $(".block .title").on("click", function () { var n = window, t = "inner", i; "innerWidth" in window || (t = "client", n = document.documentElement || document.body); i = { width: n[t + "Width"], height: n[t + "Height"] }; i.width < 1001 && $(this).siblings(".listbox").slideToggle("slow") }) })</script>
+
+</body>
+</html>

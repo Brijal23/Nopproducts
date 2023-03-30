@@ -26,9 +26,20 @@
                 <div class=header-links-wrapper>
                     <div class=header-links>
                         <ul>
-                            <li><a href="/register?returnUrl=%2Flunch-dinner" class="ico-register">Register</a>
-                            <li><a href="/login?returnUrl=%2Flunch-dinner" class="ico-login">Log in</a>
-
+                            @if (ViewBag.Login == "1")
+                            {
+                                <li><a href="#" class="ico-register">My Account</a></li>
+                                <li>
+                                    <a href="/System/LogOut" class="ico-login">Log out</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li><a href="#" class="ico-register">Register</a></li>
+                                <li>
+                                    <a href="/System/Login" class="ico-login">Log in</a>
+                                </li>
+                            }
                             <li id=topcartlink>
                                 <a href=/System/Cart class=ico-cart>
                                     <span class=cart-label>Shopping cart</span>
@@ -56,10 +67,10 @@
                                     {
                                         <div class="item">
                                             <div class="picture">
-                                                <a href="/System/Productdetail?name=@item.ProductName" title="Show details for Belgian Hot Chocolate">
+                                                <a href="/System/Productdetail?id=@item.ProductID" title="Show details for Belgian Hot Chocolate">
                                                     <img alt="Picture of @item.ProductName" src="@item.ImageData" title="Show details for @item.ProductName" width="50" height="50">
                                                 </a>
-                                            </div><div class="product"><div class="name"><a href="/System/Productdetail?name=@item.ProductName">@item.ProductName</a></div><div class="attributes">Size: @item.Size</div><div class="price">Unit price: <span>$@item.FPrice</span></div><div class="quantity">Quantity: <span>@item.Quantity</span></div></div>
+                                            </div><div class="product"><div class="name"><a href="/System/Productdetail?id=@item.ProductID">@item.ProductName</a></div><div class="attributes">Size: @item.Size</div><div class="price">Unit price: <span>$@item.FPrice</span></div><div class="quantity">Quantity: <span>@item.Quantity</span></div></div>
                                         </div>
                                     }
                                 </div>
@@ -111,7 +122,7 @@
             <div class="breadcrumb">
                 <ul itemscope="" itemtype="http://schema.org/BreadcrumbList">
                     <li><span> <a href="/System/Index"> <span>Product</span> </a></span> <span class=delimiter>/</span></li>
-                    <li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem"><a href="/System/Productdetail?name=@Model.ProductName" itemprop="item"> <span itemprop="name">@Model.ProductName</span> </a><meta itemprop="position" content="1"></li>
+                    <li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem"><a href="/System/Productdetail?id=@Model.ProductID" itemprop="item"> <span itemprop="name">@Model.ProductName</span> </a><meta itemprop="position" content="1"></li>
                     @*<li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem"><strong class="current-item" itemprop="name">Café au Lait</strong> <span itemprop="item" itemscope="" itemtype="http://schema.org/Thing" id="/caf%C3%A9-latte"> </span><meta itemprop="position" content="2"></li>*@
                 </ul>
             </div>
@@ -279,7 +290,6 @@
                         if(response.status == "success") {
                             window.location.href = "/System/Cart";
                         }
-                       
                     }
                 },
                 error: function (err) {

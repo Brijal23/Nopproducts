@@ -1301,6 +1301,8 @@
     <None Remove="Views\System\Cart.cshtml" />
     <None Remove="Views\System\Details.cshtml" />
     <None Remove="Views\System\Index.cshtml" />
+    <None Remove="Views\System\Login.cshtml" />
+    <None Remove="Views\System\Payment.cshtml" />
     <None Remove="Views\System\Productdetail.cshtml" />
     <None Remove="Views\System\UpdateProductdetail.cshtml" />
     <None Remove="Views\_Layout.cshtml" />
@@ -6429,6 +6431,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\all_plugins.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\System\Payment.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\System\Login.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\System\Details.cshtml">

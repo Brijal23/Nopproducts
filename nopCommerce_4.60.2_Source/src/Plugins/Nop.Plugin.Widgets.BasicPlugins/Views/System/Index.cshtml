@@ -28,9 +28,20 @@
                 <div class=header-links-wrapper>
                     <div class=header-links>
                         <ul>
-                            <li><a href="/register?returnUrl=%2Flunch-dinner" class="ico-register">Register</a>
-                            <li><a href="/login?returnUrl=%2Flunch-dinner" class="ico-login">Log in</a>
-
+                            @if (ViewBag.Login == "1")
+                            {
+                                <li><a href="#" class="ico-register">My Account</a></li>
+                                <li>
+                                    <a href="/System/LogOut" class="ico-login">Log out</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li><a href="#" class="ico-register">Register</a></li>
+                                <li>
+                                    <a href="/System/Login" class="ico-login">Log in</a>
+                                </li>
+                            }
                             <li id=topcartlink>
                                 <a href=/System/Cart class=ico-cart>
                                     <span class=cart-label>Shopping cart</span>
@@ -58,10 +69,10 @@
                                     {
                                         <div class="item">
                                             <div class="picture">
-                                                <a href="/System/Productdetail?name=@item.ProductName" title="Show details for Belgian Hot Chocolate">
+                                                <a href="/System/Productdetail?id=@item.ProductID" title="Show details for Belgian Hot Chocolate">
                                                     <img alt="Picture of @item.ProductName" src="@item.ImageData" title="Show details for @item.ProductName" width="50" height="50">
                                                 </a>
-                                            </div><div class="product"><div class="name"><a href="/System/Productdetail?name=@item.ProductName">@item.ProductName</a></div><div class="attributes">Size: @item.Size</div><div class="price">Unit price: <span>$@item.FPrice</span></div><div class="quantity">Quantity: <span>@item.Quantity</span></div></div>
+                                            </div><div class="product"><div class="name"><a href="/System/Productdetail?id=@item.ProductID">@item.ProductName</a></div><div class="attributes">Size: @item.Size</div><div class="price">Unit price: <span>$@item.FPrice</span></div><div class="quantity">Quantity: <span>@item.Quantity</span></div></div>
                                         </div>
                                     }
                                 </div>
@@ -73,7 +84,9 @@
                     }
 
                 </div>
-            </div><div class=header-lower>
+            </div>
+
+            <div class=header-lower>
                 <div class=header-logo>
                     @* <img src="d:\brijal\nopcommerce16032023\nopproducts\nopcommerce_4.60.2_source\src\presentation\nop.web\themes\defaultclean\content\images\logo.png" />*@
                     <a href="/"> <img alt="CAFE BARBERO" src=https://localhost:51590/Themes/DefaultClean/Content/images/logo.png> </a>
@@ -120,10 +133,10 @@
                                     {
                                         <div class=item-box>
                                             <div class=product-item data-productid=@item.ProductID>
-                                                <div class=picture><a href="/System/Productdetail?name=@item.ProductName" title="Show details for Iced Green Tea"> <img alt="Picture of Iced Green Tea" src=@item.SFile title="Show details for Iced Green Tea" width=250 height=250> </a></div><div class=details>
-                                                    <h2 class=product-title><a href="/System/Productdetail?name=@item.ProductName">@item.ProductName</a></h2><div class=description></div><div class=add-info>
+                                                <div class=picture><a href="/System/Productdetail?id=@item.ProductID" title="Show details for Iced Green Tea"> <img alt="Picture of Iced Green Tea" src=@item.SFile title="Show details for Iced Green Tea" width=250 height=250> </a></div><div class=details>
+                                                    <h2 class=product-title><a href="/System/Productdetail?id=@item.ProductID">@item.ProductName</a></h2><div class=description></div><div class=add-info>
                                                         <div class=prices><span class="price actual-price">$&nbsp;@item.FPrice</span></div><div class=buttons>
-                                                            <a href="/System/Productdetail?name=@item.ProductName" class="button-2 product-box-add-to-cart-button" style="padding:10px;">Add to cart</a>
+                                                            <a href="/System/Productdetail?id=@item.ProductID" class="button-2 product-box-add-to-cart-button" style="padding:10px;">Add to cart</a>
                                                         </div>
                                                     </div>
                                                 </div>

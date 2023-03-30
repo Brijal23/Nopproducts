@@ -1,11 +1,14 @@
 ﻿
+using System.Diagnostics.Eventing.Reader;
 using System.Net;
 using System.Web;
 using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Vml;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
@@ -26,7 +29,6 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
 
         [HttpGet]
         public ActionResult Index()
-
         {
             List<ShoppingCart> carts = new();
             List<Product> Products = new();
@@ -99,6 +101,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             List<Category> categories = new();
             List<ShoppingCart> carts = new();
             ListShoppingCart list = new();
+            ViewBag.Login = HttpContext.Session.GetString("Login");
             string constr = @"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True";
 
             using (SqlConnection connection = new SqlConnection(constr))
@@ -159,16 +162,40 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                         connection.Close();
                     }
                 }
+                ViewBag.ShoppingCartList = carts;
                 decimal? subtotal = 0;
                 foreach (var item in list.ShoppingCartList)
                 {
                     subtotal = subtotal + item.TotalPrice;
                 }
-                ViewBag.Subtotal = subtotal;
+                connection.Open();
+                string querys = "Update Discount set Totalprice='" + subtotal + "'";
+                SqlCommand cmd = new SqlCommand(querys, connection);
+                cmd.ExecuteNonQuery();
+                connection.Close();
+                connection.Open();
+                string qss = "Update Discount set DiscountPrice=(Case when Isdiscount=1 then (Totalprice*0.5) else Totalprice end)";
+                SqlCommand cmds = new SqlCommand(qss, connection);
+                cmds.ExecuteNonQuery();
+                connection.Close();
+                connection.Open();
+                string totalqs = "Select DiscountPrice FROM [dbo].[Discount]";
+                using (SqlCommand command = new SqlCommand(totalqs, connection))
+                {
+                    using (SqlDataReader r = command.ExecuteReader())
+                    {
+                        while (r.Read())
+                        {
+                            ViewBag.Subtotal = Convert.ToSingle(r["DiscountPrice"].ToString());
+                        }
+                    }
+                }
+                connection.Close();
+                // ViewBag.Subtotal = subtotal;
             }
         }
         [HttpGet]
-        public ActionResult Productdetail(string name)
+        public ActionResult Productdetail(int id)
         {
             Product Product = new();
             List<ShoppingCart> carts = new();
@@ -206,7 +233,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
                     connection.Open();
 
                     // string Q = "SELECT * FROM Product WHERE IsActive=1 and ProductName='" + name + "'";
-                    string Q = "SELECT P.ProductID,P.ProductName,P.ShortDescription,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID WHERE P.IsActive=1 and P.ProductName='" + name + "' and I.ImageID IN (SELECT MAX(ImageID) FROM ImageDetail GROUP BY ProductID) Union SELECT * FROM (SELECT P.ProductID,P.ProductName,P.ShortDescription,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID  WHERE P.IsActive=1 and P.ProductName='" + name + "') as X WHERE X.ImageData is null";
+                    string Q = "SELECT P.ProductID,P.ProductName,P.ShortDescription,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID WHERE P.IsActive=1 and P.ProductID='" + id + "' and I.ImageID IN (SELECT MAX(ImageID) FROM ImageDetail GROUP BY ProductID) Union SELECT * FROM (SELECT P.ProductID,P.ProductName,P.ShortDescription,P.SKU,P.Price,P.StockQuantity,P.IsPublished,P.CreatedDate,I.ImageData FROM [Product] P LEFT JOIN ImageDetail I ON P.ProductID = I.ProductID  WHERE P.IsActive=1 and P.ProductID='" + id + "') as X WHERE X.ImageData is null";
                     using (SqlCommand command = new SqlCommand(Q, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -586,6 +613,48 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             }
             return View("~/Plugins/Widgets.BasicPlugins/Views/System/Cart.cshtml", list);
         }
+        [HttpGet]
+        public ActionResult Applydiscount(string discount, decimal Total)
+        {
+            int Count = 0;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
+                {
+                    connection.Open();
+                    string q = "select COUNT(*) as Count from Discount where Isdiscount=1";
+                    using (SqlCommand command = new SqlCommand(q, connection))
+                    {
+                        using (SqlDataReader r = command.ExecuteReader())
+                        {
+                            while (r.Read())
+                            {
+                                Count = Convert.ToInt32(r["Count"].ToString());
+                            }
+                        }
+                    }
+                    connection.Close();
+                    if (Count == 0)
+                    {
+                        connection.Open();
+                        decimal discountprice = Total / 2;
+                        string qss = "Update Discount set Totalprice='" + Total + "',DiscountPrice='" + discountprice + "',Isdiscount='" + 1 + "',Discountcode='" + discount.Trim() + "'";
+                        SqlCommand cmd = new SqlCommand(qss, connection);
+                        cmd.ExecuteNonQuery();
+                        connection.Close();
+                        return Json(new { status = "success" });
+                    }
+                    else
+                    {
+                        return Json(new { status = "error", message = "Coupon code already applied." });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = ex.Message.ToString() });
+            }
+        }
         public string RetrieveImage(byte[] ImageData)
         {
             string imageBase64Data =
@@ -595,6 +664,51 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
         imageBase64Data);
             ViewBag.ImageDataUrl = imageDataURL;
             return imageDataURL;
+        }
+        [AllowAnonymous]
+        public ActionResult Login()
+        {
+            Common();
+            return View("~/Plugins/Widgets.BasicPlugins/Views/System/Login.cshtml");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult Login(Login model)
+        {
+            Common();
+            if (ModelState.IsValid)
+            {
+                string email = "cafe@olb.com";
+                string password = "cafe";
+                if (model.Email == email && model.Password == password)
+                {
+                    ViewBag.LoginSuccess = "Login Successful";
+                    HttpContext.Session.SetString("Login", "1");
+                    return RedirectToAction("Index", "System");
+                }
+                else
+                {
+                    ViewBag.Validation = "Email or Password does not match!";
+                }
+            }
+            return View("~/Plugins/Widgets.BasicPlugins/Views/System/Login.cshtml", model);
+        }
+
+        public ActionResult LogOut()
+        {
+            HttpContext.Session.Remove("Login");
+            return RedirectToAction("Login", "System");
+        }
+
+        public ActionResult Payment()
+        {
+            Common();
+            if(ViewBag.Login == "1")
+            {
+                return View("~/Plugins/Widgets.BasicPlugins/Views/System/Payment.cshtml");
+            }
+            return View("~/Plugins/Widgets.BasicPlugins/Views/System/Login.cshtml");
         }
     }
 }

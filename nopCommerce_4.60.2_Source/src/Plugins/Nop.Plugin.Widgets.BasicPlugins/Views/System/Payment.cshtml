@@ -1,4 +1,6 @@
 ﻿@model Nop.Plugin.Widgets.BasicPlugins.Models.ListShoppingCart
+@using System.Text.RegularExpressions;
+
 <!DOCTYPE html>
 <html lang=en class=html-home-page>
 <head>
@@ -10,6 +12,12 @@
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link href="~/lib_npm/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" />
     <link href="~/Plugins/Widgets.BasicPlugins/Content/styles.css" rel="stylesheet" />
+    <style>
+        .button2 {
+            pointer-events: none;
+            background: red;
+        }
+    </style>
 </head>
 <body>
     <div class=ajax-loading-block-window style=display:none></div>
@@ -18,7 +26,6 @@
     <div id=dialog-notifications-warning title=Warning style=display:none></div>
     <div id=bar-notification class=bar-notification-container data-close=Close></div><!--[if lte IE 8]><div style=clear:both;height:59px;text-align:center;position:relative><a href=http://www.microsoft.com/windows/internet-explorer/default.aspx target=_blank> <img src=/Themes/DefaultClean/Content/images/ie_warning.jpg height=42 width=820 alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."> </a></div><![endif]-->
     <div class=master-wrapper-page>
-
         <div class=header>
             <div class=header-upper>
                 <div class=header-selectors-wrapper>
@@ -63,7 +70,7 @@
                                     There are <a href="/System/Cart">@ViewBag.Count item(s)</a> in your cart.
                                 </div>
                                 <div class="items">
-                                    @foreach (var item in Model.ShoppingCartList)
+                                    @foreach (var item in @ViewBag.ShoppingCartList)
                                     {
                                         <div class="item">
                                             <div class="picture">
@@ -101,10 +108,6 @@
                 {
                     <li><a href=#>@item.CategoryName</a></li>
                 }
-                @*<li><a href=/breakfast-brunch>Breakfast &amp; Brunch </a>
-                <li><a href=/lunch-dinner>Lunch &amp; Dinner </a>
-                <li><a href=/baked-goods-desserts>Baked Goods &amp; Desserts </a>
-                <li><a href=/drinks-2>Drinks </a>*@
             </ul>
             <div class=menu-toggle>Categories</div>
             <ul class="top-menu mobile">
@@ -112,10 +115,6 @@
                 {
                     <li><a href=#>@item.CategoryName</a></li>
                 }
-                @*<li><a href=/breakfast-brunch>Breakfast &amp; Brunch </a>
-                <li><a href=/lunch-dinner>Lunch &amp; Dinner </a>
-                <li><a href=/baked-goods-desserts>Baked Goods &amp; Desserts </a>
-                <li><a href=/drinks-2>Drinks </a>*@
             </ul>
         </div>
         <div class="master-wrapper-content">
@@ -124,38 +123,80 @@
                     <div class="page checkout-page">
                         <div class="page-title"><h1>Checkout</h1></div><div class="page-body checkout-data">
                             <ol class="opc" id="checkout-steps">
-                                <li id="opc-billing" class="tab-section allow active"><div class="step-title"><span class="number">1</span><h2 class="title">Billing address</h2></div><div id="checkout-step-billing" class="step a-item" style=""><form id="co-billing-form" novalidate="novalidate"><div id="checkout-billing-load"><div class="checkout-data"><div class="section new-billing-address" id="billing-new-address-form"><div class="enter-address"><input type="hidden" data-val="true" data-val-required="The Id field is required." id="BillingNewAddress_Id" name="BillingNewAddress.Id" value="0"><div class="edit-address"><div class="inputs"><label for="BillingNewAddress_FirstName">First name:</label> <input type="text" data-val="true" data-val-required="First name is required." id="BillingNewAddress_FirstName" name="BillingNewAddress.FirstName" value="Ronnny"> <span class="required">*</span> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.FirstName" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_LastName">Last name:</label> <input type="text" data-val="true" data-val-required="Last name is required." id="BillingNewAddress_LastName" name="BillingNewAddress.LastName" value="Yakovv"> <span class="required">*</span> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.LastName" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_Email">Email:</label> <input type="email" data-val="true" data-val-email="Wrong email" data-val-required="Email is required." id="BillingNewAddress_Email" name="BillingNewAddress.Email" value="cafe@olb.com"> <span class="required">*</span> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.Email" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_Company">Company:</label> <input type="text" id="BillingNewAddress_Company" name="BillingNewAddress.Company"> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.Company" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_City">City:</label> <input type="text" id="BillingNewAddress_City" name="BillingNewAddress.City" value="NY"> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.City" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_Address1">Address 1:</label> <input type="text" id="BillingNewAddress_Address1" name="BillingNewAddress.Address1" value="78 lb road"> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.Address1" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_Address2">Address 2:</label> <input type="text" id="BillingNewAddress_Address2" name="BillingNewAddress.Address2" value="NY"> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.Address2" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_ZipPostalCode">Zip / postal code:</label> <input type="text" id="BillingNewAddress_ZipPostalCode" name="BillingNewAddress.ZipPostalCode" value="10001"> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.ZipPostalCode" data-valmsg-replace="true"></span></div><div class="inputs"><label for="BillingNewAddress_PhoneNumber">Phone number:</label> <input type="tel" id="BillingNewAddress_PhoneNumber" name="BillingNewAddress.PhoneNumber" value="1234567890"> <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.PhoneNumber" data-valmsg-replace="true"></span></div></div></div></div></div></div></form><div class="buttons" id="billing-buttons-container" style="opacity: 1;"><input type="button" title="Continue" class="button-1 new-address-next-step-button" onclick="Billing.save()" value="Continue"> <span class="please-wait" id="billing-please-wait" style="display: none;">Loading next step...</span></div></div></li>
-                                <li id="opc-payment_method" class="tab-section allow active">
+                                <li id="opc-billing" class="tab-section allow active abc1">
+                                    <div class="step-title">
+                                        <span class="number">1</span><h2 class="title">Billing address</h2>
+                                    </div>
+                                    <div id="checkout-step-billing" class="step a-item">
+                                        <div id="checkout-billing-load">
+                                            <div class="checkout-data">
+                                                <div class="section new-billing-address" id="billing-new-address-form">
+                                                    <div class="enter-address">
+                                                        <input type="hidden" data-val="true" data-val-required="The Id field is required." id="BillingNewAddress_Id" name="BillingNewAddress.Id" value="0">
+                                                        <div class="edit-address">
+                                                            <div class="inputs">
+                                                                <label for="BillingNewAddress_FirstName">First name:</label>
+                                                                <input type="text" id="BillingNewAddress_FirstName" name="BillingNewAddress.FirstName" maxlength="50" required>
+                                                                <span class="required">*</span>
+                                                                <span class="field-validation-error" id="FirstNameerror"></span>
+                                                            </div><div class="inputs">
+                                                                <label for="BillingNewAddress_LastName">Last name:</label>
+                                                                <input type="text" id="BillingNewAddress_LastName" name="BillingNewAddress.LastName" maxlength="50"> <span class="required">*</span>
+                                                                <span class="field-validation-error" id="LastNameerror"></span>
+                                                            </div>
+                                                            <div class="inputs">
+                                                                <label for="BillingNewAddress_Email">Email:</label>
+                                                                <input type="email" id="BillingNewAddress_Email" name="BillingNewAddress.Email" maxlength="50"> <span class="required">*</span>
+                                                                <span class="field-validation-error" id="Emailerror"></span>
+                                                            </div>
+                                                            <div class="inputs">
+                                                                <label for="BillingNewAddress_Company">Company:</label>
+                                                                <input type="text" id="BillingNewAddress_Company" name="BillingNewAddress.Company">
+                                                                <span class="field-validation-error" data-valmsg-for="BillingNewAddress.Company" data-valmsg-replace="true"></span>
+                                                            </div>
+                                                            <div class="inputs">
+                                                                <label for="BillingNewAddress_City">City:</label>
+                                                                <input type="text" id="BillingNewAddress_City" name="BillingNewAddress.City" maxlength="30" onkeypress="return allowOnlyLetters(event,this);" autocomplete="off">
+                                                                <span class="field-validation-error" id="Cityerror" data-valmsg-for="BillingNewAddress.City"></span>
+                                                            </div>
+                                                            <div class="inputs">
+                                                                <label for="BillingNewAddress_Address1">Address 1:</label>
+                                                                <input type="text" id="BillingNewAddress_Address1" name="BillingNewAddress.Address1">
+                                                                <span class="field-validation-error" data-valmsg-for="BillingNewAddress.Address1"></span>
+                                                            </div><div class="inputs">
+                                                                <label for="BillingNewAddress_Address2">Address 2:</label>
+                                                                <input type="text" id="BillingNewAddress_Address2" name="BillingNewAddress.Address2">
+                                                                <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.Address2"></span>
+                                                            </div>
+                                                            <div class="inputs">
+                                                                <label for="BillingNewAddress_ZipPostalCode">Zip / postal code:</label>
+                                                                <input type="text" id="BillingNewAddress_ZipPostalCode" name="BillingNewAddress.ZipPostalCode" maxlength="6" autocomplete="off" onkeypress="return isNumber(event)">
+                                                                <span class="field-validation-error" id="ZipPostalCode"></span>
+                                                            </div>
+                                                            <div class="inputs">
+                                                                <label for="BillingNewAddress_PhoneNumber">Phone number:</label>
+                                                                <input type="tel" id="BillingNewAddress_PhoneNumber" name="BillingNewAddress.PhoneNumber" maxlength="10" autocomplete="off" onkeypress="return isNumber(event)">
+                                                                <span class="field-validation-error" id="PhoneNumber">
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="buttons" id="billing-buttons-container" style="opacity: 1;">
+                                            <input type="button" title="Continue" class="button-1 new-address-next-step-button" id="button1" onclick="SaveBillingdetails();" value="Continue">
+                                            <span class="please-wait" id="billing-please-wait"></span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li id="opc-payment_method" class="tab-section abc2">
                                     <div class="step-title"><span class="number">2</span><h2 class="title">Payment method</h2></div><div id="checkout-step-payment-method" class="step a-item" style="">
                                         <form id="co-payment-method-form">
                                             <div id="checkout-payment-method-load">
                                                 <div class="checkout-data">
-
                                                     <div class="section payment-method">
-                                                        <div class="use-reward-points">
-                                                            <input onclick="PaymentMethod.toggleUseRewardPoints(this)" type="checkbox" data-val="true" data-val-required="The UseRewardPoints field is required." id="UseRewardPoints" name="UseRewardPoints" value="true"><input name="UseRewardPoints" type="hidden" value="false">
-                                                            <label for="UseRewardPoints">Use my reward points, 9 reward points ($90.00) available for this order</label>
-                                                            <script>
-                                                                $(document).ready(function () {
-                                                                    PaymentMethod.toggleUseRewardPoints($('#UseRewardPoints'));
-                                                                });
-                                                            </script>
-                                                        </div>
                                                         <ul class="method-list" id="payment-method-block">
-                                                            <li>
-                                                                <div class="method-name">
-                                                                    <div class="payment-logo">
-                                                                        <label for="paymentmethod_0">
-                                                                            <img src="https://cafe.shopfast.net/Plugins/Payments.Crypto/logo.png" alt="Crypto">
-                                                                        </label>
-                                                                    </div>
-                                                                    <div class="payment-details">
-                                                                        <input id="paymentmethod_0" type="radio" name="paymentmethod" value="Payments.Crypto" checked="checked">
-                                                                        <label for="paymentmethod_0">Crypto</label>
-                                                                        <div class="payment-description">Pay by Crypto</div>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
                                                             <li>
                                                                 <div class="method-name">
                                                                     <div class="payment-logo">
@@ -164,29 +205,27 @@
                                                                         </label>
                                                                     </div>
                                                                     <div class="payment-details">
-                                                                        <input id="paymentmethod_1" type="radio" name="paymentmethod" value="Payments.Manual">
+                                                                        <input id="paymentmethodid" type="checkbox" name="paymentmethod">
                                                                         <label for="paymentmethod_1">Credit Card</label>
                                                                         <div class="payment-description">Pay by credit / debit card</div>
                                                                     </div>
                                                                 </div>
                                                             </li>
-                                                            <li>
-                                                                <div class="method-name">
-                                                                    <div class="payment-details">
-                                                                        <input id="paymentmethod_2" type="radio" name="paymentmethod" value="ShopFast.Payments.SecurePay">
-                                                                        <label for="paymentmethod_2">SecurePay</label>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
+
                                                         </ul>
                                                     </div>
 
                                                 </div>
                                             </div>
-                                        </form><div class="buttons" id="payment-method-buttons-container"><p class="back-link"><a href="#" onclick="return Checkout.back(),!1"><small>« </small>Back</a></p><input type="button" class="button-1 payment-method-next-step-button" onclick="PaymentMethod.save()" value="Continue"> <span class="please-wait" id="payment-method-please-wait" style="display:none">Loading next step...</span></div>
+                                        </form><div class="buttons" id="payment-method-buttons-container">
+                                            <p class="back-link">
+                                                <a href="#" class="abc1"><small>« </small>Back</a>
+                                            </p><input type="button" class="button-1 payment-method-next-step-button" id="continueclick" onclick="SavePaymentMethod()" value="Continue">
+                                            <span class="please-wait" id="payment-method-please-wait"></span>
+                                        </div>
                                     </div>
                                 </li>
-                                <li id="opc-payment_info" class="tab-section allow active">
+                                <li id="opc-payment_info" class="tab-section abc3">
                                     <div class="step-title"><span class="number">3</span><h2 class="title">Payment information</h2></div><div id="checkout-step-payment-info" class="step a-item" style="">
                                         <form id="co-payment-info-form">
                                             <div id="checkout-payment-info-load">
@@ -277,22 +316,20 @@
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
-
                                                         </div>
-
                                                     </div>
-
                                                 </div>
                                             </div>
-                                        </form><div class="buttons" id="payment-info-buttons-container" style="opacity: 1;"><p class="back-link"><a href="#" onclick="return Checkout.back(),!1"><small>« </small>Back</a></p><input type="button" class="button-1 payment-info-next-step-button" onclick="PaymentInfo.save()" value="Continue"> <span class="please-wait" id="payment-info-please-wait" style="display: none;">Loading next step...</span></div>
+                                        </form><div class="buttons" id="payment-info-buttons-container" style="opacity: 1;">
+                                            <p class="back-link abc2"><a href="#"><small>« </small>Back</a></p><input type="button" class="button-1 payment-info-next-step-button" onclick="setconfirmorder();" value="Continue">
+                                            <span class="please-wait" id="payment-info-please-wait"></span>
+                                        </div>
                                     </div>
                                 </li>
-                                <li id="opc-confirm_order" class="tab-section allow active">
+                                <li id="opc-confirm_order" class="tab-section">
                                     <div class="step-title"><span class="number">4</span><h2 class="title">Confirm order</h2></div><div id="checkout-step-confirm-order" class="step a-item" style="">
                                         <div id="checkout-confirm-order-load">
                                             <div class="checkout-data">
-
-
                                                 <div class="section order-summary">
                                                     <div class="order-summary-content">
 
@@ -303,23 +340,20 @@
                                                                         <strong>Billing Address</strong>
                                                                     </div>
                                                                     <ul class="info-list">
-                                                                        <li class="name">
-                                                                            Ronnny Yakovv
+                                                                        <li class="name" id="name">
+
                                                                         </li>
-                                                                        <li class="email">
-                                                                            Email: cafe@olb.com
+                                                                        <li class="email" id="email">
+
                                                                         </li>
-                                                                        <li class="phone">
-                                                                            Phone: 1234567890
+                                                                        <li class="phone" id="phone">
                                                                         </li>
                                                                         <li class="address1">
-                                                                            78 lb road
+
                                                                         </li>
                                                                         <li class="address2">
-                                                                            NY
                                                                         </li>
                                                                         <li class="city-state-zip">
-                                                                            NY,10001
                                                                         </li>
                                                                     </ul>
                                                                 </div>
@@ -339,9 +373,7 @@
                                                                     </ul>
                                                                 </div>
                                                             </div>
-
                                                         </div>
-
                                                         <form method="post" enctype="multipart/form-data" id="shopping-cart-form" action="/cart">
                                                             <div class="table-wrapper">
                                                                 <table class="cart">
@@ -372,75 +404,22 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                        <tr>
-                                                                            <td class="product-picture">
-                                                                                <a href="/hot-chocolate"><img alt="Picture of Belgian Hot Chocolate" src="https://cafe.shopfast.net/images/thumbs/0004398_belgian-hot-chocolate_80.jpeg" title="Show details for Belgian Hot Chocolate"></a>
-                                                                            </td>
-                                                                            <td class="product">
-                                                                                <a href="/hot-chocolate" class="product-name">Belgian Hot Chocolate</a>
-                                                                                <div class="attributes">
-                                                                                    Size: Small
-                                                                                </div>
-                                                                            </td>
-                                                                            <td class="unit-price">
-                                                                                <label class="td-title">Price:</label>
-                                                                                <span class="product-unit-price">$4.00</span>
-                                                                            </td>
-                                                                            <td class="quantity">
-                                                                                <label class="td-title" for="itemquantity5033">Qty.:</label>
-                                                                                <span class="product-quantity">11</span>
-                                                                            </td>
-                                                                            <td class="subtotal">
-                                                                                <label class="td-title">Total:</label>
-                                                                                <span class="product-subtotal">$44.00</span>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="product-picture">
-                                                                                <a href="/caf%C3%A9-latte"><img alt="Picture of Café au Lait" src="https://cafe.shopfast.net/images/thumbs/0004475_cafe-au-lait_80.jpeg" title="Show details for Café au Lait"></a>
-                                                                            </td>
-                                                                            <td class="product">
-                                                                                <a href="/caf%C3%A9-latte" class="product-name">Café au Lait</a>
-                                                                                <div class="attributes">
-                                                                                    Size: Small
-                                                                                </div>
-                                                                            </td>
-                                                                            <td class="unit-price">
-                                                                                <label class="td-title">Price:</label>
-                                                                                <span class="product-unit-price">$2.50</span>
-                                                                            </td>
-                                                                            <td class="quantity">
-                                                                                <label class="td-title" for="itemquantity5034">Qty.:</label>
-                                                                                <span class="product-quantity">5</span>
-                                                                            </td>
-                                                                            <td class="subtotal">
-                                                                                <label class="td-title">Total:</label>
-                                                                                <span class="product-subtotal">$12.50</span>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="product-picture">
-                                                                                <a href="/caf%C3%A9-latte"><img alt="Picture of Café au Lait" src="https://cafe.shopfast.net/images/thumbs/0004475_cafe-au-lait_80.jpeg" title="Show details for Café au Lait"></a>
-                                                                            </td>
-                                                                            <td class="product">
-                                                                                <a href="/caf%C3%A9-latte" class="product-name">Café au Lait</a>
-                                                                                <div class="attributes">
-                                                                                    Size: Medium [+$1.00]
-                                                                                </div>
-                                                                            </td>
-                                                                            <td class="unit-price">
-                                                                                <label class="td-title">Price:</label>
-                                                                                <span class="product-unit-price">$3.50</span>
-                                                                            </td>
-                                                                            <td class="quantity">
-                                                                                <label class="td-title" for="itemquantity5041">Qty.:</label>
-                                                                                <span class="product-quantity">1</span>
-                                                                            </td>
-                                                                            <td class="subtotal">
-                                                                                <label class="td-title">Total:</label>
-                                                                                <span class="product-subtotal">$3.50</span>
-                                                                            </td>
-                                                                        </tr>
+                                                                        @{
+
+                                                                            @foreach (var item in ViewBag.ShoppingCartList)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td class=product-picture><a href="#"><img alt="Picture of @item.ProductName" src="@item.ImageData" title="Show details for @item.ProductName" width="80" height="50"></a></td>
+                                                                                    <td class=product><a href="/System/Productdetail?id=@item.ProductID" class=product-name>@item.ProductName</a><div class=attributes>Size: @item.Size</div></td>
+                                                                                    <td class=unit-price><label class=td-title>Price:</label> <span class=product-unit-price>$@item.FPrice</span></td>
+                                                                                    <td class=quantity><label class=td-title for=itemquantity5030>Qty.:</label> <span class="product-quantity">@item.Quantity</span></td>
+                                                                                    <td class=subtotal>
+                                                                                        <label class=td-title>Total:</label> <span class=product-subtotal id="Totalvalue">$@item.TotalPrice</span>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -460,7 +439,7 @@
                                                                                         <label>Sub-Total:</label>
                                                                                     </td>
                                                                                     <td class="cart-total-right">
-                                                                                        <span class="value-summary">$60.00</span>
+                                                                                        <span class="value-summary">$@ViewBag.Subtotal</span>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr class="shipping-cost">
@@ -484,30 +463,21 @@
                                                                                         <label>Total:</label>
                                                                                     </td>
                                                                                     <td class="cart-total-right">
-                                                                                        <span class="value-summary"><strong>$60.00</strong></span>
+                                                                                        <span class="value-summary"><strong>$@ViewBag.Subtotal</strong></span>
                                                                                     </td>
                                                                                 </tr>
-                                                                                <tr class="earn-reward-points">
-                                                                                    <td class="cart-total-left">
-                                                                                        <label>You will earn:</label>
-                                                                                    </td>
-                                                                                    <td class="cart-total-right">
-                                                                                        <span class="value-summary">6 points</span>
-                                                                                    </td>
-                                                                                </tr>
+                                                                                
                                                                             </tbody>
                                                                         </table>
                                                                     </div>
-
                                                                 </div>
                                                             </div>
                                                             <input name="__RequestVerificationToken" type="hidden" value="CfDJ8AbvH5xMMqhDnQ6lLyGo1LF9-5AvlprRSKJE_A1Igc7zgevGYqmuvnMnDYrifh1e_UF3aOU8adauV16r8muDYNGuDYIHhYGfNFyibgRsDvymNt7x1C-aV7a5o4JR7VG2mL3cCU9qfhlAeKrNySKGpGbo1-jUzEB0zLfzn5LBUJMc9QIgLuMy_LMP_Rmymal5tg">
                                                         </form>
-
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div><div class="buttons" id="confirm-order-buttons-container"><p class="back-link"><a href="#" onclick="return Checkout.back(),!1"><small>« </small>Back</a></p><input type="button" class="button-1 confirm-order-next-step-button" onclick="ConfirmOrder.save()" value="Confirm"> <span class="please-wait" id="confirm-order-please-wait" style="display:none">Submitting order information...</span></div>
+                                        </div><div class="buttons" id="confirm-order-buttons-container"><p class="back-link abc3"><a href="#" onclick="return Checkout.back(),!1"><small>« </small>Back</a></p><input type="button" class="button-1 confirm-order-next-step-button" onclick="ConfirmOrder.save()" value="Confirm"> <span class="please-wait" id="confirm-order-please-wait" style="display:none">Submitting order information...</span></div>
                                     </div>
                                 </li>
                             </ol>
@@ -520,6 +490,13 @@
     </div>
     <script src="~/lib_npm/jquery/jquery.min.js"></script>
     <script src="~/lib_npm/jquery-ui-dist/jquery-ui.min.js"></script>
+    <script src="~/lib_npm/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    @*<script>
+    Stripe.setPublishableKey("pk_test_51MrimbSBcio2GVxsCufPQifKxgc3CXwmjWQIRCD5fUdtgcv0dDAoUJU2840q5E9lETUBvu454Op3II4YdYX7vxsv00VgmVOy4u");
+    </script>*@
+
     <script>function checkoutAttributeChange() { $.ajax({ cache: !1, url: "/shoppingcart/checkoutattributechange?isEditable=True", data: $("#shopping-cart-form").serialize(), type: "POST", success: function (n) { var t; if (n.ordetotalssectionhtml && $(".total-info").replaceWith(n.ordetotalssectionhtml), n.selectedcheckoutattributesssectionhtml && $(".selected-checkout-attributes").replaceWith(n.selectedcheckoutattributesssectionhtml), n.enabledattributeids) for (t = 0; t < n.enabledattributeids.length; t++)$("#checkout_attribute_label_" + n.enabledattributeids[t]).show(), $("#checkout_attribute_input_" + n.enabledattributeids[t]).show(); if (n.disabledattributeids) for (t = 0; t < n.disabledattributeids.length; t++)$("#checkout_attribute_label_" + n.disabledattributeids[t]).hide(), $("#checkout_attribute_input_" + n.disabledattributeids[t]).hide(); $(document).trigger({ type: "checkout_attributes_changed", changedData: n }) } }) } $(document).ready(function () { checkoutAttributeChange() })</script>
     <script>$(document).ready(function () { $("#discountcouponcode").on("keydown", function (n) { if (n.keyCode == 13) return $("#applydiscountcouponcode").trigger("click"), !1 }) })</script>
     <script>$(document).ready(function () { $("#checkout").on("click", function () { var n = !0; return $("#termsofservice").length > 0 && ($("#termsofservice").is(":checked") ? n = !0 : ($("#terms-of-service-warning-box").dialog(), n = !1)), n }) })</script>
@@ -529,6 +506,174 @@
     <script>$(document).ready(function () { $(".menu-toggle").on("click", function () { $(this).siblings(".top-menu.mobile").slideToggle("slow") }); $(".top-menu.mobile .sublist-toggle").on("click", function () { $(this).siblings(".sublist").slideToggle("slow") }) })</script>
     <script>$(document).ready(function () { $(".footer-block .title").on("click", function () { var n = window, t = "inner", i; "innerWidth" in window || (t = "client", n = document.documentElement || document.body); i = { width: n[t + "Width"], height: n[t + "Height"] }; i.width < 769 && $(this).siblings(".list").slideToggle("slow") }) })</script>
     <script>$(document).ready(function () { $(".block .title").on("click", function () { var n = window, t = "inner", i; "innerWidth" in window || (t = "client", n = document.documentElement || document.body); i = { width: n[t + "Width"], height: n[t + "Height"] }; i.width < 1001 && $(this).siblings(".listbox").slideToggle("slow") }) })</script>
+    <script>
+        $(document).ready(function () {
+            $("#billing-please-wait").text("");
+            $("#payment-method-please-wait").text("");
+            $("#payment-info-please-wait").text("");
+            document.getElementById("checkout-step-payment-method").style.display = "none";
+            document.getElementById("checkout-step-payment-info").style.display = "none";
+            document.getElementById("checkout-step-confirm-order").style.display = "none";
+            // $("#checkout-step-payment-method").hide();;
+        });
+        function allowOnlyLetters(e, t) {
+            if (window.event) {
+                var charCode = window.event.keyCode;
+            }
+            else if (e) {
+                var charCode = e.which;
+            }
+            else { return true; }
+            if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123))
+                return true;
+            else {
+                //alert("Please enter only alphabets");
+                return false;
+            }
+        }
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+        function SaveBillingdetails() {
+            var FirstName = $("#BillingNewAddress_FirstName").val();
+            var LastName = $("#BillingNewAddress_LastName").val();
+            var Email = $("#BillingNewAddress_Email").val();
+            var Company = $("#BillingNewAddress_Company").val();
+            var City = $("#BillingNewAddress_City").val();
+            var Address1 = $("#BillingNewAddress_Address1").val();
+            var Address2 = $("#BillingNewAddress_Address2").val();
+            var ZipPostalCode = $("#BillingNewAddress_ZipPostalCode").val();
+            var PhoneNumber = $("#BillingNewAddress_PhoneNumber").val();
+            const nameRegex = /^[a-zA-Z\s-]+$/;
+            const emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$");
+            console.log(FirstName.trim().length);
+            if (FirstName.trim().length == 0 || FirstName == "") {
+                $("#FirstNameerror").text("First name is required.");
+            } else {
+                if (!nameRegex.test(FirstName)) {
+                    $("#FirstNameerror").text("Please enter valid first name.");
+                } else { $("#FirstNameerror").text(""); }
+            }
+            if (City.trim().length != 0 || City != "") {
+                if (!nameRegex.test(City)) {
+                    $("#Cityerror").text("Please enter valid city name.");
+                } else { $("#Cityerror").text(""); }
+            } else { $("#Cityerror").text(""); }
+            if (LastName.trim().length == 0 || LastName == "") {
+                $("#LastNameerror").text("Last name is required.");
+            }
+            else {
+                if (!nameRegex.test(LastName)) {
+                    $("#LastNameerror").text("Please enter valid last name.");
+                } else { $("#LastNameerror").text(""); }
+            }
+            if (Email.trim().length == 0 || Email == "") {
+                $("#Emailerror").text("Email is required.");
+            } else {
+                if (!emailRegex.test(Email)) {
+                    $("#Emailerror").text("Please enter valid email.");
+                } else { $("#Emailerror").text(""); }
+            }
+            if ($("#FirstNameerror").text() == "" && $("#LastNameerror").text() == "" && $("#Emailerror").text() == "" && $("#Cityerror").text("")) {
+
+                $("#button1").addClass("button2");
+                $("#billing-please-wait").text("Loading next step...");
+                setTimeout(showloader1, 1000);
+            }
+
+        }
+        if ($("#FirstNameerror").text() == "" && $("#LastNameerror").text() == "" && $("#Emailerror").text() == "" && $("#Cityerror").text("")) {
+
+            $(".abc1").click(function () {
+                document.getElementById("checkout-step-billing").style.display = "block";
+                document.getElementById("checkout-step-payment-method").style.display = "none";
+                document.getElementById("checkout-step-payment-info").style.display = "none";
+                document.getElementById("checkout-step-confirm-order").style.display = "none";
+                $("#billing-please-wait").text("");
+                $("#payment-method-please-wait").text("");
+                $("#payment-info-please-wait").text("");
+                $("#opc-payment_method").removeClass("allow");
+                $("#opc-payment_info").removeClass("allow");
+            });
+
+        }
+        function showloader1() {
+            document.getElementById("checkout-step-billing").style.display = "none";
+            $("#opc-payment_method").addClass("allow");
+            document.getElementById("checkout-step-payment-method").style.display = "block";
+            $("#button1").removeClass("button2");
+        }
+
+        function SavePaymentMethod() {
+            var check = $("input[name='paymentmethod']:checked").val();
+            console.log(check);
+            if (check == "on") {
+                $("#payment-method-please-wait").text("Loading next step...");
+                setTimeout(showloader2, 3000);
+
+                //payment();
+            }
+        }
+        $(".abc2").click(function () {
+            document.getElementById("checkout-step-billing").style.display = "none";
+            document.getElementById("checkout-step-payment-method").style.display = "block";
+            document.getElementById("checkout-step-payment-info").style.display = "none";
+            document.getElementById("checkout-step-confirm-order").style.display = "none";
+            $("#billing-please-wait").text("");
+            $("#payment-method-please-wait").text("");
+            $("#payment-info-please-wait").text("");
+            $("#opc-payment_method").addClass("allow");
+            $("#opc-payment_info").removeClass("allow");
+            $("#opc-confirm_order").removeClass("allow");
+        });
+        function showloader2() {
+            document.getElementById("checkout-step-payment-method").style.display = "none";
+            $("#opc-payment_info").addClass("allow");
+            document.getElementById("checkout-step-payment-info").style.display = "block";
+        }
+         $(".abc3").click(function () {
+            document.getElementById("checkout-step-billing").style.display = "none";
+            document.getElementById("checkout-step-payment-method").style.display = "none";
+            document.getElementById("checkout-step-payment-info").style.display = "block";
+            document.getElementById("checkout-step-confirm-order").style.display = "none";
+            $("#billing-please-wait").text("");
+            $("#payment-method-please-wait").text("");
+            $("#payment-info-please-wait").text("");
+            $("#opc-payment_info").addClass("allow");
+            $("#opc-confirm_order").removeClass("allow");
+        });
+        function setconfirmorder() {
+            document.getElementById("checkout-step-confirm-order").style.display = "block";
+            $("#name").text($("#BillingNewAddress_FirstName").val() + " " + $("#BillingNewAddress_LastName").val());
+            $("#email").text("Email: " + $("#BillingNewAddress_Email").val());
+            if ($("#BillingNewAddress_PhoneNumber").val() != "") {
+                $("#phone").text("Phone: " + $("#BillingNewAddress_PhoneNumber").val());
+            }
+            $(".address1").text($("#BillingNewAddress_Address1").val());
+            $(".address2").text($("#BillingNewAddress_Address2").val());
+            $(".city-state-zip").text($("#BillingNewAddress_City").val() + "," + $("#BillingNewAddress_ZipPostalCode").val());
+        }
+                                        //function payment() {
+                                        //    //var bouton = $(this);
+                                        //    //var sessionId = bouton.prev().val();
+
+                                        //    var stripe = Stripe('pk_test_51MrimbSBcio2GVxsCufPQifKxgc3CXwmjWQIRCD5fUdtgcv0dDAoUJU2840q5E9lETUBvu454Op3II4YdYX7vxsv00VgmVOy4u');
+                                        //    return stripe.redirectToCheckout({})
+                                        //        .then(function (result) {
+                                        //            if (result.error) {
+                                        //                alert(result.error.message);
+                                        //            }
+                                        //        })
+                                        //        .catch(function (error) {
+                                        //            console.error("Error:", error);
+                                        //        });
+                                        //});
+    </script>
 
 </body>
 </html>

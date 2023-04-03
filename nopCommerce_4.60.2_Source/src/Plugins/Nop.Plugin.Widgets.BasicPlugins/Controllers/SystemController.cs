@@ -672,6 +672,30 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
             return View("~/Plugins/Widgets.BasicPlugins/Views/System/Login.cshtml");
         }
 
+        [HttpGet]
+        public ActionResult Checkout()
+        {
+
+            List<ShoppingCart> carts = new();
+            ListShoppingCart list = new();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-9N1RJHQ\SQLEXPRESS;Initial Catalog=NopProduct;Integrated Security=true;Persist Security Info=False;Trust Server Certificate=True"))
+                {
+                    connection.Open();
+                   
+                    string qss = "Update ShoppingCart set IsActive=0";
+                    SqlCommand cmd = new SqlCommand(qss, connection);
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                    return Json(new { status = "success" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = "error" });
+            }
+        }
         [HttpPost]
         [AllowAnonymous]
         public ActionResult Login(Login model)
@@ -704,7 +728,7 @@ namespace Nop.Plugin.Widgets.BasicPlugins.Controllers
         public ActionResult Payment()
         {
             Common();
-            if(ViewBag.Login == "1")
+            if (ViewBag.Login == "1")
             {
                 return View("~/Plugins/Widgets.BasicPlugins/Views/System/Payment.cshtml");
             }
